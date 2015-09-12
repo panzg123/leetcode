@@ -663,6 +663,28 @@ public:
 		p->next = nullptr; // 断开环
 		return head;
 	}
+	/*remove nth from end ,用前后两个指针*/
+	ListNode* removeNthFromEnd(ListNode *head, int n)
+	{
+		ListNode *myhead = new ListNode(-1);
+		myhead->next = head;
+		ListNode* pre=nullptr, *nextptr=nullptr;
+		int count = 0;
+		nextptr = myhead;
+		pre = myhead;
+		while (count != n && nextptr != nullptr)
+		{
+			nextptr = nextptr->next;
+			count++;
+		}
+		while (nextptr != nullptr&&nextptr->next != nullptr&&pre != nullptr&&pre->next!=nullptr)
+		{
+			nextptr = nextptr->next;
+			pre = pre->next;
+		}
+		pre->next = pre->next->next;
+		return myhead->next;
+	}
 
 
 private:
