@@ -1,4 +1,4 @@
-#include"header.h"
+ï»¿#include"header.h"
 
 using namespace std;
 class Solution
@@ -87,7 +87,7 @@ public:
 		}
 		return result;
 	}
-	/// leetcode , fourSum,ÓÃunordered_multimap,³¬Ê±
+	/// leetcode , fourSum,ç”¨unordered_multimap,è¶…æ—¶
 	vector<vector<int>> fourSum(vector<int> &num, int target)
 	{
 		vector<vector<int>> result;
@@ -126,7 +126,7 @@ public:
 		return result;
 
 	}
-	//leetcode,4sum,ÓÃunodered_map£¬²»³¬Ê±
+	//leetcode,4sum,ç”¨unodered_mapï¼Œä¸è¶…æ—¶
 	vector<vector<int>> fourSum_v2(vector<int> &num, int target)
 	{
 		vector<vector<int>> result;
@@ -145,7 +145,7 @@ public:
 				const auto& vec = cache[key];
 				for (size_t k = 0; k < vec.size(); ++k) {
 					if (c <= vec[k].second)
-						continue; // ÓĞÖØµş
+						continue; // æœ‰é‡å 
 					result.push_back({ num[vec[k].first],
 						num[vec[k].second], num[c], num[d] });
 				}
@@ -192,7 +192,7 @@ public:
 		}
 		sort(nums.begin(), nums.end());
 	}
-	/*permutation_sequence ±©Á¦ÆÆ½â·¨ ³¬Ê±*/
+	/*permutation_sequence æš´åŠ›ç ´è§£æ³• è¶…æ—¶*/
 	string permutation_sequence(const int n, const int k)
 	{
 		string str(n,'0');
@@ -206,7 +206,7 @@ public:
 		}
 		return str;
 	}
-	/*permutation sequence ¿µÍĞĞòÁĞÊ±¼ä¸´ÔÓ¶È O(n)£¬¿Õ¼ä¸´ÔÓ¶È O(1) */
+	/*permutation sequence åº·æ‰˜åºåˆ—æ—¶é—´å¤æ‚åº¦ O(n)ï¼Œç©ºé—´å¤æ‚åº¦ O(1) */
 	string getPermutation(int n, int k)
 	{
 		string s(n, '0');
@@ -225,7 +225,7 @@ public:
 		left_flag[0] = 0;
 		right_flag[n - 1] = 0;
 
-		//É¨Ãè×ó±ß
+		//æ‰«æå·¦è¾¹
 		for (int i = 1; i < n; i++)
 		{
 			if (A[i-1]>left_flag[i-1])
@@ -237,7 +237,7 @@ public:
 				left_flag[i] = left_flag[i - 1];
 			}
 		}
-		//É¨ÃèÓÒ±ß
+		//æ‰«æå³è¾¹
 		for (int i = n-2; i >=0; i--)
 		{
 			if (A[i + 1] > right_flag[i + 1])
@@ -269,7 +269,7 @@ public:
 		left_flag[0] = 0;
 		right_flag[n - 1] = 0;
 
-		//É¨Ãè×ó±ß
+		//æ‰«æå·¦è¾¹
 		for (int i = 1; i < n; i++)
 		{
 			if (height[i - 1]>left_flag[i - 1])
@@ -281,7 +281,7 @@ public:
 				left_flag[i] = left_flag[i - 1];
 			}
 		}
-		//É¨ÃèÓÒ±ß
+		//æ‰«æå³è¾¹
 		for (int i = n - 2; i >= 0; i--)
 		{
 			if (height[i + 1] > right_flag[i + 1])
@@ -302,12 +302,12 @@ public:
 	}
 	/*
 	rotate image
-	Ê±¼ä¸´ÔÓ¶È O(n^2)£¬¿Õ¼ä¸´ÔÓ¶È O(1)
+	æ—¶é—´å¤æ‚åº¦ O(n^2)ï¼Œç©ºé—´å¤æ‚åº¦ O(1)
 	*/
 	void rotate(vector<vector<int>> &matrix)
 	{
 		int n = matrix.size();
-		//×ªÖÃ¾ØÕó
+		//è½¬ç½®çŸ©é˜µ
 		for (size_t i = 0; i < n; i++)
 		{
 			for (size_t j = 0; j < i; j++)
@@ -315,7 +315,7 @@ public:
 				swap(matrix[i][j], matrix[j][i]);
 			}
 		}
-		//×óÓÒ·­×ª
+		//å·¦å³ç¿»è½¬
 		for (size_t i = 0; i < n; i++)
 		{
 			for (size_t j = 0; j < n/2; j++)
@@ -354,7 +354,7 @@ public:
 			result.push_back(i ^ (i >> 1));
 		return result;
 	}
-	/*¿Õ¼ä¸´ÔÓ¶ÈÎªO(m+n)*/
+	/*ç©ºé—´å¤æ‚åº¦ä¸ºO(m+n)*/
 	void setZeros(vector<vector<int>> &matrix)
 	{
 		int rows = matrix.size();
@@ -395,15 +395,15 @@ public:
 		}
 	}
 	/*
-	*¿Õ¼ä¸´ÔÓ¶ÈÎªO£¨1£©
-	*¸´ÓÃµÚÒ»ĞĞºÍµÚÒ»ÁĞ£¬ÏÈ±ê¼ÇµÚÒ»ĞĞºÍµÚÒ»ÁĞÊÇ·ñÓĞ0ÔªËØ£¬È»ºó±éÀú¾ØÕó£¬Èç¹ûÓĞ0¾Í½«¸ÃÔªËØµÄĞĞÁĞµÚÒ»¸öÔªËØ±ê¼ÇÎª0.
+	*ç©ºé—´å¤æ‚åº¦ä¸ºOï¼ˆ1ï¼‰
+	*å¤ç”¨ç¬¬ä¸€è¡Œå’Œç¬¬ä¸€åˆ—ï¼Œå…ˆæ ‡è®°ç¬¬ä¸€è¡Œå’Œç¬¬ä¸€åˆ—æ˜¯å¦æœ‰0å…ƒç´ ï¼Œç„¶åéå†çŸ©é˜µï¼Œå¦‚æœæœ‰0å°±å°†è¯¥å…ƒç´ çš„è¡Œåˆ—ç¬¬ä¸€ä¸ªå…ƒç´ æ ‡è®°ä¸º0.
 	*/
 	void setZeros_v2(vector<vector<int>> &matrix)
 	{
 		int rows = matrix.size();
 		int colums = matrix[0].size();
 		int first_rows_have_zero = 0,first_colum_have_zero=0;
-		//±ê¼ÇµÚÒ»ĞĞÊÇ·ñÓĞ0ÔªËØ
+		//æ ‡è®°ç¬¬ä¸€è¡Œæ˜¯å¦æœ‰0å…ƒç´ 
 		for (size_t i = 0; i < colums; i++)
 		{
 			if (matrix[0][i]==0)
@@ -412,7 +412,7 @@ public:
 				break;
 			}
 		}
-		//±ê¼ÇµÚÒ»ÁĞÊÇ·ñÓĞ0ÔªËØ
+		//æ ‡è®°ç¬¬ä¸€åˆ—æ˜¯å¦æœ‰0å…ƒç´ 
 		for (size_t i = 0; i < rows; i++)
 		{
 			if (matrix[i][0]==0)
@@ -421,7 +421,7 @@ public:
 				break;
 			}
 		}
-		//¸´ÓÃµÚÒ»ĞĞºÍµÚÒ»ÁĞ£¬Èç¹ûÓĞ0ÔªËØ¾Í½«¸ÃÔªËØµÄĞĞÁĞµÚÒ»¸öÔªËØÖÃ0
+		//å¤ç”¨ç¬¬ä¸€è¡Œå’Œç¬¬ä¸€åˆ—ï¼Œå¦‚æœæœ‰0å…ƒç´ å°±å°†è¯¥å…ƒç´ çš„è¡Œåˆ—ç¬¬ä¸€ä¸ªå…ƒç´ ç½®0
 		for (size_t i = 1; i < rows; i++)
 		{
 			for (size_t j = 1; j < colums; j++)
@@ -433,7 +433,7 @@ public:
 				}
 			}
 		}
-		//±éÀú£¬Èç¹ûµÚÒ»ĞĞµÚÒ»ÁĞµÄÔªËØÎª0£¬Ôò¸ÃÔªËØÓ¦Îª0
+		//éå†ï¼Œå¦‚æœç¬¬ä¸€è¡Œç¬¬ä¸€åˆ—çš„å…ƒç´ ä¸º0ï¼Œåˆ™è¯¥å…ƒç´ åº”ä¸º0
 		for (size_t i = 1; i < rows; i++)
 		{
 			for (size_t j = 1; j < colums; j++)
@@ -444,7 +444,7 @@ public:
 				}
 			}
 		}
-		//ÌÖÂÛµÚÒ»ÁĞÊÇ·ñº¬0
+		//è®¨è®ºç¬¬ä¸€åˆ—æ˜¯å¦å«0
 		if (first_colum_have_zero)
 		{
 			for (size_t i = 0; i < rows; i++)
@@ -452,7 +452,7 @@ public:
 				matrix[i][0] = 0;
 			}
 		}
-		//ÌÖÂÛµÚÒ»ĞĞÊÇ·ñº¬0
+		//è®¨è®ºç¬¬ä¸€è¡Œæ˜¯å¦å«0
 		if (first_rows_have_zero)
 		{
 			for (size_t i = 0; i < colums; i++)
@@ -461,7 +461,7 @@ public:
 			}
 		}
 	}
-	/*ÌâÒâ²»Ã÷*/
+	/*é¢˜æ„ä¸æ˜*/
 	int canCompleteCircuit(vector<int>& gas, vector<int>& cost)
 	{
 		int total = 0;
@@ -520,7 +520,7 @@ public:
 				return nums[i];
 		}
 	}
-	/*²»Ê¹ÓÃ¶îÍâµÄ¿Õ¼ä*/
+	/*ä¸ä½¿ç”¨é¢å¤–çš„ç©ºé—´*/
 	int singleNumber(vector<int> &nums, int flag = 0)
 	{
 		int x = 0;
@@ -569,7 +569,7 @@ public:
 		return val.next;
 	}
 	ListNode *addTwoNumbers2(ListNode *l1, ListNode *l2) {
-		ListNode dummy(-1); // Í·½Úµã
+		ListNode dummy(-1); // å¤´èŠ‚ç‚¹
 		int carry = 0;
 		ListNode *prev = &dummy;
 		for (ListNode *pa = l1, *pb = l2;
@@ -581,7 +581,7 @@ public:
 			const int bi = pb == nullptr ? 0 : pb->val;
 			const int value = (ai + bi + carry) % 10;
 			carry = (ai + bi + carry) / 10;
-			prev->next = new ListNode(value); // Î²²å·¨
+			prev->next = new ListNode(value); // å°¾æ’æ³•
 		}
 		if (carry > 0)
 			prev->next = new ListNode(carry);
@@ -648,22 +648,22 @@ public:
 		if (head == nullptr || k == 0) return head;
 		int len = 1;
 		ListNode* p = head;
-		while (p->next)   // Çó³¤¶È
+		while (p->next)   // æ±‚é•¿åº¦
 		{
 			len++;
 			p = p->next;
 		}
 		k = len - k % len;
-		p->next = head; // Ê×Î²ÏàÁ¬
+		p->next = head; // é¦–å°¾ç›¸è¿
 		for (int step = 0; step < k; step++)
 		{
-			p = p->next; //½Ó×ÅÍùºóÅÜ
+			p = p->next; //æ¥ç€å¾€åè·‘
 		}
-		head = p->next; // ĞÂµÄÊ×½Úµã
-		p->next = nullptr; // ¶Ï¿ª»·
+		head = p->next; // æ–°çš„é¦–èŠ‚ç‚¹
+		p->next = nullptr; // æ–­å¼€ç¯
 		return head;
 	}
-	/*remove nth from end ,ÓÃÇ°ºóÁ½¸öÖ¸Õë*/
+	/*remove nth from end ,ç”¨å‰åä¸¤ä¸ªæŒ‡é’ˆ*/
 	ListNode* removeNthFromEnd(ListNode *head, int n)
 	{
 		ListNode *myhead = new ListNode(-1);
@@ -685,6 +685,39 @@ public:
 		pre->next = pre->next->next;
 		return myhead->next;
 	}
+	/*è‡ªå·±å†™çš„å†’æ³¡æ’åº*/
+	void bubblesort(vector<int> &ivec)
+	{
+		int swap;
+		int flag=1;
+		int num = ivec.size();
+		for (int i = num-1; i >0 && flag; i--)
+		{
+			flag = 0;
+			for (int j = 0; j < i; j++)
+			{
+				if (ivec[j]>ivec[j + 1])
+				{
+					swap = ivec[j];
+					ivec[j] = ivec[j + 1];
+					ivec[j + 1] = swap;
+					flag = 1;
+				}
+			}
+		}
+	}
+	int minimumTotal(vector<vector<int>>& triangle)
+	{
+		for (int i = triangle.size()-2; i >=0; i--)
+		{
+			for (size_t j = 0; j < i+1; j++)
+			{
+				triangle[i][j] = min(triangle[i + 1][j], triangle[i + 1][j + 1])+triangle[i][j];
+			}
+		}
+		return triangle[0][0];
+	}
+
 
 
 private:
@@ -700,7 +733,7 @@ private:
 			result *= i;
 		return result;
 	}
-	// seq ÒÑÅÅºÃĞò£¬ÊÇµÚÒ»¸öÅÅÁĞ
+	// seq å·²æ’å¥½åºï¼Œæ˜¯ç¬¬ä¸€ä¸ªæ’åˆ—
 	template<typename Sequence>
 	Sequence kth_permutation(const Sequence &seq, int k)
 	{
@@ -708,20 +741,88 @@ private:
 		Sequence S(seq);
 		Sequence result;
 		int base = factorial(n - 1);
-		--k; // ¿µÍĞ±àÂë´Ó 0 ¿ªÊ¼
+		--k; // åº·æ‰˜ç¼–ç ä» 0 å¼€å§‹
 		for (int i = n - 1; i > 0; k %= base, base /= i, --i)
 		{
 			auto a = next(S.begin(), k / base);
 			result.push_back(*a);
 			S.erase(a);
 		}
-		result.push_back(S[0]); // ×îºóÒ»¸ö
+		result.push_back(S[0]); // æœ€åä¸€ä¸ª
 		return result;
 	}
+	vector<int>& generate_data()
+	{
+		vector<int> ivec(10);
+		iota(ivec.begin(), ivec.end(), 1);
+
+		std::random_device rd;
+		std::mt19937 g(rd());
+		shuffle(ivec.begin(), ivec.end(), g);
+		for each (auto var in ivec)
+		{
+			cout << "  " << var;
+		}
+		return ivec;
+	}
 };
+/*é™ˆç¡•ï¼Œå¤šè·¯å½’å¹¶æ’åº*/
+File mergeN(const std::vector<File>& files)
+	{
+		File output;
+		std::vector<Input> inputs;
 
+		for (size_t i = 0; i < files.size(); ++i) {
+			Input input(&files[i]);
+			if (input.next()) {
+				inputs.push_back(input);
+			}
+		}
 
-/*²âÊÔstd::nextµÄ´úÂë*/
+		std::make_heap(inputs.begin(), inputs.end());
+		while (!inputs.empty()) {
+			std::pop_heap(inputs.begin(), inputs.end());
+			output.push_back(inputs.back().value);
+
+			if (inputs.back().next()) {
+				std::push_heap(inputs.begin(), inputs.end());
+			}
+			else {
+				inputs.pop_back();
+			}
+		}
+
+		return output;
+	}
+void mergeN_test()
+{
+	//ç”Ÿæˆæ•°æ®
+	const int kFiles = 32;
+	std::vector<File> files(kFiles);
+	for (int i = 0; i < kFiles; ++i) {
+		File file(rand() % 1000);
+		std::generate(file.begin(), file.end(), &rand);
+		std::sort(file.begin(), file.end());
+		files[i].swap(file);
+	}
+	//å¤šè·¯å½’å¹¶æ’åº
+	File output = mergeN(files);
+
+	//è¾“å‡ºæ’åºç»“æœ
+	cout << output.size() << endl;
+	std::copy(output.begin(), output.end(),
+		std::ostream_iterator<Record>(std::cout, "\n"));
+}
+void test_init()
+{
+	int *pt1 = new int[10];
+	int *pt2 = new int[10]();
+
+	delete[] pt1;
+	delete[] pt2;
+}
+
+/*æµ‹è¯•std::nextçš„ä»£ç */
 void test_next()
 {
 	std::list<int> mylist;
@@ -734,30 +835,81 @@ void test_next()
 
 	std::cout << '\n';
 }
+void example(char acWelcome[]){
+	printf("%d", sizeof(acWelcome));
+	return;
+}
+//ç™¾åº¦ç¬”è¯•ï¼Œtimoæ¯’è˜‘è‡é—®é¢˜
+void get_line_count(int n,int m)
+{
+	int *matrix = new int[n*m];
+	//å…ˆè®¡ç®—å…¨éƒ¨è·¯çº¿
+	for (int i = 0; i < n*m; i++)
+	{
+		matrix[i] = 1;
+	}
+	for (size_t i = 1; i < n; i++)
+	{
+		for (size_t j = 1; j < m; j++)
+		{
+			matrix[i*m + j] = matrix[i*m + j - 1] + matrix[(i - 1)*m + j];
+		}
+	}
+	cout << "line counts:" << matrix[n*m - 1]<<endl;
+
+	//ä¸‹é¢è®¡ç®—å®‰å…¨è·¯çº¿
+	vector<pair<int, int>> point_vec;
+	for (int i = 0; i < n*m; i++)
+	{
+		matrix[i] = 1;
+	}
+	for (size_t i = 0; i < point_vec.size(); i++)
+	{
+		matrix[(point_vec[i].first - 1)*m + point_vec[i].second]=0;
+	}
+	for (size_t i = 1; i < n; i++)
+	{
+		for (size_t j = 1; j < m; j++)
+		{
+			if (matrix[i*m + j]!=0)
+				matrix[i*m + j] = matrix[i*m + j - 1] + matrix[(i - 1)*m + j];
+		}
+	}
+	cout << "safe counts:" << matrix[n*m - 1] << endl;
+
+	delete[] matrix;
+}
 
 int main()
 {
-	ListNode *l1 = new ListNode(1);
+	/*ListNode *l1 = new ListNode(1);
 	ListNode *l2 = new ListNode(2);
 	ListNode *l3 = new ListNode(3);
 	ListNode *l4 = new ListNode(4);
 	ListNode *l5 = new ListNode(5);
-	//ListNode *l6 = new ListNode(2);
+	ListNode *l6 = new ListNode(2);
 	l1->next = l2;
 	l2->next = l3;
 	l3->next = l4;
 	l4->next = l5;
-	//l5->next = l6;
+	l5->next = l6;
 
 	ListNode * ll2 = nullptr;
+
+
+	
 
 	Solution solution;
 	ListNode* res = solution.rotateRight(ll2,0);
 	for (ListNode *ptr = res; ptr!=nullptr; ptr=ptr->next)
 	{
 		cout << " " << ptr->val;
-	}
+	}*/
 
+
+	get_line_count(3, 3);
+
+	
 	system("pause");
 		return 0;
 }
