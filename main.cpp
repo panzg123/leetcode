@@ -739,6 +739,136 @@ public:
             }
         return result;
     }
+	bool isPalindrome(string s)
+	{
+		transform(s.begin(), s.end(), s.begin(), ::tolower);
+		auto left = s.begin();
+		auto right = prev(s.end());
+		while (left<right)
+		{
+			if (!isalnum(*left)) left++;
+			else if (!isalnum(*right)) right--;
+			else if (*left == *right) { left++; right--; }
+			else return false;
+		}
+		return true;
+	}
+	int strStr(string haystack, string needle)
+	{
+		if (needle=="") return 0;
+		int index_long = haystack.size() - needle.size();
+		int i, j;
+		for (i = 0; i <= index_long; i++)
+		{
+			for (j = 0; j < needle.size(); j++)
+			{
+				if (needle[j] != haystack[i + j])
+					break;
+			}
+			if (j == needle.size()) return i;
+		}
+		return -1;
+	}
+
+	int myAtoi(string str)
+	{
+		int i = 0, sign = 1;
+		long int num = 0;
+
+		//remove the whitespaces
+		while (isspace(str[i])) i++;
+
+		//get the sign
+		if ('+' == str[i]) i++;
+		else if ('-' == str[i]) {
+			sign = -1;
+			i++;
+		}
+
+		//create the number
+		while (str[i] >= '0' && str[i] <= '9') {
+			num = num * 10 + str[i] - '0';
+
+			//if outside the limit, return limit
+			if (sign*num > INT_MAX) return INT_MAX;
+			else if (sign*num < INT_MIN) return INT_MIN;
+
+			i++;
+		}
+		//ignore the other chars
+
+		return (int)sign*num;
+	}
+	/*add Binary*/
+	string addBinary(string a, string b)
+	{
+		string result;
+		int n = a.size() > b.size() ? a.size() : b.size();
+		reverse(a.begin(), a.end());
+		reverse(b.begin(), b.end());
+		int carry = 0;
+
+		for (size_t i = 0; i < n; i++)
+		{
+			const int ai = i < a.size() ? a[i]-'0' : 0;
+			const int bi = i < b.size() ? b[i] - '0' : 0;
+			const int val = ai + bi + carry;
+			carry = val / 2;
+			result.insert(result.begin(), val%2+'0');
+		}
+		if (carry > 0)
+			result.insert(result.begin(), '1');
+		return result;
+	}
+
+	/*Longest Palindromic Substring
+	*简单动态规划
+	f(i, j) =  |- true && i==j
+			   |- s[i]==s[j]&&i+1==j
+			   |- s[i]==s[j]&&i+1<j&&f[i+1][j-1]
+	*复杂度为O(N^2),另外有Manacher’ s Algorithm算法，为O(n)，难以理解
+	*/
+	string longestPalindrome(string s)
+	{
+		int _size = s.size();
+		int start = 0, lenght = 1;
+		int *matrix = new int[_size*_size];
+		memset(matrix, 0, _size*_size*sizeof(int));
+		for (size_t i = 0; i < _size; i++)
+		{
+			matrix[i*_size + i] = 1;
+		}
+		//注意这里的遍历顺利，第i个状态依赖于i+1个状态
+		for (int i = _size-1; i >= 0; i--)
+		{
+			for (size_t j = i; j < _size; j++)
+			{
+				if (i == j) 
+					matrix[i*_size + j] = 1;
+				else if ((i + 1 == j) && (s[i] == s[j]))
+				{
+					matrix[i*_size + j] = 1;
+					if (lenght < 2)
+					{
+						start = i;
+						lenght = 2;
+					}
+				}
+				else if ((i+1<j)&&(s[i] == s[j]) && (matrix[(i + 1)*_size + j - 1]))
+				{
+					matrix[i*_size + j] = 1;
+					if (lenght < (j - i + 1))
+					{
+						lenght = (j - i + 1);
+						start = i;
+					}
+				}
+			}
+		}
+		delete[] matrix;
+		return s.substr(start, lenght);
+	}
+
 
 
 private:
@@ -938,8 +1068,9 @@ int main()
     }*/
 
 
-    get_line_count(3, 3);
-
+	Solution s;
+	auto res = s.longestPalindrome("aaaa");
+	cout << res;
 
     system("pause");
     return 0;
