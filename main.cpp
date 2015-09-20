@@ -950,9 +950,66 @@ public:
 			cout << ratio << endl;
 		}
 	}
+	/* Palindrome Partitioning II 动态规划 */
+	int minCut(string s)
+	{
+		const int lenght = s.size();
+		int *f = new int[lenght+1];
+		int **p = new int*[lenght];
+		for (size_t i = 0; i < lenght; i++)
+		{
+			p[i] = new int[lenght];
+			memset(p[i], 0, lenght*sizeof(int));
+		}
+		for (size_t i = 0; i < lenght; i++)
+		{
+			for (size_t j = 0; j < lenght; j++)
+			{
+				cout << " " << p[i][j];
+			}
+			cout << "\n";
+		}
+		for (size_t i = 0; i <= lenght; i++)
+		{
+			f[i] = lenght - 1 - i;
+		}
+		for (int i = lenght - 1; i >= 0; i--)
+		{
+			for (int j = i; j < lenght; j++)
+			{
+				if (s[i] == s[j] && ((j - i) < 2 || p[i + 1][j - 1]))
+				{
+					p[i][j] = 1;
+					f[i] = min(f[i], f[j + 1] + 1);
+				}
+			}
+		}
+		int temp = f[0];
+		delete[] f;
+		delete_matrix(p, lenght);
+		return temp;
+	}
 
 
 private:
+	int ** new_matrix(int n, int m)
+	{
+		int **p;
+		p = new int*[n];
+		for (size_t i = 0; i < n; i++)
+		{
+			p[i] = new int[m];
+		}
+		return p;
+	}
+	void delete_matrix(int **p, int n)
+	{
+		for (size_t i = 0; i < n; i++)
+		{
+			delete[] p[i];
+		}
+		delete[] p;
+	}
 	static unsigned int binary_to_gray(unsigned int n)
 	{
 
@@ -1125,45 +1182,8 @@ void get_line_count(int n, int m)
 # if 1
 int main()
 {
-	string str;
-	while (cin >> str)
-	{
-		string a = str;
-		string b = str;
-		int len1 = a.size();
-		int len2 = b.size();
-		int begin = 0, end = len1 - 1;
-		while (begin < end)
-		{
-			char temp = b[begin];
-			b[begin] = b[end];
-			b[end] = temp;
-			++begin;
-			--end;
-		}
-
-		//反转字符串，变成求最长公共子序列问题
-		//std::reverse(b.begin(), b.end());
-		int dp[3][10];
-		memset(dp, 0, sizeof(dp));
-		for (int i = 1; i <= len1; i++)
-		{
-			for (int j = 1; j <= len2; j++)
-			{
-				dp[0][j] = dp[1][j]; //滚动数组节省内存
-				dp[1][j] = dp[2][j];
-				if (a[i - 1] == b[j - 1])
-					dp[1][j] = dp[0][j - 1] + 1;
-				else
-					dp[1][j] = max(dp[0][j], dp[1][j - 1]);
-			}
-		}
-		//如果距离为1，则可以添加一个字母变成回文,否则不能。这里dp[1][len2]表示公共子序列大小
-		if (len1 - dp[1][len2] == 1)
-			cout << "YES" << endl;
-		else
-			cout << "N0" << endl;
-	}
+	Solution s;
+	cout<<s.minCut("aab");
 	return 0;
 }
 #endif
