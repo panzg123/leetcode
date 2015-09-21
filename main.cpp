@@ -3,6 +3,69 @@
 using namespace std;
 class Solution
 {
+private:
+	int ** new_matrix(int n, int m)
+	{
+		int **p;
+		p = new int*[n];
+		for (size_t i = 0; i < n; i++)
+		{
+			p[i] = new int[m];
+		}
+		return p;
+	}
+	void delete_matrix(int **p, int n)
+	{
+		for (size_t i = 0; i < n; i++)
+		{
+			delete[] p[i];
+		}
+		delete[] p;
+	}
+	static unsigned int binary_to_gray(unsigned int n)
+	{
+
+		return n ^ (n >> 1);
+	}
+	int factorial(int n)
+	{
+		int result = 1;
+		for (int i = 1; i <= n; ++i)
+			result *= i;
+		return result;
+	}
+	// seq 已排好序，是第一个排列
+	template<typename Sequence>
+	Sequence kth_permutation(const Sequence &seq, int k)
+	{
+		const int n = seq.size();
+		Sequence S(seq);
+		Sequence result;
+		int base = factorial(n - 1);
+		--k; // 康托编码从 0 开始
+		for (int i = n - 1; i > 0; k %= base, base /= i, --i)
+		{
+			auto a = next(S.begin(), k / base);
+			result.push_back(*a);
+			S.erase(a);
+		}
+		result.push_back(S[0]); // 最后一个
+		return result;
+	}
+	vector<int>& generate_data()
+	{
+		vector<int> ivec(10);
+		iota(ivec.begin(), ivec.end(), 1);
+
+		std::random_device rd;
+		std::mt19937 g(rd());
+		shuffle(ivec.begin(), ivec.end(), g);
+		for each (auto var in ivec)
+		{
+			cout << "  " << var;
+		}
+		return ivec;
+	}
 public:
 	vector<int> twoSum(vector<int> &num, int target)
 	{
@@ -989,71 +1052,177 @@ public:
 		delete_matrix(p, lenght);
 		return temp;
 	}
-
-
-private:
-	int ** new_matrix(int n, int m)
+	/*maximalRectangle*/
+	int maximalRectangle(vector<vector<char>> & matrix)
 	{
-		int **p;
-		p = new int*[n];
+		if (matrix.empty()) return 0;
+		const int m = matrix.size();
+		const int n = matrix[0].size();
+		vector<int> L(n, 0);
+		vector<int> H(n, 0);
+		vector<int> R(n, n);
+
+		int ret = 0;
+		for (int i = 0; i < m; i++)
+		{
+			int left = 0, right = n;
+			for (int j = 0; j < n; ++j)
+			{
+				if (matrix[i][j] == '1')
+				{
+					++H[j];
+					L[j] = max(L[j], left);
+				}
+				else
+				{
+					left = j + 1;
+					H[j] = 0; L[j] = 0; R[j] = n;
+				}
+				//cout << "  L:  " << L[j];
+			}
+			//cout << endl;
+			for (int j = n - 1; j >= 0; --j)
+			{
+				if (matrix[i][j] == '1')
+				{
+					R[j] = min(R[j], right);
+					ret = max(ret, H[j] * (R[j] - L[j]));
+				}
+				else
+				{
+					right = j;
+				}
+				//cout << "  R:" << R[j]<<"   H:"<<H[j];
+			}
+			//cout << endl;
+		}
+		return ret;
+	}
+	/*Largest Rectangle in Histogram
+	* 复杂度为O（n），超时
+	*修改后，能正常提交，20ms,主要对while循环进行优化，按照v2的方法，进行跳转，而不是j--,j++
+	*大体复杂度为O(n),最坏O(n^2)为递增或者递减。
+	有一种复杂度为O(n)的算法，用栈，较为难懂
+	*/
+	int largestRectangleArea(vector<int>& height)
+	{
+		const int n = height.size();
+		vector<int> L(n, 0);
+		vector<int> R(n, n);
+		//左边界
+		for (int i = 1; i < n; i++)
+		{
+			L[i] = i;
+			int j = i - 1;
+			while (j >= 0 && height[j] >= height[i])
+			{
+				L[i] = L[j];
+				j = L[j] - 1;
+			}
+		}
+		//右边界
+		for (int i = n-1; i >= 0; i--)
+		{
+			int j = i + 1;
+			R[i] = i;
+			while (j < n && height[j] >= height[i])
+			{
+				R[i] = R[j];
+				j = R[j] + 1;
+			}
+		}
+
+		int ret = 0;
 		for (size_t i = 0; i < n; i++)
 		{
-			p[i] = new int[m];
+			ret = max(ret, (R[i] - L[i]+1)*height[i]);
 		}
-		return p;
+		return ret;
 	}
-	void delete_matrix(int **p, int n)
+	int largestRectangleArea_v2(vector<int>& height)
 	{
-		for (size_t i = 0; i < n; i++)
-		{
-			delete[] p[i];
-		}
-		delete[] p;
-	}
-	static unsigned int binary_to_gray(unsigned int n)
-	{
+		int n = height.size();
+		int *r = new int[n];
+		int *l = new int[n];
 
-		return n ^ (n >> 1);
-	}
-	int factorial(int n)
-	{
-		int result = 1;
-		for (int i = 1; i <= n; ++i)
-			result *= i;
-		return result;
-	}
-	// seq 已排好序，是第一个排列
-	template<typename Sequence>
-	Sequence kth_permutation(const Sequence &seq, int k)
-	{
-		const int n = seq.size();
-		Sequence S(seq);
-		Sequence result;
-		int base = factorial(n - 1);
-		--k; // 康托编码从 0 开始
-		for (int i = n - 1; i > 0; k %= base, base /= i, --i)
-		{
-			auto a = next(S.begin(), k / base);
-			result.push_back(*a);
-			S.erase(a);
+		for (int i = 0; i<n; i++){
+			l[i] = i;
+			int j = i - 1;
+			while (j >= 0 && height[j] >= height[i]){
+				l[i] = l[j];
+				j = l[j] - 1;
+			}
 		}
-		result.push_back(S[0]); // 最后一个
-		return result;
-	}
-	vector<int>& generate_data()
-	{
-		vector<int> ivec(10);
-		iota(ivec.begin(), ivec.end(), 1);
 
-		std::random_device rd;
-		std::mt19937 g(rd());
-		shuffle(ivec.begin(), ivec.end(), g);
-		for each (auto var in ivec)
-		{
-			cout << "  " << var;
+		for (int i = n - 1; i >= 0; i--){
+			r[i] = i;
+			int j = i + 1;
+			while (j<n && height[j] >= height[i]){
+				r[i] = r[j];
+				j = r[j] + 1;
+			}
 		}
-		return ivec;
+
+		int ans = 0;
+		for (int i = 0; i<n; i++){
+			int temp = height[i] * (r[i] - l[i] + 1);
+			if (temp > ans)
+				ans = temp;
+		}
+
+		delete[] l;
+		delete[] r;
+		return ans;
 	}
+	/*Valid Parentheses 用栈来判断括号是否匹配*/
+	bool isValid(string s)
+	{
+		string left = "[{(";
+		string right = "]})";
+		stack<char> cvec;
+		for (auto var : s)
+		{
+			if (left.find(var) != string::npos)
+			{
+				cvec.push(var);
+			}
+			else
+			{
+				if (cvec.empty() || cvec.top() != left[right.find(var)])
+					return false;
+				else
+					cvec.pop();
+			}
+		}
+		return cvec.empty();
+	}
+	/*Longest Valid Parentheses 用栈来记录最后一个‘）’的索引位置, 每次更新max_len*/
+	int longestValidParentheses(string s)
+	{
+		int max_len = 0;
+		int last = -1;
+		stack<int> cvec;
+		for (int i = 0; i < s.size(); i++)
+		{
+			if (s[i] == '(')
+				cvec.push(i);
+			else
+			{
+				if (cvec.empty())
+					last = i;
+				else
+				{
+					cvec.pop();
+					if (cvec.empty())
+						max_len = max(max_len, i - last);
+					else
+						max_len = max(max_len, i - cvec.top());
+				}
+			}
+		}
+		return max_len;
+	}
+
 };
 /*陈硕，多路归并排序*/
 File mergeN(const std::vector<File>& files)
@@ -1182,8 +1351,12 @@ void get_line_count(int n, int m)
 # if 1
 int main()
 {
+	vector<int> ivec = { 4, 2, 0, 3, 2, 4, 3, 4};
+	string str = "(()";
 	Solution s;
-	cout<<s.minCut("aab");
+	cout << s.longestValidParentheses(str);
+
+	system("pause");
 	return 0;
 }
 #endif
