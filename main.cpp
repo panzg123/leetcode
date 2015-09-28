@@ -1017,7 +1017,7 @@ public:
 	int minCut(string s)
 	{
 		const int lenght = s.size();
-		int *f = new int[lenght+1];
+		int *f = new int[lenght + 1];
 		int **p = new int*[lenght];
 		for (size_t i = 0; i < lenght; i++)
 		{
@@ -1121,7 +1121,7 @@ public:
 			}
 		}
 		//右边界
-		for (int i = n-1; i >= 0; i--)
+		for (int i = n - 1; i >= 0; i--)
 		{
 			int j = i + 1;
 			R[i] = i;
@@ -1135,7 +1135,7 @@ public:
 		int ret = 0;
 		for (size_t i = 0; i < n; i++)
 		{
-			ret = max(ret, (R[i] - L[i]+1)*height[i]);
+			ret = max(ret, (R[i] - L[i] + 1)*height[i]);
 		}
 		return ret;
 	}
@@ -1145,7 +1145,7 @@ public:
 		int *r = new int[n];
 		int *l = new int[n];
 
-		for (int i = 0; i<n; i++){
+		for (int i = 0; i < n; i++){
 			l[i] = i;
 			int j = i - 1;
 			while (j >= 0 && height[j] >= height[i]){
@@ -1157,7 +1157,7 @@ public:
 		for (int i = n - 1; i >= 0; i--){
 			r[i] = i;
 			int j = i + 1;
-			while (j<n && height[j] >= height[i]){
+			while (j < n && height[j] >= height[i]){
 				r[i] = r[j];
 				j = r[j] + 1;
 			}
@@ -1223,6 +1223,117 @@ public:
 		return max_len;
 	}
 
+
+	/*
+	递归版
+	假设现在走到s的i位置，p的j位置，情况分为下列两种：
+	(1)p[j+1]不是'*'。情况比较简单，只要判断当前s的i和p的j上的字符是否一样（如果有p在j上的字符是'.',也是相同），如果不同，返回false，否则，递归下一层i+1，j+1;
+	(2)p[j+1]是'*'。那么此时看从s[i]开始的子串，假设s[i],s[i+1],...s[i+k]都等于p[j]那么意味着这些都有可能是合适的匹配，那么递归对于剩下的(i,j+2),(i+1,j+2),...,(i+k,j+2)都要尝试（j+2是因为跳过当前和下一个'*'字符）。
+	*/
+	bool isMatch(const char* s, const char *p)
+	{
+		if (*p == '\0') return *s == '\0';
+		//p[j+1]不是'*'
+		if (*(p + 1) != '*')
+		{
+			if (*p == *s || (*p == '.' && *s != '\0'))
+				return isMatch(s + 1, p + 1);
+			else
+				return false;
+		}
+		//p[j+1]是'*'
+		else
+		{
+			while (*p == *s || (*p == '.' && *s != '\0'))
+			{
+				if (isMatch(s, p + 2))
+					return true;
+				s++;
+			}
+			return isMatch(s, p + 2);
+		}
+	}
+	bool isMatch(string s, string p)
+	{
+		const char *s1 = s.c_str();
+		const char *p1 = p.c_str();
+		if (*p1 == '\0') return *s1 == '\0';
+		//p[j+1]不是'*'
+		if (*(p1 + 1) != '*')
+		{
+			if (*p1 == *s1 || (*p1 == '.' && *s1 != '\0'))
+				return isMatch(s1 + 1, p1 + 1);
+			else
+				return false;
+		}
+		//p[j+1]是'*'
+		else
+		{
+			while (*p1 == *s1 || (*p1 == '.' && *s1 != '\0'))
+			{
+				if (isMatch(s, p1 + 2))
+					return true;
+				s1++;
+			}
+			return isMatch(s, p1 + 2);
+		}
+	}
+
+	/*
+	bool isMatch_wildcard_matching(const char *s, const char *p) 
+	{
+		if (s == NULL || p == NULL) 
+		{
+			return false;
+		}
+
+		int n = strlen(s);
+		int m = strlen(p);
+		int f[n + 1][m + 1];
+
+		memset(f, false, sizeof(f));
+
+		f[0][0] = true;
+		for (int i = 1; i <= n; i++)
+			f[i][0] = false;
+
+		for (int i = 1; i <= m; i++)
+			f[0][i] = f[0][i - 1] && p[i - 1] == '*';
+
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= m; j++) {
+				if (p[j - 1] == '*') {
+					f[i][j] = f[i - 1][j] || f[i][j - 1];
+				}
+				else if (p[j - 1] == '?') {
+					f[i][j] = f[i - 1][j - 1];
+				}
+				else {
+					f[i][j] = f[i - 1][j - 1] && (s[i - 1] == p[j - 1]);
+				}
+			}
+		} // for
+
+		return f[n][m];
+	}
+	//动态规划
+	bool isMatch_wild_matching(string s, string p) {
+		int pLen = p.size(), sLen = s.size(), i, j, k, cur, prev;
+		if (!pLen) return sLen == 0;
+		bool matched[2][sLen + 1];
+		fill_n(&matched[0][0], 2 * (sLen + 1), false);
+
+		matched[0][0] = true;
+		for (i = 1; i <= pLen; ++i)
+		{
+			cur = i % 2, prev = 1 - cur;
+			matched[cur][0] = matched[prev][0] && p[i - 1] == '*';
+			if (p[i - 1] == '*') for (j = 1; j <= sLen; ++j) matched[cur][j] = matched[cur][j - 1] || matched[prev][j];
+			else for (j = 1; j <= sLen; ++j)            matched[cur][j] = matched[prev][j - 1] && (p[i - 1] == '?' || p[i - 1] == s[j - 1]);
+		}
+		return matched[cur][sLen];
+	}
+	*/
 };
 /*陈硕，多路归并排序*/
 File mergeN(const std::vector<File>& files)
@@ -1351,10 +1462,11 @@ void get_line_count(int n, int m)
 # if 1
 int main()
 {
-	vector<int> ivec = { 4, 2, 0, 3, 2, 4, 3, 4};
-	string str = "(()";
-	Solution s;
-	cout << s.longestValidParentheses(str);
+	string p = "aab";
+	string s = "c*a*b";
+
+	Solution sol;
+	cout << sol.isMatch(p, s);
 
 	system("pause");
 	return 0;
