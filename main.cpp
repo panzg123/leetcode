@@ -1485,6 +1485,75 @@ public:
 		if (res) return true;
 		else return false;
 	}
+	/*
+	纯模拟：
+	基本字符:I V X L C D M
+	相应的阿拉伯数字表示为 1 5 10 50 100 500 1000
+	另外:
+	1.相同的数字连写，所表示的数等于这些数字相加得到的数，如：Ⅲ = 3；
+	2.小的数字在大的数字的右边，所表示的数等于这些数字相加得到的数， 如：Ⅷ = 8；Ⅻ = 12；
+	3.小的数字，（限于Ⅰ、X 和C）在大的数字的左边，所表示的数等于大数减小数得到的数，如：Ⅳ= 4；Ⅸ= 9；
+	4.正常使用时，连写的数字重复不得超过三次。（表盘上的四点钟“IIII”例外）
+	5.在一个数的上面画一条横线，表示这个数扩大1000倍。
+	*/
+	string intToRoman(int num)
+	{
+		const int radix[] = {1000,900,500,400,100,90,50,40,10,9,5,4,1};
+		const string symbol[] = { "M", "CM", "D", "CD", "C", "XC",
+			"L", "XL", "X", "IX", "V", "IV", "I" };
+		string roman;
+		for (size_t i = 0; num > 0; i++)
+		{
+			int count = num / radix[i];
+			num = num % radix[i];
+			for (; count > 0; --count)
+				roman += symbol[i];
+		}
+		return roman;
+	}
+	/*
+	前往后扫描，用一个临时变量记录分段数字。
+	如果当前比前一个大，说明这一段的值应该是当前这个值减去上一个值。
+	*/
+	int romanToInt(string s)
+	{
+		map<char, int> roman = { { 'I', 1 }, { 'V', 5 }, { 'X', 10 }, { 'L', 50 }, { 'C', 100 }, { 'D', 500 }, { 'M', 1000 } };
+		int sum = 0;
+		for (int i = 0; i < s.size(); i++)
+		{
+			if (i>0 && roman[s[i]] > roman[s[i - 1]])
+				sum += (roman[s[i]] - 2 * roman[s[i - 1]]); /*前一位的值被计算，需要减去*/
+			else
+				sum += roman[s[i]];
+		}
+		return sum;
+	}
+
+	/*
+	模拟
+	题意是n=1时输出字符串1；n=2时，数上次字符串中的数值个数，因为上次字符串有1个1，所以输出11；
+	n=3时，由于上次字符是11，有2个1，所以输出21；n=4时，由于上次字符串是21，有1个2和1个1，所以输出1211。依次类推。
+	*/
+	string countAndSay(int n)
+	{
+		string s = "1";
+		while (--n)
+			s=getNext(s);
+		return s;
+	}
+	string getNext(const string &s)
+	{
+		std::stringstream ss;
+		for (auto i = s.begin(); i != s.end();)
+		{
+			auto j = find_if(i, s.end(), bind1st(not_equal_to<char>(),*i));
+			ss << distance(i, j) << *i;
+			i = j;
+		}
+		return ss.str();
+	}
+
+
 };
 /*陈硕，多路归并排序*/
 File mergeN(const std::vector<File>& files)
@@ -1617,7 +1686,7 @@ int main()
 	string s = "c*a*b";
 
 	Solution sol;
-	cout << sol.isMatch(p, s);
+	cout << sol.countAndSay(2);
 
 	system("pause");
 	return 0;
