@@ -2,10 +2,15 @@
 #include<algorithm>
 #include <iostream>
 #include <string>
+#include<sstream>
 #include <unordered_map>
 #include <numeric>
 #include <map>
+#include<stack>
 #include<random>
+#include<regex>
+#include<functional>
+
 
 
 typedef struct ListNode
@@ -51,3 +56,12 @@ struct Input
 		return value > rhs.value;
 	}
 };
+
+//leetcode上二叉树的节点定义如下
+typedef struct TreeNode
+{
+	int val;
+	TreeNode *left;
+	TreeNode *right;
+	TreeNode(int x) :val(x), left(nullptr), right(nullptr){}
+}TreeNode;
