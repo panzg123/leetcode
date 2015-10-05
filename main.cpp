@@ -910,6 +910,21 @@ void get_line_count(int n,int m)
 
     delete[] matrix;
 }
+long getcount(int n)
+{
+#define N 100000
+	int matrix[100000];
+	memset(matrix, 0, 100000);
+	matrix[1] = 1;
+	matrix[5] = 1;
+
+	for (size_t i = 0; i < n; i++)
+	{
+		if (n>100)
+	}
+
+}
+
 
 int main()
 {
@@ -938,7 +953,6 @@ int main()
     }*/
 
 
-    get_line_count(3, 3);
 
 
     system("pause");
