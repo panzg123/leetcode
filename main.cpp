@@ -1,5 +1,4 @@
 ﻿#include"header.h"
-
 using namespace std;
 class Solution
 {
@@ -75,6 +74,24 @@ private:
 		s.erase(0, s.find_first_not_of(" "));
 		s.erase(s.find_last_not_of(" ") + 1);
 		return s;
+	}
+	vector<std::string> split(std::string str, std::string pattern)
+	{
+		std::string::size_type pos;
+		std::vector<std::string> result;
+		str += pattern;//扩展字符串以方便操作
+		int size = str.size();
+		for (int i = 0; i < size; i++)
+		{
+			pos = str.find(pattern, i);
+			if (pos < size)
+			{
+				std::string s = str.substr(i, pos - i);
+				result.push_back(s);
+				i = pos + pattern.size() - 1;
+			}
+		}
+		return result;
 	}
 public:
 	vector<int> twoSum(vector<int> &num, int target)
@@ -1290,58 +1307,58 @@ public:
 	}
 
 	/*
-	bool isMatch_wildcard_matching(const char *s, const char *p) 
+	bool isMatch_wildcard_matching(const char *s, const char *p)
 	{
-		if (s == NULL || p == NULL) 
-		{
-			return false;
-		}
+	if (s == NULL || p == NULL)
+	{
+	return false;
+	}
 
-		int n = strlen(s);
-		int m = strlen(p);
-		int f[n + 1][m + 1];
+	int n = strlen(s);
+	int m = strlen(p);
+	int f[n + 1][m + 1];
 
-		memset(f, false, sizeof(f));
+	memset(f, false, sizeof(f));
 
-		f[0][0] = true;
-		for (int i = 1; i <= n; i++)
-			f[i][0] = false;
+	f[0][0] = true;
+	for (int i = 1; i <= n; i++)
+	f[i][0] = false;
 
-		for (int i = 1; i <= m; i++)
-			f[0][i] = f[0][i - 1] && p[i - 1] == '*';
+	for (int i = 1; i <= m; i++)
+	f[0][i] = f[0][i - 1] && p[i - 1] == '*';
 
-		for (int i = 1; i <= n; i++) {
-			for (int j = 1; j <= m; j++) {
-				if (p[j - 1] == '*') {
-					f[i][j] = f[i - 1][j] || f[i][j - 1];
-				}
-				else if (p[j - 1] == '?') {
-					f[i][j] = f[i - 1][j - 1];
-				}
-				else {
-					f[i][j] = f[i - 1][j - 1] && (s[i - 1] == p[j - 1]);
-				}
-			}
-		} // for
+	for (int i = 1; i <= n; i++) {
+	for (int j = 1; j <= m; j++) {
+	if (p[j - 1] == '*') {
+	f[i][j] = f[i - 1][j] || f[i][j - 1];
+	}
+	else if (p[j - 1] == '?') {
+	f[i][j] = f[i - 1][j - 1];
+	}
+	else {
+	f[i][j] = f[i - 1][j - 1] && (s[i - 1] == p[j - 1]);
+	}
+	}
+	} // for
 
-		return f[n][m];
+	return f[n][m];
 	}
 	//动态规划
 	bool isMatch_wild_matching(string s, string p) {
-		int pLen = p.size(), sLen = s.size(), i, j, k, cur, prev;
-		if (!pLen) return sLen == 0;
-		bool matched[2][sLen + 1];
-		fill_n(&matched[0][0], 2 * (sLen + 1), false);
+	int pLen = p.size(), sLen = s.size(), i, j, k, cur, prev;
+	if (!pLen) return sLen == 0;
+	bool matched[2][sLen + 1];
+	fill_n(&matched[0][0], 2 * (sLen + 1), false);
 
-		matched[0][0] = true;
-		for (i = 1; i <= pLen; ++i)
-		{
-			cur = i % 2, prev = 1 - cur;
-			matched[cur][0] = matched[prev][0] && p[i - 1] == '*';
-			if (p[i - 1] == '*') for (j = 1; j <= sLen; ++j) matched[cur][j] = matched[cur][j - 1] || matched[prev][j];
-			else for (j = 1; j <= sLen; ++j)            matched[cur][j] = matched[prev][j - 1] && (p[i - 1] == '?' || p[i - 1] == s[j - 1]);
-		}
-		return matched[cur][sLen];
+	matched[0][0] = true;
+	for (i = 1; i <= pLen; ++i)
+	{
+	cur = i % 2, prev = 1 - cur;
+	matched[cur][0] = matched[prev][0] && p[i - 1] == '*';
+	if (p[i - 1] == '*') for (j = 1; j <= sLen; ++j) matched[cur][j] = matched[cur][j - 1] || matched[prev][j];
+	else for (j = 1; j <= sLen; ++j)            matched[cur][j] = matched[prev][j - 1] && (p[i - 1] == '?' || p[i - 1] == s[j - 1]);
+	}
+	return matched[cur][sLen];
 	}
 	*/
 
@@ -1361,11 +1378,11 @@ public:
 	}
 
 	//valid number ,使用自动机
-	bool isNumber(string s) 
+	bool isNumber(string s)
 	{
 		char fsm[10][128];
 		memset(fsm, 10, sizeof(fsm));
-		for (char i = '0'; i <= '9'; i++) 
+		for (char i = '0'; i <= '9'; i++)
 		{
 			fsm[0][i] = 1;
 			fsm[1][i] = 1;
@@ -1395,10 +1412,10 @@ public:
 		fsm[2]['+'] = 9;
 		fsm[2]['-'] = 9;
 		int state = 0;
-		for (auto c : s) 
+		for (auto c : s)
 		{
 			state = fsm[state][c];
-			if (state > 9) 
+			if (state > 9)
 			{
 				return false;
 			}
@@ -1468,7 +1485,7 @@ public:
 		char *endptr;
 		strtod(cstr, &endptr);
 		if (endptr == cstr) return false;
-		for (;*endptr;++endptr)
+		for (; *endptr; ++endptr)
 		if (!isspace(*endptr)) return false;
 		return true;
 	}
@@ -1498,7 +1515,7 @@ public:
 	*/
 	string intToRoman(int num)
 	{
-		const int radix[] = {1000,900,500,400,100,90,50,40,10,9,5,4,1};
+		const int radix[] = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
 		const string symbol[] = { "M", "CM", "D", "CD", "C", "XC",
 			"L", "XL", "X", "IX", "V", "IV", "I" };
 		string roman;
@@ -1538,7 +1555,7 @@ public:
 	{
 		string s = "1";
 		while (--n)
-			s=getNext(s);
+			s = getNext(s);
 		return s;
 	}
 	string getNext(const string &s)
@@ -1546,14 +1563,282 @@ public:
 		std::stringstream ss;
 		for (auto i = s.begin(); i != s.end();)
 		{
-			auto j = find_if(i, s.end(), bind1st(not_equal_to<char>(),*i));
+			auto j = find_if(i, s.end(), bind1st(not_equal_to<char>(), *i));
 			ss << distance(i, j) << *i;
 			i = j;
 		}
 		return ss.str();
 	}
+	/*
+	Anagrams
+	problem:Given an array of strings, return all groups of strings that are anagrams.
+	analysis:单词里的字母的种类和数目没有改变，只是改变了字母的排列顺序。 因此，将几个单词按照字母顺序排序后，若它们相等，则它们属于同一组 anagrams 。
+	*/
+	vector<string> anagrams(vector<string> &strs)
+	{
+		unordered_map<string, vector<string>> group;
+		for (const auto &s : strs)
+		{
+			string key = s;
+			sort(key.begin(), key.end());
+			group[key].push_back(s);
+		}
+		vector<string> result;
+		for (auto it = group.cbegin(); it != group.cend(); it++)
+		{
+			if (it->second.size() > 1)
+				result.insert(result.end(), it->second.begin(), it->second.end());
+		}
+		return result;
+	}
+	/*Group Anagrams*/
+	vector<vector<string>> groupAnagrams(vector<string>& strs)
+	{
+		unordered_map<string, vector<string>> group;
+		for (const auto &s : strs)
+		{
+			string key = s;
+			sort(key.begin(), key.end());
+			group[key].push_back(s);
+		}
+		vector<vector<string>> result;
+		for (auto it = group.cbegin(); it != group.cend(); it++)
+		{
+			vector<string> temp = it->second;
+			sort(temp.begin(), temp.end());
+			result.push_back(temp);
+		}
+		return result;
+	}
+	/*valid anagram , 判断两个字符串是不是anagram*/
+	bool isAnagram(string s, string t)
+	{
+		sort(s.begin(), s.end());
+		sort(t.begin(), t.end());
+		if (s == t) return true;
+		else return false;
+	}
+	/*simplify path*/
+	string simplifyPath(string path)
+	{
+		vector<string> dirs; // 当做栈
+		for (auto i = path.begin(); i != path.end();)
+		{
+			++i;
+			auto j = find(i, path.end(), '/');
+			auto dir = string(i, j);
+			if (!dir.empty() && dir != ".")
+			{
+				// 当有连续 '///' 时， dir 为空
+				if (dir == "..")
+				{
+					if (!dirs.empty())
+						dirs.pop_back();  /*pop_back位删除最后一个元素*/
+				}
+				else
+					dirs.push_back(dir);
+			}
+			i = j;
+		}
+		//stringstream 用来构造格式化字符串
+		stringstream out;
+		if (dirs.empty())
+		{
+			out << "/";
+		}
+		else
+		{
+			for (auto dir : dirs)
+				out << '/' << dir;
+		}
+		return out.str();
+	}
+	int lengthOfLastWord(string s)
+	{
+		trim(s);
+		vector<string> result = split(s, " ");
+		if (result.size() == 0) return 0;
+		else return result[result.size() - 1].size();
+	}
+	int lengthOfLastWord_v2(string s)
+	{
+		int len = s.length();
+		int count = 0;
+		for (int i = len - 1; i >= 0; i--)
+		{
+			if (s[i] == ' ' && count) break;
+			if (s[i] != ' ') count++;
+		}
+		return count;
+	}
+	int evalRPN(vector<string>& tokens)
+	{
+		stack<int> number_stack;
+		int a, b, res;
+		for (size_t i = 0; i < tokens.size(); i++)
+		{
+			string temp = tokens[i];
+			if (temp.size() == 1 && (temp == "+" || temp == "-" || temp == "/" || temp == "*"))
+			{
+				a = number_stack.top();
+				number_stack.pop();
+				b = number_stack.top();
+				number_stack.pop();
+				if (temp == "+") res = a + b;
+				else if (temp == "-") res = b - a;
+				else if (temp == "/") res = b / a;
+				else res = a*b;
+				number_stack.push(res);
+
+			}
+			else
+			{
+				number_stack.push(atoi(temp.c_str()));
+			}
+		}
+		return number_stack.top();
+	}
+	/*Binary Tree Preorder Traversal , 递归版本*/
+	vector<int> preorderTraversal(TreeNode *root)
+	{
+		vector<int> result;
+		if (root == nullptr) return result;
+		result.push_back(root->val);
+		vector<int> left = preorderTraversal(root->left);
+		result.insert(result.end(), left.begin(), left.end());
+		vector<int> right = preorderTraversal(root->right);
+		result.insert(result.end(), right.begin(), right.end());
+		return result;
+	}
+	/*非递归，用栈*/
+	vector<int> preorderTraversal_v2(TreeNode *root)
+	{
+		stack<TreeNode*> stack_tree;
+		vector<int> result;
+		if (root == nullptr)
+			return result;
+		stack_tree.push(root);
+		while (!stack_tree.empty())
+		{
+			TreeNode * ptr_tree = stack_tree.top();
+			result.push_back(ptr_tree->val);
+			stack_tree.pop();
+			if (ptr_tree->right != nullptr)
+				stack_tree.push(ptr_tree->right);
+			if (ptr_tree->left != nullptr)
+				stack_tree.push(ptr_tree->left);
+		}
+		return result;
+	}
+	/*inorderTraversal，栈 用标志位来记录是否访问过*/
+	vector<int> inorderTraversal(TreeNode* root)
+	{
+		typedef struct node_flag
+		{
+			TreeNode *node;
+			int flag = 0;  //标记位
+			node_flag(TreeNode * val) :node(val){}
+		};
+		stack<node_flag> stack_tree;
+		vector<int> result;
+		if (root == nullptr)
+			return result;
+		node_flag flag_root(root);
+		stack_tree.push(flag_root);
+
+		while (!stack_tree.empty())
+		{
+			node_flag  ptr_tree = stack_tree.top();
+			if (ptr_tree.flag ==1)	
+				result.push_back(ptr_tree.node->val);
+			stack_tree.pop();
+			
+			if (ptr_tree.node->right != nullptr && ptr_tree.flag == 0)
+			{
+				node_flag flag_right(ptr_tree.node->right);
+				stack_tree.push(flag_right);
+			}
+			
+			//left_flag来保存标记
+			int left_flag = ptr_tree.flag;
+			if (ptr_tree.flag == 0)
+			{
+				ptr_tree.flag = 1;
+				stack_tree.push(ptr_tree);
+			}
+
+			if (ptr_tree.node->left != nullptr && left_flag == 0)
+			{
+				node_flag flag_left(ptr_tree.node->left);
+				stack_tree.push(flag_left);
+			}
+			
+		}
+		return result;
+	}
+	vector<int> inorderTraversal_v2(TreeNode *root) {
+		vector<int> result;
+		const TreeNode *p = root;
+		stack<const TreeNode *> s;
+		while (!s.empty() || p != nullptr) {
+			if (p != nullptr) {
+				s.push(p);
+				p = p->left;
+			}
+			else {
+				p = s.top();
+				s.pop();
+				result.push_back(p->val);
+				p = p->right;
+			}
+		}
+		return result;
+	}
+	vector<int> postorderTraversal(TreeNode* root)
+	{
+		typedef struct node_flag
+		{
+			TreeNode *node;
+			int flag = 0;
+			node_flag(TreeNode * val) :node(val){}
+		};
+		stack<node_flag> stack_tree;
+		vector<int> result;
+		if (root == nullptr)
+			return result;
+		node_flag flag_root(root);
+		stack_tree.push(flag_root);
+
+		while (!stack_tree.empty())
+		{
+			node_flag  ptr_tree = stack_tree.top();
+			if (ptr_tree.flag == 1)
+				result.push_back(ptr_tree.node->val);
+			stack_tree.pop();
+
+			int left_flag = ptr_tree.flag;
+			if (ptr_tree.flag == 0)
+			{
+				ptr_tree.flag = 1;
+				stack_tree.push(ptr_tree);
+			}
+
+			if (ptr_tree.node->right != nullptr && left_flag == 0)
+			{
+				node_flag flag_right(ptr_tree.node->right);
+				stack_tree.push(flag_right);
+			}
 
 
+			if (ptr_tree.node->left != nullptr && left_flag == 0)
+			{
+				node_flag flag_left(ptr_tree.node->left);
+				stack_tree.push(flag_left);
+			}
+
+		}
+		return result;
+	}
 };
 /*陈硕，多路归并排序*/
 File mergeN(const std::vector<File>& files)
@@ -1682,12 +1967,18 @@ void get_line_count(int n, int m)
 # if 1
 int main()
 {
-	string p = "aab";
-	string s = "c*a*b";
+	TreeNode root(1);
+	TreeNode left(2);
+	TreeNode right(3);
+	left.left = &right;
+	root.right = &left;
 
 	Solution sol;
-	cout << sol.countAndSay(2);
-
+	vector<int> res = sol.postorderTraversal(&root);
+	for each (auto var in res)
+	{
+		cout << " " << var;
+	}
 	system("pause");
 	return 0;
 }

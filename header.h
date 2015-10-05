@@ -12,6 +12,7 @@
 #include<functional>
 
 
+
 typedef struct ListNode
 {
 	int val;
@@ -55,3 +56,12 @@ struct Input
 		return value > rhs.value;
 	}
 };
+
+//leetcode上二叉树的节点定义如下
+typedef struct TreeNode
+{
+	int val;
+	TreeNode *left;
+	TreeNode *right;
+	TreeNode(int x) :val(x), left(nullptr), right(nullptr){}
+}TreeNode;
