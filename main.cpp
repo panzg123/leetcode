@@ -1839,6 +1839,52 @@ public:
 		}
 		return result;
 	}
+	/*Binary Tree Level Order Traversal*/
+	vector<vector<int>> levelOrder(TreeNode* root)
+	{
+		typedef struct level_tree
+		{
+			TreeNode *node;
+			int level;
+			level_tree(TreeNode *node1, int level1) :node(node1), level(level1){}
+		}level_tree;
+		vector<vector<int>> result;
+		queue<level_tree> q;
+		if (root == nullptr) return result;
+		level_tree tree_node(root, 0);
+		q.push(tree_node);
+		int level_flag = 0;
+		vector<int> ivec;
+		while (!q.empty())
+		{
+			level_tree temp_node = q.front();
+			q.pop();
+			if (temp_node.level != level_flag)
+			{
+				result.push_back(ivec);
+				vector<int> tep;
+				swap(tep, ivec);
+				ivec.clear();
+				level_flag += 1;
+			}
+			ivec.push_back(temp_node.node->val);
+			if (temp_node.node->left != nullptr)
+			{
+				level_tree left_node(temp_node.node->left, temp_node.level + 1);
+				q.push(left_node);
+			}
+			if (temp_node.node->right != nullptr)
+			{
+				level_tree left_node(temp_node.node->right, temp_node.level + 1);
+				q.push(left_node);
+			}
+		}
+		if (!ivec.empty())
+			result.push_back(ivec);
+		//下面一行用于level order 2题
+		reverse(result.begin(), result.end());
+		return result;
+	}
 };
 /*陈硕，多路归并排序*/
 File mergeN(const std::vector<File>& files)
@@ -1963,20 +2009,6 @@ void get_line_count(int n, int m)
 
 	delete[] matrix;
 }
-long getcount(int n)
-{
-#define N 100000
-	int matrix[100000];
-	memset(matrix, 0, 100000);
-	matrix[1] = 1;
-	matrix[5] = 1;
-
-	for (size_t i = 0; i < n; i++)
-	{
-		if (n>100)
-	}
-
-}
 
 
 # if 1
@@ -1990,10 +2022,14 @@ int main()
 
 
 	Solution sol;
-	vector<int> res = sol.postorderTraversal(&root);
+	vector<vector<int>> res = sol.levelOrder(&root);
 	for each (auto var in res)
 	{
-		cout << " " << var;
+		for each (auto var1 in var)
+		{
+			cout << " " << var1;
+		}
+		cout << "\n";
 	}
 	system("pause");
 	return 0;

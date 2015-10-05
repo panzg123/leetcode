@@ -7,6 +7,7 @@
 #include <numeric>
 #include <map>
 #include<stack>
+#include<queue>
 #include<random>
 #include<regex>
 #include<functional>
