@@ -2124,7 +2124,21 @@ public:
 	};
 	bool isSameTree(TreeNode* p, TreeNode* q)
 	{
-
+		if (!p && !q) return true; // 终止条件
+		if (!p || !q) return false; // 剪枝
+		return p->val == q->val // 三方合并
+			&& isSameTree(p->left, q->left)
+			&& isSameTree(p->right, q->right);
+	}
+	bool isSymmetric(TreeNode *root) {
+		return root ? isSymmetric(root->left, root->right) : true;
+	}
+	bool isSymmetric(TreeNode *left, TreeNode *right) {
+		if (!left && !right) return true; // 终止条件
+		if (!left || !right) return false; // 终止条件
+		return left->val == right->val // 三方合并
+			&& isSymmetric(left->left, right->right)
+			&& isSymmetric(left->right, right->left);
 	}
 };
 /*陈硕，多路归并排序*/
