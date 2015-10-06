@@ -93,6 +93,34 @@ private:
 		}
 		return result;
 	}
+	// 逆转路径
+	static void tree_reverse(TreeNode *from, TreeNode *to)
+	{
+		TreeNode *x = from, *y = from->right, *z;
+		if (from == to) return;
+		while (x != to)
+		{
+			z = y->right;
+			y->right = x;
+			x = y;
+			y = z;
+		}
+	}
+	// 访问逆转后的路径上的所有结点
+	static void visit_reverse(TreeNode* from, TreeNode *to,
+		std::function< void(const TreeNode*) >& visit)
+	{
+		TreeNode *p = to;
+		reverse(from, to);
+		while (true)
+		{
+			visit(p);
+			if (p == from)
+				break;
+			p = p->right;
+		}
+		reverse(to, from);
+	}
 public:
 	vector<int> twoSum(vector<int> &num, int target)
 	{
@@ -1730,6 +1758,43 @@ public:
 		}
 		return result;
 	}
+	// Morris 先序遍历，时间复杂度 O(n)，空间复杂度 O(1)
+	vector<int> preorderTraversal_v3(TreeNode *root)
+	{
+		vector<int> result;
+		TreeNode *cur, *prev;
+		cur = root;
+		while (cur != nullptr)
+		{
+			if (cur->left == nullptr)
+			{
+				result.push_back(cur->val);
+				prev = cur; /* cur 刚刚被访问过 */
+				cur = cur->right;
+			}
+			else
+			{
+				/* 查找前驱 */
+				TreeNode *node = cur->left;
+				while (node->right != nullptr && node->right != cur)
+					node = node->right;
+				if (node->right == nullptr)   /* 还没线索化，则建立线索 */
+				{
+					result.push_back(cur->val); /* 仅这一行的位置与中序不同 */
+					node->right = cur;
+					prev = cur; /* cur 刚刚被访问过 */
+					cur = cur->left;
+				}
+				else     /* 已经线索化，则删除线索 */
+				{
+					node->right = nullptr;
+					/* prev = cur; 不能有这句， cur 已经被访问 */
+					cur = cur->right;
+				}
+			}
+		}
+		return result;
+	}
 	/*inorderTraversal，栈 用标志位来记录是否访问过*/
 	vector<int> inorderTraversal(TreeNode* root)
 	{
@@ -1794,12 +1859,50 @@ public:
 		}
 		return result;
 	}
+	// Morris 中序遍历，时间复杂度 O(n)，空间复杂度 O(1)
+	vector<int> inorderTraversal_v3(TreeNode *root)
+	{
+		vector<int> result;
+		TreeNode *cur, *prev;
+		cur = root;
+		while (cur != nullptr)
+		{
+			if (cur->left == nullptr)
+			{
+				result.push_back(cur->val);
+				prev = cur;
+				cur = cur->right;
+			}
+			else
+			{
+				/* 查找前驱 */
+				TreeNode *node = cur->left;
+				while (node->right != nullptr && node->right != cur)
+					node = node->right;
+				if (node->right == nullptr)   /* 还没线索化，则建立线索 */
+				{
+					node->right = cur;
+					/* prev = cur; 不能有这句， cur 还没有被访问 */
+					cur = cur->left;
+				}
+				else     /* 已经线索化，则访问节点，并删除线索 */
+				{
+					result.push_back(cur->val);
+					node->right = nullptr;
+					prev = cur;
+					cur = cur->right;
+				}
+			}
+		}
+		return result;
+	}
+	/*用栈，用flag来记录是否被访问*/
 	vector<int> postorderTraversal(TreeNode* root)
 	{
 		typedef struct node_flag
 		{
 			TreeNode *node;
-			int flag = 0;
+			int flag = 0; //记录是否被访问
 			node_flag(TreeNode * val) :node(val){}
 		};
 		stack<node_flag> stack_tree;
@@ -1836,6 +1939,48 @@ public:
 				stack_tree.push(flag_left);
 			}
 
+		}
+		return result;
+	}
+	// Morris 后序遍历，时间复杂度 O(n)，空间复杂度 O(1)
+	vector<int> postorderTraversal_v2(TreeNode *root)
+	{
+		vector<int> result;
+		TreeNode dummy(-1);
+		TreeNode *cur, *prev = nullptr;
+		std::function < void(const TreeNode*)> visit =
+			[&result](const TreeNode *node)
+		{
+			result.push_back(node->val);
+		};
+		dummy.left = root;
+		cur = &dummy;
+		while (cur != nullptr)
+		{
+			if (cur->left == nullptr)
+			{
+				prev = cur; /* 必须要有 */
+				cur = cur->right;
+			}
+			else
+			{
+				TreeNode *node = cur->left;
+				while (node->right != nullptr && node->right != cur)
+					node = node->right;
+				if (node->right == nullptr)   /* 还没线索化，则建立线索 */
+				{
+					node->right = cur;
+					prev = cur; /* 必须要有 */
+					cur = cur->left;
+				}
+				else     /* 已经线索化，则访问节点，并删除线索 */
+				{
+					visit_reverse(cur->left, prev, visit);
+					prev->right = nullptr;
+					prev = cur; /* 必须要有 */
+					cur = cur->right;
+				}
+			}
 		}
 		return result;
 	}
@@ -1882,8 +2027,42 @@ public:
 		if (!ivec.empty())
 			result.push_back(ivec);
 		//下面一行用于level order 2题
-		reverse(result.begin(), result.end());
+		//reverse(result.begin(), result.end());
 		return result;
+	}
+	// 递归版，时间复杂度 O(n)，空间复杂度 O(n)
+	vector<vector<int> > levelOrder_v2(TreeNode *root)
+	{
+		vector<vector<int>> result;
+		traverse(root, 1, result);
+		return result;
+	}
+	void traverse(TreeNode *root, size_t level, vector<vector<int>> &result)
+	{
+		if (!root) return;
+		if (level > result.size())
+			result.push_back(vector<int>());
+		result[level - 1].push_back(root->val);
+		traverse(root->left, level + 1, result);
+		traverse(root->right, level + 1, result);
+	}
+	/*Binary Tree Zigzag Level Order Traversal，递归*/
+	vector<vector<int>> zigzagLevelOrder(TreeNode* root)
+	{
+		vector<vector<int>> result;
+		zigzag_traverse(root, 0, result);
+		return result;
+	}
+	void zigzag_traverse(TreeNode *root, size_t level, vector<vector<int>> &result)
+	{
+		if (!root) return;
+		if (level+1 > result.size())
+			result.push_back(vector<int>());
+		if (level % 2 == 0) result[level].push_back(root->val);
+		else result[level].insert(result[level].begin(), root->val);
+
+		zigzag_traverse(root->left, level + 1, result);
+		zigzag_traverse(root->right, level + 1, result);
 	}
 };
 /*陈硕，多路归并排序*/
@@ -2022,7 +2201,7 @@ int main()
 
 
 	Solution sol;
-	vector<vector<int>> res = sol.levelOrder(&root);
+	vector<vector<int>> res = sol.zigzagLevelOrder(&root);
 	for each (auto var in res)
 	{
 		for each (auto var1 in var)
