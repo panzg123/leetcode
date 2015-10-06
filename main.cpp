@@ -2064,6 +2064,68 @@ public:
 		zigzag_traverse(root->left, level + 1, result);
 		zigzag_traverse(root->right, level + 1, result);
 	}
+	/*Recover Binary Search Tree*/
+	void recoverTree(TreeNode* root)
+	{
+		vector<TreeNode*> res = recoverTree_inorder(root);
+		TreeNode *firstEle = nullptr;
+		TreeNode *secondEle = nullptr;
+		int lenght = res.size();
+		for (size_t i = 0; i < lenght; i++)
+		{
+			if ((i>0 && (res[i - 1]>res[i])) || ((i<lenght - 1) && (res[i]>res[i+1])))
+			if (firstEle == nullptr) firstEle = res[i];
+			else { secondEle = res[i]; break; }
+		}
+		swap(firstEle->val, secondEle->val);
+	}
+	vector<TreeNode*> recoverTree_inorder(TreeNode *root) {
+		vector<TreeNode*> result;
+		TreeNode *p = root;
+		stack<TreeNode *> s;
+		while (!s.empty() || p != nullptr) {
+			if (p != nullptr) {
+				s.push(p);
+				p = p->left;
+			}
+			else {
+				p = s.top();
+				s.pop();
+				TreeNode * temp = p;
+				result.push_back(temp);
+				p = p->right;
+			}
+		}
+		return result;
+	}
+	/*内部类，Recover Binary Search Tree*/
+	class recoverTree_sol
+	{
+	public:
+		TreeNode *p, *q;
+		TreeNode *prev;
+		void recoverTree(TreeNode *root)
+		{
+			p = q = prev = NULL;
+			inorder(root);
+			swap(p->val, q->val);
+		}
+		void inorder(TreeNode *root)
+		{
+			if (root->left)inorder(root->left);
+			if (prev != NULL && (prev->val>root->val))
+			{
+				if (p == NULL)p = prev;
+				q = root;
+			}
+			prev = root;
+			if (root->right)inorder(root->right);
+		}
+	};
+	bool isSameTree(TreeNode* p, TreeNode* q)
+	{
+
+	}
 };
 /*陈硕，多路归并排序*/
 File mergeN(const std::vector<File>& files)
@@ -2193,22 +2255,20 @@ void get_line_count(int n, int m)
 # if 1
 int main()
 {
-	TreeNode root(1);
-	TreeNode left(2);
+	TreeNode root(2);
+	TreeNode left(1);
 	TreeNode right(3);
-	left.left = &right;
+	//left.left = &right;
 	root.right = &left;
 
 
 	Solution sol;
-	vector<vector<int>> res = sol.zigzagLevelOrder(&root);
+	vector<int> res = sol.inorderTraversal_v2(&root);
+		sol.recoverTree(&root);
+		//vector<int> res = sol.inorderTraversal_v2(&root);
 	for each (auto var in res)
 	{
-		for each (auto var1 in var)
-		{
-			cout << " " << var1;
-		}
-		cout << "\n";
+		cout << var << " ";
 	}
 	system("pause");
 	return 0;
