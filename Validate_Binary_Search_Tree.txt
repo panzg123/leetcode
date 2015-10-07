@@ -1,0 +1,25 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+/* Validate Binary Search Tree  递归 时间复杂度 O(n)，空间复杂度 O(\logn)*/
+   bool isValidBST(TreeNode* root)
+	{
+		return isValidBST_hlep(root, numeric_limits<long int>::min(), numeric_limits<long int>::max());
+	}
+	bool isValidBST_hlep(TreeNode* root, long int start, long int end)
+	{
+		if (root == nullptr) return true;
+		return (root->val<end && 
+			root->val > start &&
+			isValidBST_hlep(root->left, start, root->val) &&
+			isValidBST_hlep(root->right, root->val, end));
+	}
+};

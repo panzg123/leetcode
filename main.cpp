@@ -2234,6 +2234,50 @@ public:
 		return f[n];
 		delete[] f;
 	}
+	/*Unique Binary Search Trees II，递归*/
+	vector<TreeNode*> generateTrees(int n)
+	{
+		if (n == 0) return generate_bst_tree(1, 0);
+		return generate_bst_tree(1, n);
+	}
+	vector<TreeNode*> generate_bst_tree(int start, int end)
+	{
+		vector<TreeNode*> subTree;
+		if (start > end)
+		{
+			subTree.push_back(nullptr);
+			return subTree;
+		}
+		for (int k = start; k <= end; k++)
+		{
+			vector<TreeNode*> leftSubs = generate_bst_tree(start, k - 1);
+			vector<TreeNode*> rightSubs = generate_bst_tree(k + 1, end);
+			for (auto i : leftSubs)
+			{
+				for (auto j : rightSubs)
+				{
+					TreeNode * node = new TreeNode(k);
+					node->left = i;
+					node->right = j;
+					subTree.push_back(node);
+				}
+			}
+		}
+		return subTree;
+	}
+	/* Validate Binary Search Tree */
+	bool isValidBST(TreeNode* root)
+	{
+		return isValidBST_hlep(root, numeric_limits<long int>::min(), numeric_limits<long int>::max());
+	}
+	bool isValidBST_hlep(TreeNode* root, long int start, long int end)
+	{
+		if (root == nullptr) return true;
+		return (root->val<end && 
+			root->val > start &&
+			isValidBST_hlep(root->left, start, root->val) &&
+			isValidBST_hlep(root->right, root->val, end));
+	}
 };
 /*陈硕，多路归并排序*/
 File mergeN(const std::vector<File>& files)
@@ -2367,21 +2411,11 @@ int main()
 	TreeNode left(1);
 	TreeNode right(3);
 	//left.left = &right;
-	root.right = &left;
+	//root.right = &left;
 
 
 	Solution sol;
-	vector<int> res = sol.inorderTraversal_v2(&root);
-	for each (auto var in res)
-	{
-		cout << var << " ";
-	}
-		sol.flatten(&root);
-		//vector<int> res = sol.inorderTraversal_v2(&root);
-		for each (auto var in res)
-		{
-			cout << var << " ";
-		}
+	cout << sol.isValidBST(&root);
 	system("pause");
 	return 0;
 }
