@@ -2278,6 +2278,32 @@ public:
 			isValidBST_hlep(root->left, start, root->val) &&
 			isValidBST_hlep(root->right, root->val, end));
 	}
+	/*Convert Sorted Array to Binary Search Tree，递归*/
+	TreeNode* sortedArrayToBST(vector<int>& nums)
+	{
+		int length = nums.size();
+		if (length == 0) return nullptr;
+		sortedArrayToBST_help(nums, 0, length - 1);
+	}
+	TreeNode* sortedArrayToBST_help(vector<int> &nums,int start,int end)
+	{
+		TreeNode *ret_node = new TreeNode(-1);
+		if (start == end)  //终止条件
+		{
+			ret_node->val = nums[start];
+			return ret_node;
+		}
+		if (start > end) //合并两个元素出出现start>end
+			return nullptr;
+		//二分
+		int mid = (start + end) / 2;
+		ret_node->val = nums[mid];
+		TreeNode *left = sortedArrayToBST_help(nums, start, mid-1);
+		TreeNode *right = sortedArrayToBST_help(nums, mid + 1, end);
+		ret_node->left = left;
+		ret_node->right = right;
+		return ret_node;
+	}
 };
 /*陈硕，多路归并排序*/
 File mergeN(const std::vector<File>& files)
