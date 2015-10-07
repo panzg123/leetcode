@@ -2140,6 +2140,41 @@ public:
 			&& isSymmetric(left->left, right->right)
 			&& isSymmetric(left->right, right->left);
 	}
+	/*balanced binary tree，递归*/
+	bool isBalanced(TreeNode* root)
+	{
+		return balanceHeight(root) >= 0;
+	}
+	int balanceHeight(TreeNode *root)
+	{
+		if (root == nullptr) return 0;
+		int left = balanceHeight(root->left);
+		int right = balanceHeight(root->right);
+		if (left < 0 || right <0 || abs(left - right)>1) return -1;
+		return max(left, right) + 1;
+	}
+	/*flatten binary tree to linked list*/
+	void flatten(TreeNode* root)
+	{
+		if (root == nullptr) return;
+		vector<TreeNode*> node_vec;
+		flatten_preorder(root, node_vec);
+		size_t length = node_vec.size();
+		for (size_t i = 1; i < length; i++)
+		{
+			node_vec[i-1]->right = node_vec[i];
+			node_vec[i - 1]->left = nullptr;
+		}
+		node_vec[length - 1]->right = nullptr;
+		node_vec[length - 1]->left = nullptr;
+	}
+	void flatten_preorder(TreeNode* root, vector<TreeNode*> &res)
+	{
+		if (root == nullptr) return;
+		res.push_back(root);
+		flatten_preorder(root->left,res);
+		flatten_preorder(root->right,res);
+	}
 };
 /*陈硕，多路归并排序*/
 File mergeN(const std::vector<File>& files)
@@ -2278,12 +2313,16 @@ int main()
 
 	Solution sol;
 	vector<int> res = sol.inorderTraversal_v2(&root);
-		sol.recoverTree(&root);
-		//vector<int> res = sol.inorderTraversal_v2(&root);
 	for each (auto var in res)
 	{
 		cout << var << " ";
 	}
+		sol.flatten(&root);
+		//vector<int> res = sol.inorderTraversal_v2(&root);
+		for each (auto var in res)
+		{
+			cout << var << " ";
+		}
 	system("pause");
 	return 0;
 }
