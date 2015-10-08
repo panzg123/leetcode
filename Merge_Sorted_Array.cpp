@@ -1,5 +1,3 @@
-#include"header.h"
-using namespace std;
 class Solution
 {
 public:
@@ -16,7 +14,3 @@ public:
 			nums1[icur--] = nums2[ib--];
 	}
 };
-int main()
-{
-	return 0;
-}
