@@ -2596,7 +2596,7 @@ void get_line_count(int n, int m)
 }
 
 
-# if 1
+# if 0
 int main()
 {
 	TreeNode root(2);
