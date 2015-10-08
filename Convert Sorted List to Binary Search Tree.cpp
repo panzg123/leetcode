@@ -1,4 +1,12 @@
 /**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+/**
  * Definition for a binary tree node.
  * struct TreeNode {
  *     int val;
@@ -9,29 +17,32 @@
  */
 class Solution {
 public:
-	/*Convert Sorted Array to Binary Search Tree，递归*/
-    TreeNode* sortedArrayToBST(vector<int>& nums)
+    /*Convert Sorted List to Binary Search Tree
+	自底向上,时间复杂度 O(n)，空间复杂度 O(logn)
+	也可以自顶向下，时间复杂度为O(n^2)*/
+	TreeNode* sortedListToBST(ListNode* head)
 	{
-		int length = nums.size();
-		if (length == 0) return nullptr;
-		sortedArrayToBST_help(nums, 0, length - 1);
-	}
-	TreeNode* sortedArrayToBST_help(vector<int> &nums,int start,int end)
-	{
-		TreeNode *ret_node = new TreeNode(-1);
-		if (start == end) //终止条件
+		int length = 0;
+		ListNode *temp = head;
+		while (temp)
 		{
-			ret_node->val = nums[start];
-			return ret_node;
+			length++;
+			temp = temp->next;
 		}
-		if (start > end) //合并两个元素出出现start>end
+		return sortedListToBST_help(head, 0, length - 1);
+	}
+	TreeNode* sortedListToBST_help(ListNode* &list, int start,int end)
+	{
+		if (start > end)
 			return nullptr;
 		int mid = (start + end) / 2;
-		ret_node->val = nums[mid];
-		TreeNode *left = sortedArrayToBST_help(nums, start, mid-1);
-		TreeNode *right = sortedArrayToBST_help(nums, mid + 1, end);
-		ret_node->left = left;
-		ret_node->right = right;
-		return ret_node;
+		TreeNode *left = sortedListToBST_help(list, start, mid - 1);
+		TreeNode *root = new TreeNode(-1);
+		root->val = list->val;
+		root->left = left;
+		list = list->next;
+		TreeNode *right = sortedListToBST_help(list, mid + 1, end);
+		root->right = right;
+		return root;
 	}
 };
