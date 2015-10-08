@@ -2332,7 +2332,40 @@ public:
 		root->right = right;
 		return root;
 	}
-
+	/*Minimum Depth of Binary Tree*/
+	int minDepth(TreeNode* root)
+	{
+		if (root == nullptr) return 0;
+		return minDepth_help(root, 0);
+	}
+	int minDepth_help(TreeNode* root, int depth)
+	{
+		if (root == nullptr)
+			return -1;
+		int left_depth = minDepth_help(root->left, depth + 1);
+		int right_depth = minDepth_help(root->right, depth + 1);
+		if (left_depth != -1 && right_depth != -1)
+			return min(left_depth, right_depth);
+		else if (left_depth == -1 && right_depth != -1)
+			return right_depth;
+		else if (left_depth != -1 && right_depth == -1)
+			return left_depth;
+		else
+			return depth;
+	}
+	/*Path Sum*/
+	bool hasPathSum(TreeNode* root, int sum)
+	{
+		if (root == nullptr) return false;
+		if (root && root->left == nullptr && root->right == nullptr)
+			return root->val == sum;
+		bool flag_left = false, flag_right = false;
+		if (root->left)
+			flag_left = hasPathSum(root->left, sum - root->val);
+		if (root->right)
+			flag_right = hasPathSum(root->right, sum - root->val);
+		return flag_left || flag_right;
+	}
 };
 /*陈硕，多路归并排序*/
 File mergeN(const std::vector<File>& files)
