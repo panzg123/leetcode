@@ -2437,8 +2437,26 @@ public:
 			return max(r, l) > 0 ? max(r, l) + root->val : root->val;
 		}
 	};
-
-
+	/*Populating Next Right Pointers in Each Node*/
+	void connect_in_each_node(TreeLinkNode *root)
+	{
+		if (root == nullptr) return;
+		TreeLinkNode dump(-1);
+		for (TreeLinkNode *pre = &dump, *cur = root; cur; cur = cur->next)
+		{
+			if (cur->left != nullptr)
+			{
+				pre->next = cur->left;
+				pre = pre->next;
+			}
+			if (cur->right != nullptr)
+			{
+				pre->next = cur->right;
+				pre = pre->next;
+			}
+		}
+		connect(dump.next);
+	}
 };
 /*陈硕，多路归并排序*/
 File mergeN(const std::vector<File>& files)
