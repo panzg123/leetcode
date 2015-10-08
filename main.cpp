@@ -2393,6 +2393,51 @@ public:
 
 		return res_vec;
 	}
+	/*Binary Tree Maximum Path Sum 递归超时*/
+	int maxPathSum(TreeNode* root)
+	{
+		unordered_map<TreeNode*, int> max_val_map;		
+		if (root == nullptr) return 0;
+		maxPathSum_help(root, max_val_map);
+		int result = max_val_map[root->left] + max_val_map[root->right] + root->val;
+		int left_res = maxPathSum(root->left);
+		int right_res = maxPathSum(root->right);
+		if (left_res < right_res) return result < right_res ? right_res : result;
+		else return result < left_res ? left_res : result;
+	}
+	int maxPathSum_help(TreeNode* root, unordered_map<TreeNode*, int>& _map)
+	{
+		if (root == nullptr) return 0;
+		int res = max(maxPathSum_help(root->left,_map), maxPathSum_help(root->right,_map)) + root->val;
+		_map[root] = res;
+		return res;
+	}
+	// LeetCode, Binary Tree Maximum Path Sum
+	// 时间复杂度 O(n)，空间复杂度 O(logn)
+	class Solution_maxPathSum
+	{
+	public:
+		int maxPathSum(TreeNode *root)
+		{
+			max_sum = INT_MIN;
+			dfs(root);
+			return max_sum;
+		}
+	private:
+		int max_sum;
+		int dfs(const TreeNode *root)
+		{
+			if (root == nullptr) return 0;
+			int l = dfs(root->left);
+			int r = dfs(root->right);
+			int sum = root->val;
+			if (l > 0) sum += l;
+			if (r > 0) sum += r;
+			max_sum = max(max_sum, sum);
+			return max(r, l) > 0 ? max(r, l) + root->val : root->val;
+		}
+	};
+
 
 };
 /*陈硕，多路归并排序*/
