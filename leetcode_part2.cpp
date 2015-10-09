@@ -86,7 +86,7 @@ public:
 		}
 		return head;
 	}
-
+	/*insertion list */
 	ListNode *insertionSortList(ListNode *head)
 	{
 		ListNode dummy(INT_MIN);
@@ -108,6 +108,26 @@ public:
 			pre = cur, cur = cur->next)
 			;
 		return pre;
+	}
+	/*Sort List
+	归并排序，时间复杂度 O(nlogn)，空间复杂度 O(1)*/
+	ListNode* sortList(ListNode* head)
+	{
+		if (head == nullptr || head->next == nullptr) return head;
+		ListNode *fast = head, *slow = head;
+		while (fast->next != nullptr && fast->next->next != nullptr)
+		{
+			fast = fast->next->next;
+			slow = slow->next;
+		}
+		//断开
+		ListNode *temp = slow;
+		slow = slow->next;
+		temp->next = nullptr;
+		//前后半段分别排序
+		ListNode *l1 = sortList(head);
+		ListNode *l2 = sortList(slow);
+		return mergeTwoLists(l1, l2);
 	}
 };
 int main()
