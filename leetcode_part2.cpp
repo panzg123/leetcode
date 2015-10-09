@@ -411,13 +411,36 @@ public:
 		} while (std::next_permutation(nums.begin(), nums.end()));
 		return result;
 	}
+	vector<vector<int>> combine(int n, int k)
+	{
+		vector<vector<int>> result;
+		if (n < 2) return result;
+		vector<int> path;
+		combine_help(result, n, 1, 0, path);
+		return result;
+	}
+	void combine_help(vector<vector<int>> &result,int n,int k,int length,vector<int> &path)
+	{
+		if (k<=n+1 && length == 2)
+		{
+			result.push_back(path);
+			return;
+		}
+		if (k>n) return;
+		//ัก
+		path.push_back(k);
+		combine_help(result, n, k + 1, length+1, path);
+		path.pop_back();
+		//ฒปัก
+		combine_help(result, n, k + 1, length, path);
+	}
 };
 int main()
 {
 
 	vector<int> vec = { 1,2,2 };
 	Solution sol;
-	auto res = sol.permutation(vec);
+	auto res = sol.combine(4,2);
 	for each (auto var in res)
 	{
 		for each (auto var1 in var)
