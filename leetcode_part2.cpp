@@ -52,12 +52,12 @@ public:
 		ListNode * head = NULL;
 		ListNode * ptr = NULL;
 		vector<int> null_index;
-		for (int i = 0; i<lists.size(); i++)
+		for (int i = 0; i < lists.size(); i++)
 		{
 			if (lists[i] == NULL) null_index.push_back(i);
 		}
 		cout << null_index.size() << endl;
-		for (int i = null_index.size() - 1; i<null_index.size(); i--)
+		for (int i = null_index.size() - 1; i < null_index.size(); i--)
 		{
 			lists.erase(lists.begin() + null_index[i]);
 		}
@@ -86,8 +86,37 @@ public:
 		}
 		return head;
 	}
+
+	ListNode *insertionSortList(ListNode *head)
+	{
+		ListNode dummy(INT_MIN);
+		//dummy.next = head;
+		for (ListNode *cur = head; cur != nullptr;)
+		{
+			auto pos = findInsertPos(&dummy, cur->val);
+			ListNode *tmp = cur->next;
+			cur->next = pos->next;
+			pos->next = cur;
+			cur = tmp;
+		}
+		return dummy.next;
+	}
+	ListNode* findInsertPos(ListNode *head, int x)
+	{
+		ListNode *pre = nullptr;
+		for (ListNode *cur = head; cur != nullptr && cur->val <= x;
+			pre = cur, cur = cur->next)
+			;
+		return pre;
+	}
 };
 int main()
 {
+
+	ListNode node(1);
+	ListNode node2(1);
+	node.next = &node2;
+	Solution sol;
+	auto res = sol.insertionSortList(&node);
 	return 0;
 }
