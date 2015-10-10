@@ -244,7 +244,7 @@ public:
 			if (target > *mid) first = ++mid;
 			else last = mid;
 		}
-		return first-nums.begin();
+		return first - nums.begin();
 	}
 	/*
 	Search a 2D Matrix
@@ -301,7 +301,7 @@ public:
 			if (matrix[row][col] > target) { col--; continue; }
 		}
 		return false;
-		      
+
 	}
 	/*
 	增量构造法，深搜，时间复杂度 O(2^n)，空间复杂度 O(n)
@@ -411,37 +411,304 @@ public:
 		} while (std::next_permutation(nums.begin(), nums.end()));
 		return result;
 	}
+	/*
+	Combinations
+	递归，时间复杂度 O(n!)，空间复杂度 O(n)
+	*/
 	vector<vector<int>> combine(int n, int k)
 	{
 		vector<vector<int>> result;
-		if (n < 2) return result;
+		if (n < k) return result;
 		vector<int> path;
-		combine_help(result, n, 1, 0, path);
+		combine_help(result, n, 1, 0, path, k);
 		return result;
 	}
-	void combine_help(vector<vector<int>> &result,int n,int k,int length,vector<int> &path)
+	/*
+	result:存储结果
+	n:大小
+	k：开始位置
+	length:已选择的数据个数
+	path:选择的记录
+	target：目标选择个数
+	*/
+	void combine_help(vector<vector<int>> &result, int n, int k, int length, vector<int> &path, int target)
 	{
-		if (k<=n+1 && length == 2)
+		if (k <= n + 1 && length == target)
 		{
 			result.push_back(path);
 			return;
 		}
-		if (k>n) return;
+		if (k > n) return;
 		//选
 		path.push_back(k);
-		combine_help(result, n, k + 1, length+1, path);
+		combine_help(result, n, k + 1, length + 1, path, target);
 		path.pop_back();
 		//不选
-		combine_help(result, n, k + 1, length, path);
+		combine_help(result, n, k + 1, length, path, target);
 	}
+	/*
+	Letter Combinations of a Phone Number
+	递归， 时间复杂度 O(3^n)，空间复杂度 O(n)
+	*/
+	vector<string> letterCombinations(string digits)
+	{
+		vector<string> result;
+		if (digits == "") return result;
+		letterCombinations_help(digits, 0, "", result);
+		return result;
+	}
+	void letterCombinations_help(const string& digits, size_t cur, string path, vector<string> &result)
+	{
+		if (cur == digits.size())
+		{
+			result.push_back(path);
+			return;
+		}
+		for (auto s : keyboard[digits[cur] - '0'])
+		{
+			letterCombinations_help(digits, cur + 1, path + s, result);
+		}
+		return;
+	}
+	/*Word Ladder 广度优先搜索 时间复杂度 O(n)，空间复杂度 O(n) */
+	int ladderLength(string beginWord, string endWord, unordered_set<string>& wordList) {
+		queue<string> current, next; // 当前层，下一层
+		unordered_set<string> visited; // 判重
+		int level = 0; // 层次
+		bool found = false;
+		//判断是否到达终点
+		auto state_is_target = [&](const string &s)
+		{
+			return s == endWord;
+		};
+		//获取单词s可以到达的单词集合
+		auto state_extend = [&](const string &s)
+		{
+			vector<string> result;
+			for (size_t i = 0; i < s.size(); ++i)
+			{
+				string new_word(s);
+				//改变一个字母
+				for (char c = 'a'; c <= 'z'; c++)
+				{
+					if (c == new_word[i]) continue;
+					swap(c, new_word[i]);
+					//需要保证单词未被访问过
+					if ((wordList.count(new_word) > 0 || new_word == endWord) &&
+						!visited.count(new_word))
+					{
+						result.push_back(new_word);
+						visited.insert(new_word);
+					}
+					swap(c, new_word[i]); // 恢复该单词
+				}
+			}
+			return result;
+		};
+		current.push(beginWord);
+		//found标记是否找到
+		while (!current.empty() && !found)
+		{
+			++level;
+			while (!current.empty() && !found)
+			{
+				const string str = current.front();
+				current.pop();
+				const auto& new_states = state_extend(str);
+				for (const auto& state : new_states)
+				{
+					next.push(state);
+					if (state_is_target(state))
+					{
+						found = true; //找到了，退出
+						break;
+					}
+				}
+			}
+			swap(next, current);
+		}
+		if (found) return level + 1;
+		else return 0;
+	}
+	/*Word Ladder 2 递归 时间复杂度 O(n)，空间复杂度 O(n)*/
+	vector<vector<string> > findLadders(string beginWord, string endWord,unordered_set<string> &wordList)
+	{
+		unordered_set<string> current, next; // 当前层，下一层，用集合是为了去重
+		unordered_set<string> visited; // 判重
+		unordered_map<string, vector<string> > father; // 树
+		bool found = false;
+		auto state_is_target = [&](const string &s)
+		{
+			return s == endWord;
+		};
+		auto state_extend = [&](const string &s)
+		{
+			unordered_set<string> result;
+			for (size_t i = 0; i < s.size(); ++i)
+			{
+				string new_word(s);
+				for (char c = 'a'; c <= 'z'; c++)
+				{
+					if (c == new_word[i]) continue;
+					swap(c, new_word[i]);
+					if ((wordList.count(new_word) > 0 || new_word == endWord) &&
+						!visited.count(new_word))
+					{
+						result.insert(new_word);
+					}
+					swap(c, new_word[i]); // 恢复该单词
+				}
+			}
+			return result;
+		};
+		current.insert(beginWord);
+		while (!current.empty() && !found)
+		{
+			// 先将本层全部置为已访问，防止同层之间互相指向
+			for (const auto& word : current)
+				visited.insert(word);
+			for (const auto& word : current)
+			{
+				const auto new_states = state_extend(word);
+				for (const auto &state : new_states)
+				{
+					if (state_is_target(state)) found = true;
+					next.insert(state);
+					father[state].push_back(word);
+					// visited.insert(state); // 移动到最上面了
+				}
+			}
+			current.clear();
+			swap(current, next);
+		}
+		vector<vector<string> > result;
+		if (found)
+		{
+			vector<string> path;
+			gen_path(father, path, beginWord, endWord, result);
+		}
+		return result;
+	}
+	void gen_path(unordered_map<string, vector<string> > &father,
+		vector<string> &path, const string &start, const string &word,
+		vector<vector<string> > &result)
+	{
+		path.push_back(word);
+		if (word == start)
+		{
+			result.push_back(path);
+			reverse(result.back().begin(), result.back().end());
+		}
+		else
+		{
+			for (const auto& f : father[word])
+			{
+				gen_path(father, path, start, f, result);
+			}
+		}
+		path.pop_back();
+	}
+	/*
+	Surrounded Regions BFS，时间复杂度 O(n)，空间复杂度 O(n)
+	主要思想：遍历四周的每个字符，如果是‘O’，则从当前字符开始BFS遍历，如果周围是'O'，则加入队列。
+	遍历完成后，进行二次扫描，如果仍被标记为'O',则表示被包围，应改为'X'；如果被标记为'+',则表示未被包围，仍为'O';
+	*/
+	void solve(vector<vector<char>>& board)
+	{
+		if (board.empty())
+			return;
+		const int m = board.size();
+		const int n = board[0].size();
+		//从四周边界开始遍历
+		for (size_t i = 0; i < n; i++)
+		{
+			bfs(board, 0, i);
+			bfs(board, m - 1, i);
+		}
+		for (size_t i = 1; i < m-1; i++)
+		{
+			bfs(board, i, 0);
+			bfs(board, i, n - 1);
+		}
+		//二次扫描
+		for (size_t i = 0; i < m; i++)
+		{
+			for (size_t j = 0; j < n; j++)
+			{
+				if (board[i][j] == 'O')
+					board[i][j] = 'X';
+				else if (board[i][j] == '+')
+					board[i][j] = 'O';
+			}
+		}
+	}
+private:
+	void bfs(vector<vector<char>> &board, int i, int j)
+	{
+		typedef pair<int, int> state_t;
+		queue<state_t> q;
+		const int m = board.size();
+		const int n = board[0].size();
+		/*判断当前字符是否是'O'*/
+		auto is_valid = [&](const state_t &s)
+		{
+			const int x = s.first;
+			const int y = s.second;
+			if (x < 0 || x >= m || y < 0 || y >= n || board[x][y] != 'O')
+				return false;
+			return true;
+		};
+		//匿名函数，返回当前字符s的四周'O'集合
+		auto state_extend = [&](const state_t &s)
+		{
+			vector<state_t> result;
+			const int x = s.first;
+			const int y = s.second;
+			//上下左右
+			const state_t new_states[4] = { { x - 1, y }, { x + 1, y }, { x, y - 1 }, { x, y + 1 } };
+			for (size_t i = 0; i < 4; i++)
+			{
+				if (is_valid(new_states[i]))
+				{
+					//既有标记又有去重的功能
+					board[new_states[i].first][new_states[i].second] = '+';
+					result.push_back(new_states[i]);
+				}
+			}
+			return result;
+		};
+		//BFS
+		state_t start = { i, j };
+		if (is_valid(start))
+		{
+			board[i][j] = '+';
+			q.push(start);
+		}
+		while (!q.empty())
+		{
+			auto cur = q.front();
+			q.pop();
+			auto new_states = state_extend(cur);
+			for (auto s : new_states)
+				q.push(s);
+		}
+	}
+	vector<string> keyboard;// = { " ", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz" };
 };
 int main()
 {
 
-	vector<int> vec = { 1,2,2 };
+	vector<vector<char>> board;
+	vector<char> c1 = { 'X', 'X', 'X' };
+	vector<char> c2 = { 'X', 'O', 'X' };
+	vector<char> c3 = { 'X', 'X', 'X' };
+	board.push_back(c1);
+	board.push_back(c2);
+	board.push_back(c3);
+
 	Solution sol;
-	auto res = sol.combine(4,2);
-	for each (auto var in res)
+	sol.solve(board);
+	for each (auto var in board)
 	{
 		for each (auto var1 in var)
 		{
