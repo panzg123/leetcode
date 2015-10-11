@@ -1,10 +1,10 @@
-#include"header.h"
+ï»¿#include"header.h"
 using namespace std;
 class Solution
 {
 public:
 	/*merge sorted array
-	Ê±¼ä¸´ÔÓ¶È O(m+n)£¬¿Õ¼ä¸´ÔÓ¶È O(1)*/
+	æ—¶é—´å¤æ‚åº¦ O(m+n)ï¼Œç©ºé—´å¤æ‚åº¦ O(1)*/
 	void merge(vector<int>& nums1, int m, vector<int>& nums2, int n)
 	{
 		int ia = m - 1, ib = n - 1, icur = m + n - 1;
@@ -15,7 +15,7 @@ public:
 		while (ib >= 0)
 			nums1[icur--] = nums2[ib--];
 	}
-	/*Merge Two Sorted Lists Ê±¼ä¸´ÔÓ¶È O(min(m,n))£¬¿Õ¼ä¸´ÔÓ¶È O(1)*/
+	/*Merge Two Sorted Lists æ—¶é—´å¤æ‚åº¦ O(min(m,n))ï¼Œç©ºé—´å¤æ‚åº¦ O(1)*/
 	ListNode* mergeTwoLists(ListNode* l1, ListNode *l2)
 	{
 		if (l1 == nullptr) return l2;
@@ -39,7 +39,7 @@ public:
 		p->next = l1 == nullptr ? l2 : l1;
 		return head.next;
 	}
-	/*Merge k Sorted Lists Á½Á½ºÏ²¢³¬Ê±,ÓÃÓÅÏÈ¶ÓÁĞ*/
+	/*Merge k Sorted Lists ä¸¤ä¸¤åˆå¹¶è¶…æ—¶,ç”¨ä¼˜å…ˆé˜Ÿåˆ—*/
 	struct k_sort_compare {
 		bool operator()(const ListNode* l, const ListNode* r) {
 			return l->val > r->val;
@@ -110,7 +110,7 @@ public:
 		return pre;
 	}
 	/*Sort List
-	¹é²¢ÅÅĞò£¬Ê±¼ä¸´ÔÓ¶È O(nlogn)£¬¿Õ¼ä¸´ÔÓ¶È O(1)*/
+	å½’å¹¶æ’åºï¼Œæ—¶é—´å¤æ‚åº¦ O(nlogn)ï¼Œç©ºé—´å¤æ‚åº¦ O(1)*/
 	ListNode* sortList(ListNode* head)
 	{
 		if (head == nullptr || head->next == nullptr) return head;
@@ -120,16 +120,16 @@ public:
 			fast = fast->next->next;
 			slow = slow->next;
 		}
-		//¶Ï¿ª
+		//æ–­å¼€
 		ListNode *temp = slow;
 		slow = slow->next;
 		temp->next = nullptr;
-		//Ç°ºó°ë¶Î·Ö±ğÅÅĞò
+		//å‰ååŠæ®µåˆ†åˆ«æ’åº
 		ListNode *l1 = sortList(head);
 		ListNode *l2 = sortList(slow);
 		return mergeTwoLists(l1, l2);
 	}
-	/*sort colors Ê±¼ä¸´ÔÓ¶È O(n)£¬¿Õ¼ä¸´ÔÓ¶È O(1)*/
+	/*sort colors æ—¶é—´å¤æ‚åº¦ O(n)ï¼Œç©ºé—´å¤æ‚åº¦ O(1)*/
 	void sortColors(vector<int> &nums)
 	{
 		int count[3] = { 0 };
@@ -151,7 +151,7 @@ public:
 	class searchRange_class
 	{
 	public:
-		/*±éÀú£¬Ê±¼ä¸´ÔÓ¶ÈÎªO(n),¿Õ¼ä¸´ÔÓ¶ÈO(1)*/
+		/*éå†ï¼Œæ—¶é—´å¤æ‚åº¦ä¸ºO(n),ç©ºé—´å¤æ‚åº¦O(1)*/
 		vector<int> searchRange(vector<int>& nums, int target)
 		{
 			vector<int> result = { -1, -1 };
@@ -172,7 +172,7 @@ public:
 			}
 			return result;
 		}
-		/*Ê¹ÓÃSTL Ê±¼ä¸´ÔÓ¶È O(logn)£¬¿Õ¼ä¸´ÔÓ¶È O(1)*/
+		/*ä½¿ç”¨STL æ—¶é—´å¤æ‚åº¦ O(logn)ï¼Œç©ºé—´å¤æ‚åº¦ O(1)*/
 		vector<int> searchRenge_STL(vector<int> &nums, int target)
 		{
 			vector<int> result = { -1, -1 };
@@ -186,8 +186,8 @@ public:
 			return result;
 		}
 		/*
-		ÖØĞÂÊµÏÖ lower_bound ºÍ upper_bound
-		Ê±¼ä¸´ÔÓ¶È O(logn)£¬¿Õ¼ä¸´ÔÓ¶È O(1)
+		é‡æ–°å®ç° lower_bound å’Œ upper_bound
+		æ—¶é—´å¤æ‚åº¦ O(logn)ï¼Œç©ºé—´å¤æ‚åº¦ O(1)
 		*/
 		vector<int> searchRange_imple(int A[], int n, int target)
 		{
@@ -217,7 +217,7 @@ public:
 			while (first != last)
 			{
 				auto mid = next(first, distance(first, last) / 2);
-				if (value >= *mid) first = ++mid; // Óë lower_bound ½ö´Ë²»Í¬
+				if (value >= *mid) first = ++mid; // ä¸ lower_bound ä»…æ­¤ä¸åŒ
 				else last = mid;
 			}
 			return first;
@@ -225,7 +225,7 @@ public:
 	};
 	/*
 	Search Insert Position
-	Ê¹ÓÃlower_bound£¬beat 0.01% cpp....
+	ä½¿ç”¨lower_boundï¼Œbeat 0.01% cpp....
 	*/
 	int searchInsert(vector<int>& nums, int target)
 	{
@@ -248,7 +248,7 @@ public:
 	}
 	/*
 	Search a 2D Matrix
-	¶ş·Ö²éÕÒ,12ms
+	äºŒåˆ†æŸ¥æ‰¾,12ms
 	*/
 	bool searchMatrix(vector<vector<int>>& matrix, int target)
 	{
@@ -277,17 +277,17 @@ public:
 		int n = matrix[0].size();
 		for (size_t i = 0; i < matrix.size(); i++)
 		{
-			//¼ôÖ¦
+			//å‰ªæ
 			if (matrix[i][0] > target || matrix[i][n - 1] < target)
 				continue;
-			//¶ş·Ö²éÕÒ
+			//äºŒåˆ†æŸ¥æ‰¾
 			if (std::binary_search(matrix[i].begin(), matrix[i].end(), target))
 				return true;
 		}
 		return false;
 	}
 	/*
-	Search a 2D Matrix 2£¬¸´ÔÓ¶ÈÎªO(M+N)
+	Search a 2D Matrix 2ï¼Œå¤æ‚åº¦ä¸ºO(M+N)
 	272ms,beats 95%
 	*/
 	bool searchMatrix__matrix2_v2(vector<vector<int>>& matrix, int target) {
@@ -304,8 +304,8 @@ public:
 
 	}
 	/*
-	ÔöÁ¿¹¹Ôì·¨£¬ÉîËÑ£¬Ê±¼ä¸´ÔÓ¶È O(2^n)£¬¿Õ¼ä¸´ÔÓ¶È O(n)
-	Ã¿¸öÔªËØ¶¼ÓĞÁ½ÖÖÑ¡Ôñ£º¼ÓÈë»òÕß²»¼ÓÈë
+	å¢é‡æ„é€ æ³•ï¼Œæ·±æœï¼Œæ—¶é—´å¤æ‚åº¦ O(2^n)ï¼Œç©ºé—´å¤æ‚åº¦ O(n)
+	æ¯ä¸ªå…ƒç´ éƒ½æœ‰ä¸¤ç§é€‰æ‹©ï¼šåŠ å…¥æˆ–è€…ä¸åŠ å…¥
 	*/
 	vector<vector<int>> subsets(vector<int> &nums)
 	{
@@ -323,15 +323,15 @@ public:
 			result.push_back(path);
 			return;
 		}
-		//²»Ñ¡Ôñ
+		//ä¸é€‰æ‹©
 		subsets_help(result, path, step + 1, nums);
 		path.push_back(nums[step]);
-		//Ñ¡Ôñ
+		//é€‰æ‹©
 		subsets_help(result, path, step + 1, nums);
 		path.pop_back();
 	}
-	/*Subsets II ÓÃsubsetsµÄ´úÂë¡£
-	¼ÓÈëresultÖ®Ç°½øĞĞÅĞ¶ÏÊÇ·ñ´æÔÚ*/
+	/*Subsets II ç”¨subsetsçš„ä»£ç ã€‚
+	åŠ å…¥resultä¹‹å‰è¿›è¡Œåˆ¤æ–­æ˜¯å¦å­˜åœ¨*/
 	vector<vector<int>> subsetsWithDup(vector<int> &nums)
 	{
 		sort(nums.begin(), nums.end());
@@ -350,15 +350,15 @@ public:
 				result.push_back(path);
 			return;
 		}
-		//²»Ñ¡Ôñ
+		//ä¸é€‰æ‹©
 		subsetsWithDup_help(result, path, step + 1, nums);
 		path.push_back(nums[step]);
-		//Ñ¡Ôñ
+		//é€‰æ‹©
 		subsetsWithDup_help(result, path, step + 1, nums);
 		path.pop_back();
 	}
 	/*Permutations
-	ÓÃnext_permutation , Ê±¼ä¸´ÔÓ¶È O(n!)£¬¿Õ¼ä¸´ÔÓ¶È O(1)
+	ç”¨next_permutation , æ—¶é—´å¤æ‚åº¦ O(n!)ï¼Œç©ºé—´å¤æ‚åº¦ O(1)
 	*/
 	vector<vector<int>> permutation(vector<int>& nums)
 	{
@@ -370,7 +370,7 @@ public:
 		} while (std::next_permutation(nums.begin(), nums.end()));
 		return result;
 	}
-	/*¼ÙÈç²»ÄÜÊ¹ÓÃstl£¬¿ÉÒÔ×Ô¼ºÊµÏÖnext_permutation*/
+	/*å‡å¦‚ä¸èƒ½ä½¿ç”¨stlï¼Œå¯ä»¥è‡ªå·±å®ç°next_permutation*/
 	template<typename BidiIt>
 	bool my_next_permutation(BidiIt first, BidiIt last)
 	{
@@ -398,8 +398,8 @@ public:
 		return true;
 	}
 	/*Permutations
-	ÓÃnext_permutation , Ê±¼ä¸´ÔÓ¶È O(n!)£¬¿Õ¼ä¸´ÔÓ¶È O(1)
-	next_permutation¶ÔÓÚnumsÓĞÖØ¸´Êı¾İÒ²ÓĞĞ§£¬²»»áÉú³ÉÖØ¸´ÅÅĞò
+	ç”¨next_permutation , æ—¶é—´å¤æ‚åº¦ O(n!)ï¼Œç©ºé—´å¤æ‚åº¦ O(1)
+	next_permutationå¯¹äºnumsæœ‰é‡å¤æ•°æ®ä¹Ÿæœ‰æ•ˆï¼Œä¸ä¼šç”Ÿæˆé‡å¤æ’åº
 	*/
 	vector<vector<int>> permutation_2(vector<int>& nums)
 	{
@@ -413,7 +413,7 @@ public:
 	}
 	/*
 	Combinations
-	µİ¹é£¬Ê±¼ä¸´ÔÓ¶È O(n!)£¬¿Õ¼ä¸´ÔÓ¶È O(n)
+	é€’å½’ï¼Œæ—¶é—´å¤æ‚åº¦ O(n!)ï¼Œç©ºé—´å¤æ‚åº¦ O(n)
 	*/
 	vector<vector<int>> combine(int n, int k)
 	{
@@ -424,12 +424,12 @@ public:
 		return result;
 	}
 	/*
-	result:´æ´¢½á¹û
-	n:´óĞ¡
-	k£º¿ªÊ¼Î»ÖÃ
-	length:ÒÑÑ¡ÔñµÄÊı¾İ¸öÊı
-	path:Ñ¡ÔñµÄ¼ÇÂ¼
-	target£ºÄ¿±êÑ¡Ôñ¸öÊı
+	result:å­˜å‚¨ç»“æœ
+	n:å¤§å°
+	kï¼šå¼€å§‹ä½ç½®
+	length:å·²é€‰æ‹©çš„æ•°æ®ä¸ªæ•°
+	path:é€‰æ‹©çš„è®°å½•
+	targetï¼šç›®æ ‡é€‰æ‹©ä¸ªæ•°
 	*/
 	void combine_help(vector<vector<int>> &result, int n, int k, int length, vector<int> &path, int target)
 	{
@@ -439,16 +439,16 @@ public:
 			return;
 		}
 		if (k > n) return;
-		//Ñ¡
+		//é€‰
 		path.push_back(k);
 		combine_help(result, n, k + 1, length + 1, path, target);
 		path.pop_back();
-		//²»Ñ¡
+		//ä¸é€‰
 		combine_help(result, n, k + 1, length, path, target);
 	}
 	/*
 	Letter Combinations of a Phone Number
-	µİ¹é£¬ Ê±¼ä¸´ÔÓ¶È O(3^n)£¬¿Õ¼ä¸´ÔÓ¶È O(n)
+	é€’å½’ï¼Œ æ—¶é—´å¤æ‚åº¦ O(3^n)ï¼Œç©ºé—´å¤æ‚åº¦ O(n)
 	*/
 	vector<string> letterCombinations(string digits)
 	{
@@ -470,43 +470,43 @@ public:
 		}
 		return;
 	}
-	/*Word Ladder ¹ã¶ÈÓÅÏÈËÑË÷ Ê±¼ä¸´ÔÓ¶È O(n)£¬¿Õ¼ä¸´ÔÓ¶È O(n) */
+	/*Word Ladder å¹¿åº¦ä¼˜å…ˆæœç´¢ æ—¶é—´å¤æ‚åº¦ O(n)ï¼Œç©ºé—´å¤æ‚åº¦ O(n) */
 	int ladderLength(string beginWord, string endWord, unordered_set<string>& wordList) {
-		queue<string> current, next; // µ±Ç°²ã£¬ÏÂÒ»²ã
-		unordered_set<string> visited; // ÅĞÖØ
-		int level = 0; // ²ã´Î
+		queue<string> current, next; // å½“å‰å±‚ï¼Œä¸‹ä¸€å±‚
+		unordered_set<string> visited; // åˆ¤é‡
+		int level = 0; // å±‚æ¬¡
 		bool found = false;
-		//ÅĞ¶ÏÊÇ·ñµ½´ïÖÕµã
+		//åˆ¤æ–­æ˜¯å¦åˆ°è¾¾ç»ˆç‚¹
 		auto state_is_target = [&](const string &s)
 		{
 			return s == endWord;
 		};
-		//»ñÈ¡µ¥´Ês¿ÉÒÔµ½´ïµÄµ¥´Ê¼¯ºÏ
+		//è·å–å•è¯så¯ä»¥åˆ°è¾¾çš„å•è¯é›†åˆ
 		auto state_extend = [&](const string &s)
 		{
 			vector<string> result;
 			for (size_t i = 0; i < s.size(); ++i)
 			{
 				string new_word(s);
-				//¸Ä±äÒ»¸ö×ÖÄ¸
+				//æ”¹å˜ä¸€ä¸ªå­—æ¯
 				for (char c = 'a'; c <= 'z'; c++)
 				{
 					if (c == new_word[i]) continue;
 					swap(c, new_word[i]);
-					//ĞèÒª±£Ö¤µ¥´ÊÎ´±»·ÃÎÊ¹ı
+					//éœ€è¦ä¿è¯å•è¯æœªè¢«è®¿é—®è¿‡
 					if ((wordList.count(new_word) > 0 || new_word == endWord) &&
 						!visited.count(new_word))
 					{
 						result.push_back(new_word);
 						visited.insert(new_word);
 					}
-					swap(c, new_word[i]); // »Ö¸´¸Ãµ¥´Ê
+					swap(c, new_word[i]); // æ¢å¤è¯¥å•è¯
 				}
 			}
 			return result;
 		};
 		current.push(beginWord);
-		//found±ê¼ÇÊÇ·ñÕÒµ½
+		//foundæ ‡è®°æ˜¯å¦æ‰¾åˆ°
 		while (!current.empty() && !found)
 		{
 			++level;
@@ -520,7 +520,7 @@ public:
 					next.push(state);
 					if (state_is_target(state))
 					{
-						found = true; //ÕÒµ½ÁË£¬ÍË³ö
+						found = true; //æ‰¾åˆ°äº†ï¼Œé€€å‡º
 						break;
 					}
 				}
@@ -530,12 +530,12 @@ public:
 		if (found) return level + 1;
 		else return 0;
 	}
-	/*Word Ladder 2 µİ¹é Ê±¼ä¸´ÔÓ¶È O(n)£¬¿Õ¼ä¸´ÔÓ¶È O(n)*/
-	vector<vector<string> > findLadders(string beginWord, string endWord,unordered_set<string> &wordList)
+	/*Word Ladder 2 é€’å½’ æ—¶é—´å¤æ‚åº¦ O(n)ï¼Œç©ºé—´å¤æ‚åº¦ O(n)*/
+	vector<vector<string> > findLadders(string beginWord, string endWord, unordered_set<string> &wordList)
 	{
-		unordered_set<string> current, next; // µ±Ç°²ã£¬ÏÂÒ»²ã£¬ÓÃ¼¯ºÏÊÇÎªÁËÈ¥ÖØ
-		unordered_set<string> visited; // ÅĞÖØ
-		unordered_map<string, vector<string> > father; // Ê÷
+		unordered_set<string> current, next; // å½“å‰å±‚ï¼Œä¸‹ä¸€å±‚ï¼Œç”¨é›†åˆæ˜¯ä¸ºäº†å»é‡
+		unordered_set<string> visited; // åˆ¤é‡
+		unordered_map<string, vector<string> > father; // æ ‘
 		bool found = false;
 		auto state_is_target = [&](const string &s)
 		{
@@ -556,7 +556,7 @@ public:
 					{
 						result.insert(new_word);
 					}
-					swap(c, new_word[i]); // »Ö¸´¸Ãµ¥´Ê
+					swap(c, new_word[i]); // æ¢å¤è¯¥å•è¯
 				}
 			}
 			return result;
@@ -564,7 +564,7 @@ public:
 		current.insert(beginWord);
 		while (!current.empty() && !found)
 		{
-			// ÏÈ½«±¾²ãÈ«²¿ÖÃÎªÒÑ·ÃÎÊ£¬·ÀÖ¹Í¬²ãÖ®¼ä»¥ÏàÖ¸Ïò
+			// å…ˆå°†æœ¬å±‚å…¨éƒ¨ç½®ä¸ºå·²è®¿é—®ï¼Œé˜²æ­¢åŒå±‚ä¹‹é—´äº’ç›¸æŒ‡å‘
 			for (const auto& word : current)
 				visited.insert(word);
 			for (const auto& word : current)
@@ -575,7 +575,7 @@ public:
 					if (state_is_target(state)) found = true;
 					next.insert(state);
 					father[state].push_back(word);
-					// visited.insert(state); // ÒÆ¶¯µ½×îÉÏÃæÁË
+					// visited.insert(state); // ç§»åŠ¨åˆ°æœ€ä¸Šé¢äº†
 				}
 			}
 			current.clear();
@@ -609,9 +609,9 @@ public:
 		path.pop_back();
 	}
 	/*
-	Surrounded Regions BFS£¬Ê±¼ä¸´ÔÓ¶È O(n)£¬¿Õ¼ä¸´ÔÓ¶È O(n)
-	Ö÷ÒªË¼Ïë£º±éÀúËÄÖÜµÄÃ¿¸ö×Ö·û£¬Èç¹ûÊÇ¡®O¡¯£¬Ôò´Óµ±Ç°×Ö·û¿ªÊ¼BFS±éÀú£¬Èç¹ûÖÜÎ§ÊÇ'O'£¬Ôò¼ÓÈë¶ÓÁĞ¡£
-	±éÀúÍê³Éºó£¬½øĞĞ¶ş´ÎÉ¨Ãè£¬Èç¹ûÈÔ±»±ê¼ÇÎª'O',Ôò±íÊ¾±»°üÎ§£¬Ó¦¸ÄÎª'X'£»Èç¹û±»±ê¼ÇÎª'+',Ôò±íÊ¾Î´±»°üÎ§£¬ÈÔÎª'O';
+	Surrounded Regions BFSï¼Œæ—¶é—´å¤æ‚åº¦ O(n)ï¼Œç©ºé—´å¤æ‚åº¦ O(n)
+	ä¸»è¦æ€æƒ³ï¼šéå†å››å‘¨çš„æ¯ä¸ªå­—ç¬¦ï¼Œå¦‚æœæ˜¯â€˜Oâ€™ï¼Œåˆ™ä»å½“å‰å­—ç¬¦å¼€å§‹BFSéå†ï¼Œå¦‚æœå‘¨å›´æ˜¯'O'ï¼Œåˆ™åŠ å…¥é˜Ÿåˆ—ã€‚
+	éå†å®Œæˆåï¼Œè¿›è¡ŒäºŒæ¬¡æ‰«æï¼Œå¦‚æœä»è¢«æ ‡è®°ä¸º'O',åˆ™è¡¨ç¤ºè¢«åŒ…å›´ï¼Œåº”æ”¹ä¸º'X'ï¼›å¦‚æœè¢«æ ‡è®°ä¸º'+',åˆ™è¡¨ç¤ºæœªè¢«åŒ…å›´ï¼Œä»ä¸º'O';
 	*/
 	void solve(vector<vector<char>>& board)
 	{
@@ -619,18 +619,18 @@ public:
 			return;
 		const int m = board.size();
 		const int n = board[0].size();
-		//´ÓËÄÖÜ±ß½ç¿ªÊ¼±éÀú
+		//ä»å››å‘¨è¾¹ç•Œå¼€å§‹éå†
 		for (size_t i = 0; i < n; i++)
 		{
 			bfs(board, 0, i);
 			bfs(board, m - 1, i);
 		}
-		for (size_t i = 1; i < m-1; i++)
+		for (size_t i = 1; i < m - 1; i++)
 		{
 			bfs(board, i, 0);
 			bfs(board, i, n - 1);
 		}
-		//¶ş´ÎÉ¨Ãè
+		//äºŒæ¬¡æ‰«æ
 		for (size_t i = 0; i < m; i++)
 		{
 			for (size_t j = 0; j < n; j++)
@@ -642,14 +642,279 @@ public:
 			}
 		}
 	}
+	/*Palindrome Partitioning æ—¶é—´å¤æ‚åº¦ O(2^n)ï¼Œç©ºé—´å¤æ‚åº¦ O(n)
+	ä¸»è¦æ€æƒ³ï¼šä¸€ä¸ªé•¿åº¦ä¸º n çš„å­—ç¬¦ä¸²ï¼Œæœ‰ n âˆ’ 1 ä¸ªåœ°æ–¹å¯ä»¥ç æ–­ï¼Œæ¯ä¸ªåœ°æ–¹å¯æ–­å¯ä¸æ–­ */
+	vector<vector<string>> partition(string s)
+	{
+		vector<vector<string>> result;
+		vector<string> path; // ä¸€ä¸ª partition æ–¹æ¡ˆ
+		partition_help(s, path, result, 0, 1);
+		return result;
+	}
+	// s[0, prev-1] ä¹‹é—´å·²ç»å¤„ç†ï¼Œä¿è¯æ˜¯å›æ–‡ä¸²
+	// prev è¡¨ç¤º s[prev-1] ä¸ s[prev] ä¹‹é—´çš„ç©ºéš™ä½ç½®ï¼Œ start åŒç†
+	void partition_help(string &s, vector<string> &path, vector<vector<string>> &result, size_t prev, size_t start)
+	{
+		if (start == s.size())
+		{
+			if (isPalindrome(s, prev, start - 1))
+			{
+				path.push_back(s.substr(prev, start - prev));
+				result.push_back(path);
+				path.pop_back();
+			}
+			return;
+		}
+		//dfsä¸æ–­å¼€
+		partition_help(s, path, result, prev, start + 1);
+		//å¦‚æœ[prev,start-1]æ˜¯å›æ–‡ï¼Œåˆ™å¯ä»¥æ–­å¼€
+		if (isPalindrome(s, prev, start - 1))
+		{
+			path.push_back(s.substr(prev, start - prev));
+			partition_help(s, path, result, start, start + 1);
+			path.pop_back();
+		}
+	}
+	/*Palindrome Partitioning åŠ¨æ€è§„åˆ’ æ—¶é—´å¤æ‚åº¦ O(n^2)ï¼Œç©ºé—´å¤æ‚åº¦ O(1) */
+	vector<vector<string>> partition_dp(string s)
+	{
+		const int LEN = 100;
+		const int n = s.size();
+		bool p[LEN][LEN]; // whether s[i,j] is palindrome
+		//	fill_n(&p[0][0], n * n, false);
+		for (int i = n - 1; i >= 0; --i)
+		for (int j = i; j < n; ++j)
+			p[i][j] = s[i] == s[j] && ((j - i < 2) || p[i + 1][j - 1]);
+		vector<vector<string> > sub_palins[LEN]; // sub palindromes of s[0,i]
+		for (int i = n - 1; i >= 0; --i)
+		{
+			for (int j = i; j < n; ++j)
+			if (p[i][j])
+			{
+				const string palindrome = s.substr(i, j - i + 1);
+				if (j + 1 < n)
+				{
+					for (auto v : sub_palins[j + 1])
+					{
+						v.insert(v.begin(), palindrome);
+						sub_palins[i].push_back(v);
+					}
+				}
+				else
+				{
+					sub_palins[i].push_back(vector<string> { palindrome });
+				}
+			}
+		}
+		return sub_palins[0];
+	}
+	/*Unique Paths åŠ¨æ€è§„åˆ’ æ—¶é—´å¤æ‚åº¦ O(n^2)ï¼Œç©ºé—´å¤æ‚åº¦ O(n)*/
+	int uniquePaths(int m, int n)
+	{
+		const int MAX_LEN = 100;
+		int dp[MAX_LEN][MAX_LEN];
+		//åˆå§‹åŒ–
+		for (size_t i = 0; i < m; i++)
+		{
+			for (size_t j = 0; j < n; j++)
+			{
+				dp[i][j] = 0;
+			}
+		}
+		for (size_t i = 0; i < n; i++)
+		{
+			dp[0][i] = 1;
+		}
+		for (size_t i = 0; i < m; i++)
+		{
+			dp[i][0] = 1;
+		}
+		//çŠ¶æ€è½¬ç§»ï¼šf[i][j]=f[i-1][j]+f[i][j-1]
+		for (size_t i = 1; i < m; i++)
+		{
+			for (size_t j = 1; j < n; j++)
+			{
+				dp[i][j] = (dp[i][j - 1] + dp[i - 1][j]);
+			}
+		}
+		return dp[m - 1][n - 1];
+	}
+	/*DFS æ—¶é—´å¤æ‚åº¦ O(n^4)ï¼Œç©ºé—´å¤æ‚åº¦ O(n)*/
+	int uniquePaths_DFS(int m, int n) {
+		if (m < 1 || n < 1) return 0; // ç»ˆæ­¢æ¡ä»¶
+		if (m == 1 && n == 1) return 1; // æ”¶æ•›æ¡ä»¶
+		return uniquePaths(m - 1, n) + uniquePaths(m, n - 1);
+	}
+	/*Unique Paths 2 åŠ¨æ€è§„åˆ’ æ—¶é—´å¤æ‚åº¦ O(n^2)ï¼Œç©ºé—´å¤æ‚åº¦ O(n)*/
+	int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid)
+	{
+		int m = obstacleGrid.size();
+		int n = obstacleGrid[0].size();
+		const int MAX_LEN = 100;
+		int dp[MAX_LEN][MAX_LEN];
+		//åˆå§‹åŒ–
+		for (size_t i = 0; i < m; i++)
+		{
+			for (size_t j = 0; j < n; j++)
+			{
+				dp[i][j] = (obstacleGrid[i][j] == 1 ? 0 : 1);
+			}
+		}
+
+		for (size_t i = 0; i < m; i++)
+		{
+			for (size_t j = 0; j < n; j++)
+			{
+				//ç¬¬0è¡Œï¼ŒçŠ¶æ€è½¬ç§»ï¼šf[i][j]=f[i][j-1]
+				if (i == 0 && j>0 && obstacleGrid[i][j] == 0)
+					dp[0][j] = dp[0][j - 1];
+				//ç¬¬0åˆ—ï¼ŒçŠ¶æ€è½¬ç§»ï¼šf[i][j]=f[i-1][j]
+				if (j == 0 && i>0 && obstacleGrid[i][j] == 0)
+					dp[i][0] = dp[i - 1][0];
+				//çŠ¶æ€è½¬ç§»ï¼šf[i][j]=f[i-1][j]+f[i][j-1]
+				if (obstacleGrid[i][j] != 1 && i > 0 && j > 0)
+					dp[i][j] = (dp[i][j - 1] + dp[i - 1][j]);
+			}
+		}
+		return dp[m - 1][n - 1];
+	}
+	/*N-Queensï¼ŒNçš‡åé—®é¢˜ï¼ŒDFS æ·±æœ + å‰ªæ
+	æ—¶é—´å¤æ‚åº¦ O(n!)ï¼Œç©ºé—´å¤æ‚åº¦ O(n)*/
+	vector<vector<string>> solveNQueens(int n)
+	{
+		vector<vector<string>> result;
+		vector<int> path;
+		sloveNQueues_help(result, path, 0, n);
+		return result;
+	}
+	void sloveNQueues_help(vector<vector<string>> &result, vector<int> &path, int start, int n)
+	{
+		if (start == n)
+		{
+			if (solve_isValid(path))
+				result.push_back(get_queue(path));
+			return;
+		}
+		if (!solve_isValid(path))
+			return;
+		for (size_t i = 0; i < n; i++)
+		{
+			//æŸ¥è¯¢æ˜¯å¦å­˜åœ¨è¯¥é€‰æ‹©
+			auto res = find(path.begin(), path.end(), i);
+			if (res != path.end()) continue;
+			path.push_back(i);
+			sloveNQueues_help(result, path, start + 1, n);
+			path.pop_back();
+		}
+	}
+	/*æ ¹æ®é€‰æ‹©è·¯å¾„è·å–çš‡åæ’åˆ—æ–¹æ³•*/
+	vector<string> get_queue(vector<int> path)
+	{
+		int n = path.size();
+		vector<string> res;
+		for (size_t i = 0; i < n; i++)
+		{
+			string temp(n, '.');
+			temp[path[i]] = 'Q';
+			res.push_back(temp);
+		}
+		return res;
+	}
+	/*åˆ¤æ–­å½“å‰çš„é€‰æ‹©é˜Ÿåˆ—æ˜¯å¦æœ‰æ•ˆ*/
+	bool solve_isValid(vector<int> path)
+	{
+		if (path.size() == 0) return true;
+		for (size_t i = 0; i < path.size() - 1; i++)
+		{
+			for (size_t j = i + 1; j < path.size(); j++)
+			{
+				/*ç«–å‘æ–¹å‘ï¼Œä¸¤ä¸ªæ–œå‘æ–¹å‘*/
+				if (path[j] == path[i] || path[j] == (path[i] + (j - i)) || path[j] == (path[i] - (j - i)))
+					return false;
+			}
+		}
+		return true;
+	}
+	/*N-Queues 2*/
+	int totalNQueens(int n)
+	{
+		int  result = 0;
+		vector<int> path;
+		sloveNQueues_help(result, path, 0, n);
+		return result;
+	}
+	void sloveNQueues_help(int &result, vector<int> &path, int start, int n)
+	{
+		if (start == n)
+		{
+			if (solve_isValid(path))
+				result++;
+			return;
+		}
+		if (!solve_isValid(path))
+			return;
+		for (size_t i = 0; i < n; i++)
+		{
+			//æŸ¥è¯¢æ˜¯å¦å­˜åœ¨è¯¥é€‰æ‹©
+			auto res = find(path.begin(), path.end(), i);
+			if (res != path.end()) continue;
+			path.push_back(i);
+			sloveNQueues_help(result, path, start + 1, n);
+			path.pop_back();
+		}
+	}
+	/*Restore IP Addresses æ—¶é—´å¤æ‚åº¦ O(n^4)ï¼Œç©ºé—´å¤æ‚åº¦ O(n)*/
+	vector<string> restoreIpAddresses(string s)
+	{
+		vector<string> result;
+		string ip; // å­˜æ”¾ä¸­é—´ç»“æœ
+		restoreIpAddresses_dfs(s, 0, 0, ip, result);
+		return result;
+	}
+	/**
+	* @brief è§£æå­—ç¬¦ä¸²
+	* @param[in] s å­—ç¬¦ä¸²ï¼Œè¾“å…¥æ•°æ®
+	* @param[in] startIndex ä» s çš„å“ªé‡Œå¼€å§‹
+	* @param[in] step å½“å‰æ­¥éª¤ç¼–å·ï¼Œä» 0 å¼€å§‹ç¼–å·ï¼Œå–å€¼ä¸º 0,1,2,3,4 è¡¨ç¤ºç»“æŸäº†
+	* @param[out] intermediate å½“å‰è§£æå‡ºæ¥çš„ä¸­é—´ç»“æœ
+	* @param[out] result å­˜æ”¾æ‰€æœ‰å¯èƒ½çš„ IP åœ°å€
+	* @return æ— 
+	*/
+	void restoreIpAddresses_dfs(string s, size_t start, size_t step, string ip,
+		vector<string> &result)
+	{
+		if (start == s.size() && step == 4)   // æ‰¾åˆ°ä¸€ä¸ªåˆæ³•è§£
+		{
+			ip.resize(ip.size() - 1);
+			result.push_back(ip);
+			return;
+		}
+		if (s.size() - start > (4 - step) * 3)
+			return; // å‰ªæ
+		if (s.size() - start < (4 - step))
+			return; // å‰ªæ
+		int num = 0;
+		for (size_t i = start; i < start + 3; i++)
+		{
+			num = num * 10 + (s[i] - '0');
+			if (num <= 255)   // å½“å‰ç»“ç‚¹åˆæ³•ï¼Œåˆ™ç»§ç»­å¾€ä¸‹é€’å½’
+			{
+				ip += s[i];
+				restoreIpAddresses_dfs(s, i + 1, step + 1, ip + '.', result);
+			}
+			if (num == 0) break; // ä¸å…è®¸å‰ç¼€ 0ï¼Œä½†å…è®¸å•ä¸ª 0
+		}
+	}
+
 private:
+	/*Surrounded Regions BFS*/
 	void bfs(vector<vector<char>> &board, int i, int j)
 	{
 		typedef pair<int, int> state_t;
 		queue<state_t> q;
 		const int m = board.size();
 		const int n = board[0].size();
-		/*ÅĞ¶Ïµ±Ç°×Ö·ûÊÇ·ñÊÇ'O'*/
+		/*åˆ¤æ–­å½“å‰å­—ç¬¦æ˜¯å¦æ˜¯'O'*/
 		auto is_valid = [&](const state_t &s)
 		{
 			const int x = s.first;
@@ -658,19 +923,19 @@ private:
 				return false;
 			return true;
 		};
-		//ÄäÃûº¯Êı£¬·µ»Øµ±Ç°×Ö·ûsµÄËÄÖÜ'O'¼¯ºÏ
+		//åŒ¿åå‡½æ•°ï¼Œè¿”å›å½“å‰å­—ç¬¦sçš„å››å‘¨'O'é›†åˆ
 		auto state_extend = [&](const state_t &s)
 		{
 			vector<state_t> result;
 			const int x = s.first;
 			const int y = s.second;
-			//ÉÏÏÂ×óÓÒ
+			//ä¸Šä¸‹å·¦å³
 			const state_t new_states[4] = { { x - 1, y }, { x + 1, y }, { x, y - 1 }, { x, y + 1 } };
 			for (size_t i = 0; i < 4; i++)
 			{
 				if (is_valid(new_states[i]))
 				{
-					//¼ÈÓĞ±ê¼ÇÓÖÓĞÈ¥ÖØµÄ¹¦ÄÜ
+					//æ—¢æœ‰æ ‡è®°åˆæœ‰å»é‡çš„åŠŸèƒ½
 					board[new_states[i].first][new_states[i].second] = '+';
 					result.push_back(new_states[i]);
 				}
@@ -693,29 +958,25 @@ private:
 				q.push(s);
 		}
 	}
+	/*åˆ¤æ–­æ˜¯å¦æ˜¯å›æ–‡ï¼Œstartå’Œendè¡¨ç¤ºèµ·å§‹å’Œç»“æŸä½ç½®*/
+	bool isPalindrome(const string &s, int start, int end)
+	{
+		while (start < end && s[start] == s[end])
+		{
+			++start;
+			--end;
+		}
+		return start >= end;
+	}
 	vector<string> keyboard;// = { " ", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz" };
 };
 int main()
 {
 
-	vector<vector<char>> board;
-	vector<char> c1 = { 'X', 'X', 'X' };
-	vector<char> c2 = { 'X', 'O', 'X' };
-	vector<char> c3 = { 'X', 'X', 'X' };
-	board.push_back(c1);
-	board.push_back(c2);
-	board.push_back(c3);
 
 	Solution sol;
-	sol.solve(board);
-	for each (auto var in board)
-	{
-		for each (auto var1 in var)
-		{
-			cout << " " << var1;
-		}
-		cout << "\n";
-	}
+	auto res = sol.totalNQueens(4);
+	cout << res;
 	system("pause");
 	return 0;
 }
