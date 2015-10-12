@@ -905,7 +905,8 @@ public:
 			if (num == 0) break; // 不允许前缀 0，但允许单个 0
 		}
 	}
-	/*Combination Sum*/
+	/*Combination Sum 
+	Combination Sum 2 只需要将dfs中i变为i+1即可*/
 	vector<vector<int>> combinationSum(vector<int>& candidates, int target)
 	{
 		vector<int> path;
@@ -934,7 +935,170 @@ public:
 			path.pop_back();
 		}
 	}
+	/*Combinations sum3*/
+	vector<vector<int>> combinationSum3(int k, int n)
+	{
+		vector<int> path;
+		vector<vector<int>> result;
+		if (k == 0 || n == 0) return result;
+		combinationSum3_dfs(result, path, 1, 0, k, 0, n);
+		return result;
+	}
+	void combinationSum3_dfs(vector<vector<int>> &result, vector<int> path, int start,int count,int n_size,int sum, int target)
+	{
+		if (count == n_size&& sum == target)
+		{
+			sort(path.begin(), path.end());
+			result.push_back(path);
+			return;
+		}
+		if (sum >= target || count >= n_size)
+			return;
+		for (size_t i = start; i < 10; i++)
+		{
+			sum += i;
+			path.push_back(i);
+			combinationSum3_dfs(result, path, i + 1, count + 1, n_size, sum, target);
+			sum -= i;
+			path.pop_back();
+		}
+	}
 
+	/*Generate Parentheses 先用next_premutation生成全排列，然后再判断该排列是否有效*/
+	vector<string> generateParenthesis(int n)
+	{
+		vector<string> result;
+		string s(n, '(');
+		string s1(n, ')');
+		s += s1;
+		
+		sort(s.begin(), s.end());
+		do
+		{
+			if (parentheses_Valid(s))
+			{
+				result.push_back(s);
+			}
+		} while (std::next_permutation(s.begin(), s.end()));
+		return result;
+	}
+	/*判断括号匹配是否有效*/
+	bool parentheses_Valid(string s)
+	{
+		stack<char> stack_char;
+		int i = 0;
+		while (i<s.size())
+		{
+			if (s[i] == '(')
+				stack_char.push('(');
+			else
+			{
+				if (!stack_char.empty())
+					stack_char.pop();
+				else return false;
+			}
+			i++;
+		}
+		return true;
+	}
+	/*递归，小括号串是一个递归结构，跟单链表、二叉树等递归结构一样，首先想到用递归*/
+	vector<string> generateParenthesis_v2(int n) 
+	{
+		vector<string> result;
+		if (n > 0) generate(n, "", 0, 0, result);
+		return result;
+	}
+	// l 表示 '(' 出现的次数, r 表示 ')' 出现的次数
+	void generate(int n, string s, int l, int r, vector<string> &result)
+	{
+		if (l == n)
+		{
+			result.push_back(s.append(n - r, ')'));
+			return;
+		}
+		generate(n, s + '(', l + 1, r, result);
+		if (l > r) generate(n, s + ")", l, r + 1, result);
+	}
+
+	/*Valid Sudoku 运用位运算*/
+	bool isValidSudoku(vector<vector<char>>& board)
+	{
+		//col,row,sqr分别记录每行每列的状态
+		int col[9] = {}, row[9] = {}, sqr[9] = {};
+		for (int i = 0; i < 9; i++){
+			for (int j = 0; j < 9; j++){
+				if (board[i][j] != '.'){
+					//sq计算出属于第几个格子
+					int n = 1 << (board[i][j] - '1'), sq = (i / 3) * 3 + j / 3;
+					//与运算判断是否已经出现
+					if (row[i] & n || col[j] & n || sqr[sq] & n) return false;
+					//或运算，更新出现的数
+					row[i] |= n;
+					col[j] |= n;
+					sqr[sq] |= n;
+				}
+			}
+		}
+		return true;
+	}
+	/*Sudoku solver 求解数独 暴力破解 时间复杂度高
+	其它方法：0ms, https://leetcode.com/discuss/59649/yet-another-0ms-c-solution
+	*/
+	void solveSudoku(vector<vector<char>>& board)
+	{
+		solveSudoku_help(board);
+	}
+	bool solveSudoku_help(vector<vector<char>> &board)
+	{
+		for (int i = 0; i < 9; ++i)
+		for (int j = 0; j < 9; ++j) {
+			if (board[i][j] == '.') {
+				//为每个区域尝试1-9,暴力破解
+				for (int k = 0; k < 9; ++k) {
+					board[i][j] = '1' + k;
+					if (isValidSudoku(board) && solveSudoku_help(board))
+						return true;
+					board[i][j] = '.';
+				}
+				return false;
+			}
+		}
+		return true;
+	}
+	/*word search,DFS*/
+	bool exist(vector<vector<char> > &board, string word)
+	{
+		const int m = board.size();
+		const int n = board[0].size();
+		vector<vector<bool> > visited(m, vector<bool>(n, false));
+		for (int i = 0; i < m; ++i)
+		for (int j = 0; j < n; ++j)
+		if (exist_dfs(board, word, 0, i, j, visited))
+			return true;
+		return false;
+	}
+	static bool exist_dfs(const vector<vector<char> > &board, const string &word,
+		int index, int x, int y, vector<vector<bool> > &visited)
+	{
+		if (index == word.size())
+			return true; // 收敛条件
+		if (x < 0 || y < 0 || x >= board.size() || y >= board[0].size())
+			return false; // 越界，终止条件
+		if (visited[x][y]) return false; // 已经访问过，剪枝
+		if (board[x][y] != word[index]) return false; // 不相等，剪枝
+		visited[x][y] = true;
+		bool ret = exist_dfs(board, word, index + 1, x - 1, y, visited) || // 上
+			exist_dfs(board, word, index + 1, x + 1, y, visited) || // 下
+			exist_dfs(board, word, index + 1, x, y - 1, visited) || // 左
+			exist_dfs(board, word, index + 1, x, y + 1, visited); // 右
+		visited[x][y] = false;
+		return ret;
+	}
+	/*Word Search 2 还未做*/
+	vector<string> findWords(vector<vector<char>>& board, vector<string>& words) 
+	{
+
+	}
 private:
 	/*Surrounded Regions BFS*/
 	void bfs(vector<vector<char>> &board, int i, int j)
@@ -1005,15 +1169,17 @@ int main()
 
 	Solution sol;
 	vector<int> vec = {2,3,6,7};
-	auto res = sol.combinationSum(vec,7);
-	for each (auto var in res)
+	//auto res = sol.generateParenthesis(3);
+	auto res= 1 << 3;
+	cout << res;
+	/*for each (auto var in res)
 	{
 		for each (auto var1 in var)
 		{
 			cout << var1 << "  ";
 		}
 		cout << endl;
-	}
+	}*/
 
 	system("pause");
 	return 0;
