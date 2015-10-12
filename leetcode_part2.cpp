@@ -905,7 +905,7 @@ public:
 			if (num == 0) break; // 不允许前缀 0，但允许单个 0
 		}
 	}
-	/*Combination Sum 
+	/*Combination Sum
 	Combination Sum 2 只需要将dfs中i变为i+1即可*/
 	vector<vector<int>> combinationSum(vector<int>& candidates, int target)
 	{
@@ -914,7 +914,7 @@ public:
 		combinationSum_dfs(result, path, 0, 0, candidates, target);
 		return result;
 	}
-	void combinationSum_dfs(vector<vector<int>> &result,vector<int> path,int start,int sum,vector<int> candidates,int target)
+	void combinationSum_dfs(vector<vector<int>> &result, vector<int> path, int start, int sum, vector<int> candidates, int target)
 	{
 		if (target == 0)
 			return;
@@ -944,7 +944,7 @@ public:
 		combinationSum3_dfs(result, path, 1, 0, k, 0, n);
 		return result;
 	}
-	void combinationSum3_dfs(vector<vector<int>> &result, vector<int> path, int start,int count,int n_size,int sum, int target)
+	void combinationSum3_dfs(vector<vector<int>> &result, vector<int> path, int start, int count, int n_size, int sum, int target)
 	{
 		if (count == n_size&& sum == target)
 		{
@@ -971,7 +971,7 @@ public:
 		string s(n, '(');
 		string s1(n, ')');
 		s += s1;
-		
+
 		sort(s.begin(), s.end());
 		do
 		{
@@ -987,7 +987,7 @@ public:
 	{
 		stack<char> stack_char;
 		int i = 0;
-		while (i<s.size())
+		while (i < s.size())
 		{
 			if (s[i] == '(')
 				stack_char.push('(');
@@ -1002,7 +1002,7 @@ public:
 		return true;
 	}
 	/*递归，小括号串是一个递归结构，跟单链表、二叉树等递归结构一样，首先想到用递归*/
-	vector<string> generateParenthesis_v2(int n) 
+	vector<string> generateParenthesis_v2(int n)
 	{
 		vector<string> result;
 		if (n > 0) generate(n, "", 0, 0, result);
@@ -1095,7 +1095,7 @@ public:
 		return ret;
 	}
 	/*Word Search 2 还未做*/
-	vector<string> findWords(vector<vector<char>>& board, vector<string>& words) 
+	vector<string> findWords(vector<vector<char>>& board, vector<string>& words)
 	{
 
 	}
@@ -1120,7 +1120,7 @@ public:
 	时间复杂度 O(logn)，空间复杂度 O(1)*/
 	double myPow_v2(double x, int n)
 	{
-		if (n < 0) 
+		if (n < 0)
 			return 1.0 / power_help(x, -n);
 		else
 			return power_help(x, n);
@@ -1167,15 +1167,15 @@ public:
 			r = (r + x / r) / 2;
 		return r;
 	}
-	/*Jump Game 
+	/*Jump Game
 	dfs 超时*/
 	bool canJump(vector<int>& nums)
 	{
 		return canJump_help(0, nums);
 	}
-	bool canJump_help(int start,vector<int> &nums)
+	bool canJump_help(int start, vector<int> &nums)
 	{
-		if (start >= nums.size()-1)
+		if (start >= nums.size() - 1)
 			return true;
 		int val = nums[start];
 		if (val == 0)
@@ -1216,8 +1216,8 @@ public:
 		int left = 0;
 		int right = 0; // [left, right] 是当前能覆盖的区间
 		if (n == 1) return 0;
-		while (left <= right) 
-		{ 
+		while (left <= right)
+		{
 			// 尝试从每一层跳最远，
 			++step;
 			const int old_right = right;
@@ -1238,7 +1238,7 @@ public:
 		int cur_pro = 0;
 		int length = prices.size();
 		if (length < 2) return 0;
-		int cur_min= prices[0];
+		int cur_min = prices[0];
 		for (size_t i = 1; i < length; i++)
 		{
 			cur_pro = max(cur_pro, prices[i] - cur_min);
@@ -1251,18 +1251,18 @@ public:
 	int maxProfit2(vector<int>& prices)
 	{
 		int sum = 0;
-		for (int i = 1; i < prices.size(); i++) 
+		for (int i = 1; i < prices.size(); i++)
 		{
 			int diff = prices[i] - prices[i - 1];
 			if (diff > 0) sum += diff;
 		}
 		return sum;
 	}
-	int maxProfit3(vector<int>& prices) 
+	int maxProfit3(vector<int>& prices)
 	{
 		int states[2][4] = { INT_MIN, 0, INT_MIN, 0 }; // 0: 1 buy, 1: one buy/sell, 2: 2 buys/1 sell, 3, 2 buys/sells
 		int len = prices.size(), i, cur = 0, next = 1;
-		for (i = 0; i<len; ++i)
+		for (i = 0; i < len; ++i)
 		{
 			states[next][0] = max(states[cur][0], -prices[i]);
 			states[next][1] = max(states[cur][1], states[cur][0] + prices[i]);
@@ -1272,33 +1272,31 @@ public:
 		}
 		return max(states[cur][1], states[cur][3]);
 	}
-	/* Best Time to Buy and Sell Stock3 动态规划*/
+	/* 
+	Best Time to Buy and Sell Stock3 动态规划
+	思路：设状态 f(i)，表示区间 [0, i](0 ≤ i ≤ n −1) 的最大利润，
+		  状态 g(i)，表示区间 [i, n −1](0 ≤ i ≤ n − 1) 的最大利润，则最终答案为 max {f(i) + g(i)} ,0 ≤ i ≤ n − 1。
+	*/
 	int maxProfit3_v2(vector<int>& prices)
 	{
-		int size = prices.size();
-		if (size == 0 || size == 1) return 0;
-		int *profit =new int[size];
-		int *profit1 = new int[size];
-		int local_min = prices[0];
-		int local_max = prices[size - 1];
-		int j = size - 2;
-		int result = 0;
-		profit[0] = 0;
-		profit1[size - 1] = 0;
-		for (int i = 1; i<size + 1 && j >= 0; i++, j--)
+		if (prices.size() < 2) return 0;
+		const int n = prices.size();
+		vector<int> f(n, 0);
+		vector<int> g(n, 0);
+		for (int i = 1, valley = prices[0]; i < n; ++i) 
 		{
-			profit[i] = max(profit[i - 1], prices[i] - local_min);
-			local_min = min(local_min, prices[i]);
-			profit1[j] = max(profit1[j + 1], local_max - prices[j]);
-			local_max = max(local_max, prices[j]);
+			valley = min(valley, prices[i]);
+			f[i] = max(f[i - 1], prices[i] - valley);
 		}
-		for (int i = 1; i<size; i++)
+		for (int i = n - 2, peak = prices[n - 1]; i >= 0; --i) 
 		{
-			result = max(result, profit[i] + profit1[i]);
+			peak = max(peak, prices[i]);
+			g[i] = max(g[i], peak - prices[i]);
 		}
-		delete[] profit;
-		delete[] profit1;
-		return result;
+		int max_profit = 0;
+		for (int i = 0; i < n; ++i)
+			max_profit = max(max_profit, f[i] + g[i]);
+		return max_profit;
 	}
 
 	/*Best Time to Buy and Sell Stock IV*/
@@ -1325,8 +1323,8 @@ public:
 			//重复，去除该重复字母之前的子串，并添加该字母追加到末尾
 			else
 			{
-				max_len = max(max_len,(int)temp.size());
-				temp.erase(temp.begin(), find_res+1);
+				max_len = max(max_len, (int)temp.size());
+				temp.erase(temp.begin(), find_res + 1);
 				temp.push_back(s[i]);
 			}
 		}
@@ -1339,13 +1337,13 @@ public:
 		int start = 0;
 		int end = height.size() - 1;
 		int result = INT_MIN;
-		while (start < end) 
+		while (start < end)
 		{
 			int area = min(height[end], height[start]) * (end - start);
 			result = max(result, area);
-			if (height[start] <= height[end]) 
+			if (height[start] <= height[end])
 				start++;
-			else 
+			else
 				end--;
 		}
 		return result;
@@ -1424,11 +1422,11 @@ int main()
 	cout << res;
 	/*for each (auto var in res)
 	{
-		for each (auto var1 in var)
-		{
-			cout << var1 << "  ";
-		}
-		cout << endl;
+	for each (auto var1 in var)
+	{
+	cout << var1 << "  ";
+	}
+	cout << endl;
 	}*/
 
 	system("pause");

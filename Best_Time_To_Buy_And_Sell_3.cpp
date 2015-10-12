@@ -1,27 +1,26 @@
-int maxProfit3_v2(vector<int>& prices)
+	/* 
+	Best Time to Buy and Sell Stock3 动态规划
+	思路：设状态 f(i)，表示区间 [0, i](0 ≤ i ≤ n −1) 的最大利润，
+		  状态 g(i)，表示区间 [i, n −1](0 ≤ i ≤ n − 1) 的最大利润，则最终答案为 max {f(i) + g(i)} ,0 ≤ i ≤ n − 1。
+	*/
+	int maxProfit3_v2(vector<int>& prices)
 	{
-		int size = prices.size();
-		if (size == 0 || size == 1) return 0;
-		int *profit =new int[size];
-		int *profit1 = new int[size];
-		int local_min = prices[0];
-		int local_max = prices[size - 1];
-		int j = size - 2;
-		int result = 0;
-		profit[0] = 0;
-		profit1[size - 1] = 0;
-		for (int i = 1; i<size + 1 && j >= 0; i++, j--)
+		if (prices.size() < 2) return 0;
+		const int n = prices.size();
+		vector<int> f(n, 0);
+		vector<int> g(n, 0);
+		for (int i = 1, valley = prices[0]; i < n; ++i) 
 		{
-			profit[i] = max(profit[i - 1], prices[i] - local_min);
-			local_min = min(local_min, prices[i]);
-			profit1[j] = max(profit1[j + 1], local_max - prices[j]);
-			local_max = max(local_max, prices[j]);
+			valley = min(valley, prices[i]);
+			f[i] = max(f[i - 1], prices[i] - valley);
 		}
-		for (int i = 1; i<size; i++)
+		for (int i = n - 2, peak = prices[n - 1]; i >= 0; --i) 
 		{
-			result = max(result, profit[i] + profit1[i]);
+			peak = max(peak, prices[i]);
+			g[i] = max(g[i], peak - prices[i]);
 		}
-		delete[] profit;
-		delete[] profit1;
-		return result;
+		int max_profit = 0;
+		for (int i = 0; i < n; ++i)
+			max_profit = max(max_profit, f[i] + g[i]);
+		return max_profit;
 	}
