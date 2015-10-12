@@ -1099,6 +1099,213 @@ public:
 	{
 
 	}
+	/*Pow(x, n) 遍历超时*/
+	double myPow(double x, int n)
+	{
+		double result = 1;
+		int flag = 1;
+		flag = n < 0 ? 0 : 1;
+		int length = abs(n);
+		for (size_t i = 1; i <= length; i++)
+		{
+			result *= x;
+		}
+		if (flag == 0)
+			return 1 / result;
+		else
+			return result;
+	}
+	/*Pow(x,n)
+	二分法， $x^n = x^{n/2} * x^{n/2} * x^{n\%2}
+	时间复杂度 O(logn)，空间复杂度 O(1)*/
+	double myPow_v2(double x, int n)
+	{
+		if (n < 0) 
+			return 1.0 / power_help(x, -n);
+		else
+			return power_help(x, n);
+
+	}
+	double power_help(double x, int n)
+	{
+		if (n == 0) return 1;
+		double v = power_help(x, n / 2);
+		if (n % 2 == 0)
+			return v*v;
+		else
+			return v*v*x;
+	}
+	/*Sqrt(x) 分治法 时间复杂度 O(logn)，空间复杂度 O(1) */
+	int mySqrt(int x)
+	{
+		int left = 1, right = x / 2;
+		int last_mid; //记录最近一次mid,返回小于x且正好能被开方的结果
+		if (x < 2) return x;
+		while (left <= right)
+		{
+			const int mid = left + (right - left) / 2;
+			// 不要用 x > mid * mid，会溢出
+			if (x / mid > mid)
+			{
+				left = mid + 1;
+				last_mid = mid;
+			}
+			else if (x / mid < mid)
+				right = mid - 1;
+			else
+				return mid;
+		}
+		return last_mid;
+	}
+	/*Integer Newton ，快很多
+	参考解法：https://en.wikipedia.org/wiki/Integer_square_root#Using_only_integer_division
+	*/
+	int mySqrt_v2(int x)
+	{
+		long long r = x;
+		while (r*r > x)
+			r = (r + x / r) / 2;
+		return r;
+	}
+	/*Jump Game 
+	dfs 超时*/
+	bool canJump(vector<int>& nums)
+	{
+		return canJump_help(0, nums);
+	}
+	bool canJump_help(int start,vector<int> &nums)
+	{
+		if (start >= nums.size()-1)
+			return true;
+		int val = nums[start];
+		if (val == 0)
+			return false;
+		for (size_t i = 1; i <= val; i++)
+		{
+			bool res = canJump_help(start + i, nums);
+			if (res) return true;
+		}
+		return false;
+	}
+	/*贪心算法*/
+	bool canJump_v2(vector<int> &nums)
+	{
+		int reach = 1; // 最右能跳到哪里
+		int n = nums.size();
+		//更新reach
+		for (int i = 0; i < reach && reach < n; ++i)
+			reach = max(reach, i + 1 + nums[i]);
+		return reach >= n;
+	}
+	/*dp*/
+	bool canJump_dp(vector<int> &nums) {
+		int n = nums.size();
+		if (n == 0) return true;
+		// 逆向下楼梯，最左能下降到第几层
+		int left_most = n - 1;
+		for (int i = n - 2; i >= 0; --i)
+		if (i + nums[i] >= left_most)
+			left_most = i;
+		return left_most == 0;
+	}
+	/*Jump Game 2 贪心算法*/
+	int jump(vector<int> &nums)
+	{
+		int n = nums.size();
+		int step = 0; // 最小步数
+		int left = 0;
+		int right = 0; // [left, right] 是当前能覆盖的区间
+		if (n == 1) return 0;
+		while (left <= right) 
+		{ 
+			// 尝试从每一层跳最远，
+			++step;
+			const int old_right = right;
+			for (int i = left; i <= old_right; ++i)
+			{
+				int new_right = i + nums[i];
+				if (new_right >= n - 1) return step;
+				if (new_right > right) right = new_right;
+			}
+			//更新能覆盖的区间
+			left = old_right + 1;
+		}
+		return 0;
+	}
+	/*Best Time to Buy and Sell Stock*/
+	int maxProfit(vector<int>& prices)
+	{
+		int cur_pro = 0;
+		int length = prices.size();
+		if (length < 2) return 0;
+		int cur_min= prices[0];
+		for (size_t i = 1; i < length; i++)
+		{
+			cur_pro = max(cur_pro, prices[i] - cur_min);
+			cur_min = min(cur_min, prices[i]);
+		}
+		return cur_pro;
+	}
+	/*Best Time to Buy and Sell Stock2
+	思路：将所有距离为1的有利润的部分相加即可*/
+	int maxProfit2(vector<int>& prices)
+	{
+		int sum = 0;
+		for (int i = 1; i < prices.size(); i++) 
+		{
+			int diff = prices[i] - prices[i - 1];
+			if (diff > 0) sum += diff;
+		}
+		return sum;
+	}
+	int maxProfit3(vector<int>& prices) 
+	{
+		int states[2][4] = { INT_MIN, 0, INT_MIN, 0 }; // 0: 1 buy, 1: one buy/sell, 2: 2 buys/1 sell, 3, 2 buys/sells
+		int len = prices.size(), i, cur = 0, next = 1;
+		for (i = 0; i<len; ++i)
+		{
+			states[next][0] = max(states[cur][0], -prices[i]);
+			states[next][1] = max(states[cur][1], states[cur][0] + prices[i]);
+			states[next][2] = max(states[cur][2], states[cur][1] - prices[i]);
+			states[next][3] = max(states[cur][3], states[cur][2] + prices[i]);
+			swap(next, cur);
+		}
+		return max(states[cur][1], states[cur][3]);
+	}
+	/* Best Time to Buy and Sell Stock3 动态规划*/
+	int maxProfit3_v2(vector<int>& prices)
+	{
+		int size = prices.size();
+		if (size == 0 || size == 1) return 0;
+		int *profit =new int[size];
+		int *profit1 = new int[size];
+		int local_min = prices[0];
+		int local_max = prices[size - 1];
+		int j = size - 2;
+		int result = 0;
+		profit[0] = 0;
+		profit1[size - 1] = 0;
+		for (int i = 1; i<size + 1 && j >= 0; i++, j--)
+		{
+			profit[i] = max(profit[i - 1], prices[i] - local_min);
+			local_min = min(local_min, prices[i]);
+			profit1[j] = max(profit1[j + 1], local_max - prices[j]);
+			local_max = max(local_max, prices[j]);
+		}
+		for (int i = 1; i<size; i++)
+		{
+			result = max(result, profit[i] + profit1[i]);
+		}
+		delete[] profit;
+		delete[] profit1;
+		return result;
+	}
+
+	/*Best Time to Buy and Sell Stock IV*/
+	int maxProfit(int k, vector<int>& prices)
+	{
+
+	}
 private:
 	/*Surrounded Regions BFS*/
 	void bfs(vector<vector<char>> &board, int i, int j)
@@ -1168,9 +1375,8 @@ int main()
 
 
 	Solution sol;
-	vector<int> vec = {2,3,6,7};
-	//auto res = sol.generateParenthesis(3);
-	auto res= 1 << 3;
+	vector<int> vec = { 3, 2, 1, 0, 4 };
+	auto res = sol.maxProfit(vec);
 	cout << res;
 	/*for each (auto var in res)
 	{
