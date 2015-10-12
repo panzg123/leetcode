@@ -3,7 +3,7 @@
 	思路：设状态 f(i)，表示区间 [0, i](0 ≤ i ≤ n −1) 的最大利润，
 		  状态 g(i)，表示区间 [i, n −1](0 ≤ i ≤ n − 1) 的最大利润，则最终答案为 max {f(i) + g(i)} ,0 ≤ i ≤ n − 1。
 	*/
-	int maxProfit3_v2(vector<int>& prices)
+	int maxProfit3(vector<int>& prices)
 	{
 		if (prices.size() < 2) return 0;
 		const int n = prices.size();
