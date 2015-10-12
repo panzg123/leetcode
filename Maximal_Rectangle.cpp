@@ -1,7 +1,8 @@
 class Solution {
 public:
 	/*Maximal Rectangle, DP问题
-	时间复杂度 O(n^2)，空间复杂度 O(n)*/
+	时间复杂度 O(n^2)，空间复杂度 O(n)
+	*/
     int maximalRectangle(vector<vector<char>>& matrix) {
         	if (matrix.empty()) return 0;
 		const int m = matrix.size();
