@@ -1371,6 +1371,11 @@ public:
 					|| (s2[j - 1] == s3[i + j - 1] && f[i][j - 1]);
 		return f[s1.length()][s2.length()];
 	}
+	bool isScramble(string s1, string s2)
+	{
+
+	}
+
 private:
 	/*Surrounded Regions BFS*/
 	void bfs(vector<vector<char>> &board, int i, int j)
