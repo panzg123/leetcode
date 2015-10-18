@@ -1272,10 +1272,10 @@ public:
 		}
 		return max(states[cur][1], states[cur][3]);
 	}
-	/* 
+	/*
 	Best Time to Buy and Sell Stock3 动态规划
 	思路：设状态 f(i)，表示区间 [0, i](0 ≤ i ≤ n −1) 的最大利润，
-		  状态 g(i)，表示区间 [i, n −1](0 ≤ i ≤ n − 1) 的最大利润，则最终答案为 max {f(i) + g(i)} ,0 ≤ i ≤ n − 1。
+	状态 g(i)，表示区间 [i, n −1](0 ≤ i ≤ n − 1) 的最大利润，则最终答案为 max {f(i) + g(i)} ,0 ≤ i ≤ n − 1。
 	*/
 	int maxProfit3_v2(vector<int>& prices)
 	{
@@ -1283,12 +1283,12 @@ public:
 		const int n = prices.size();
 		vector<int> f(n, 0);
 		vector<int> g(n, 0);
-		for (int i = 1, valley = prices[0]; i < n; ++i) 
+		for (int i = 1, valley = prices[0]; i < n; ++i)
 		{
 			valley = min(valley, prices[i]);
 			f[i] = max(f[i - 1], prices[i] - valley);
 		}
-		for (int i = n - 2, peak = prices[n - 1]; i >= 0; --i) 
+		for (int i = n - 2, peak = prices[n - 1]; i >= 0; --i)
 		{
 			peak = max(peak, prices[i]);
 			g[i] = max(g[i], peak - prices[i]);
@@ -1355,7 +1355,7 @@ public:
 	因此状态转移方程如下：
 	f[i][j] = (s1[i - 1] == s3 [i + j - 1] && f[i - 1][j]) || (s2[j - 1] == s3 [i + j - 1] && f[i][j - 1]);
 	也可以用DFS，但会超时*/
-	bool isInterleave(string s1, string s2, string s3) 
+	bool isInterleave(string s1, string s2, string s3)
 	{
 		if (s3.length() != s1.length() + s2.length())
 			return false;
@@ -1366,12 +1366,12 @@ public:
 		for (size_t i = 1; i <= s2.length(); ++i)
 			f[0][i] = f[0][i - 1] && s2[i - 1] == s3[i - 1];
 		for (size_t i = 1; i <= s1.length(); ++i)
-			for (size_t j = 1; j <= s2.length(); ++j)
-				f[i][j] = (s1[i - 1] == s3[i + j - 1] && f[i - 1][j])
-					|| (s2[j - 1] == s3[i + j - 1] && f[i][j - 1]);
+		for (size_t j = 1; j <= s2.length(); ++j)
+			f[i][j] = (s1[i - 1] == s3[i + j - 1] && f[i - 1][j])
+			|| (s2[j - 1] == s3[i + j - 1] && f[i][j - 1]);
 		return f[s1.length()][s2.length()];
 	}
-	/*Scramble String ,dp，时间复杂度 O(n^3)，空间复杂度 O(n^3),beats 0.8% cpp submission!!!
+	/*Scramble String ,dp，时间复杂度 O(n^3)，空间复杂度 O(n^3),beats 30% cpp submission
 	设状态为 f[n][i][j]，表示长度为 n，起点为 s1[i] 和起点为 s2[j] 两个字符串是否互为 scramble，
 	则状态转移方程为 f[n][i][j]} = (f[k][i][j] && f[n-k][i+k][j+k]) || (f[k][i][j+n-k] && f[n-k][i+k][j])
 	*/
@@ -1382,13 +1382,14 @@ public:
 		if (N != s2.size()) return false;
 		// f[n][i][j]，表示长度为 n，起点为 s1[i] 和
 		// 起点为 s2[j] 两个字符串是否互为 scramble
-		bool f[MAX_LEN + 1][MAX_LEN][MAX_LEN];
-		fill_n(&f[0][0][0], (MAX_LEN + 1)*MAX_LEN*MAX_LEN, false);
+		//bool f[MAX_LEN + 1][MAX_LEN][MAX_LEN];
+		//fill_n(&f[0][0][0], (MAX_LEN + 1)*MAX_LEN*MAX_LEN, false);//耗时间
+		vector<vector<vector<bool>>> f(N + 1, vector<vector<bool>>(N, vector<bool>(N, false))); //vector也很耗时间
 		for (size_t i = 0; i < N; i++)
 		{
 			for (size_t j = 0; j < N; j++)
 			{
-				f[1][i][j] = s1[i]==s2[j];
+				f[1][i][j] = s1[i] == s2[j];
 			}
 		}
 		for (size_t n = 1; n <= N; n++)
@@ -1411,7 +1412,224 @@ public:
 		}
 		return f[N][0][0];
 	}
+	/*Minimum Path Sum*/
+	int minPathSum(vector<vector<int>>& grid)
+	{
+		int n = grid.size();
+		if (n == 0) return 0;
+		int m = grid[0].size();
+		vector<vector<int>> path(n, vector<int>(m, 0));
 
+		path[0][0] = grid[0][0]; //左上角初始化
+		for (size_t i = 1; i < n; i++)
+		{
+			path[i][0] = path[i - 1][0] + grid[i][0];
+		}
+		for (size_t i = 1; i < m; i++)
+		{
+			path[0][i] = path[0][i - 1] + grid[0][i];
+		}
+
+		for (size_t i = 1; i < n; i++)
+		{
+			for (size_t j = 1; j < m; j++)
+			{
+				path[i][j] = min(path[i - 1][j], path[i][j - 1]) + grid[i][j];
+			}
+		}
+		return path[n - 1][m - 1];
+
+	}
+	/*Edit Distance*/
+	int minDistance(string word1, string word2)
+	{
+		if (word1 == "" && word2 == "") return 0;
+		vector<vector<int>> dis(word1.size() + 1, vector<int>(word2.size() + 1, 0));
+		for (size_t i = 0; i <= word1.size(); i++)
+		{
+			dis[i][0] = i;
+		}
+		for (size_t i = 0; i <= word2.size(); i++)
+		{
+			dis[0][i] = i;
+		}
+		for (size_t i = 1; i <= word1.size(); i++)
+		{
+			for (size_t j = 1; j <= word2.size(); j++)
+			{
+				if (word1[i - 1] == word2[j - 1])
+					dis[i][j] = dis[i - 1][j - 1];
+				else
+				{
+					int mn = min(dis[i - 1][j], dis[i][j - 1]);
+					dis[i][j] = 1 + min(dis[i - 1][j - 1], mn);
+				}
+			}
+		}
+		return dis[word1.size()][word2.size()];
+	}
+	/*Decode ways, DP
+	当前位置的状态和前两个位置的状态有关，如果能和前一个字符组合，则为f[i-2]+f[i-1],不能组合为f[n-1]
+	*/
+	int numDecodings(string s)
+	{
+		if (s.empty() || s[0] == '0') return 0;
+		int prev = 0;
+		int cur = 1;
+		// 长度为 n 的字符串，有 n+1 个阶梯
+		for (size_t i = 1; i <= s.size(); ++i)
+		{
+			if (s[i - 1] == '0') cur = 0;
+			if (i < 2 || !(s[i - 2] == '1' || (s[i - 2] == '2' && s[i - 1] <= '6')))
+				prev = 0;
+			int tmp = cur;
+			cur = prev + cur;
+			prev = tmp;
+		}
+		return cur;
+	}
+	/*Distinct Subsequences
+	 二维动规 + 滚动数组
+	 时间复杂度 O(m*n)，空间复杂度 O(n)
+	 */
+	int numDistinct(string s, string t)
+	{
+		vector<int> f(t.size() + 1);
+		f[0] = 1;
+		for (int i = 0; i < s.size(); i++)
+		{
+			for (int j = t.size() - 1; j >= 0; --j)
+				f[j + 1] += s[i] == t[j] ? f[j] : 0;
+		}
+		return f[t.size()];
+	}
+	/*Word Break
+	设状态为 f(i)，表示 s[0,i] 是否可以分词，则状态转移方程为 f(i) = any_of(f(j)&&s[j + 1, i] ∈ dict),0 ≤ j < i
+	*/
+	bool wordBreak(string s, unordered_set<string>& wordDict)
+	{
+		// 长度为 n 的字符串有 n+1 个隔板
+		vector<bool> f(s.size() + 1, false);
+		f[0] = true; // 空字符串
+		for (int i = 1; i <= s.size(); ++i)
+		{
+			for (int j = i - 1; j >= 0; --j)
+			{
+				if (f[j] && wordDict.find(s.substr(j, i - j)) != wordDict.end())
+				{
+					f[i] = true;
+					break;
+				}
+			}
+		}
+		return f[s.size()];
+	}
+
+	/*word Break 2 动规，时间复杂度 O(n^2)，空间复杂度 O(n^2)
+	设状态为 f(i)，表示 s[0,i] 是否可以分词，则状态转移方程为 f(i) = any_of(f(j)&&s[j + 1, i] ∈ dict),0 ≤ j < i
+	*/
+	vector<string> wordBreak2(string s, unordered_set<string> &dict)
+	{
+		vector<string> result;
+		vector<string> path;
+		if (dict.size() == 0) return result;
+		vector<bool> f(s.length() + 1, false);
+		vector<vector<bool>> prev(s.length() + 1, vector<bool>(s.length()));
+		f[0] = true;
+		for (int i = 1; i <= s.length(); ++i)
+		{
+			for (int j = i - 1; j >= 0; --j)
+			{
+				if (f[j] && dict.find(s.substr(j, i - j)) != dict.end())
+				{
+					f[i] = true;
+					prev[i][j] = true;
+				}
+			}
+		}
+		wordbreak_genpath(s, prev, s.length(), path, result);
+		return result;
+	}
+	//辅助函数，生成路径，DFS
+	void wordbreak_genpath(const string &s, const vector<vector<bool>> &prev, int cur, vector<string> &path, vector<string> &result)
+	{
+		if (cur == 0)
+		{
+			string tmp;
+			//反转
+			for (auto iter = path.crbegin(); iter != path.crend(); ++iter)
+			{
+				tmp += *iter + " ";
+			}
+			//删除最后的一个空格
+			tmp.erase(tmp.end() - 1);
+			result.push_back(tmp);
+		}
+		for (size_t i = 0; i < s.size(); i++)
+		{
+			if (prev[cur][i])
+			{
+				path.push_back(s.substr(i, cur - i));
+				wordbreak_genpath(s, prev, i, path, result);
+				path.pop_back();
+			}
+		}
+	}
+
+	/*Clone Graph BFS，时间复杂度 O(n)，空间复杂度 O(n)*/
+	
+	UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node)
+	{
+		if (node == nullptr) return nullptr;
+		unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> copied;
+		queue<UndirectedGraphNode*> q;
+		q.push(node);
+		copied[node] = new UndirectedGraphNode(node->label);
+		while (!q.empty())
+		{
+			UndirectedGraphNode *cur = q.front();
+			q.pop();
+			for (auto nbr : cur->neighbors)
+			{
+				//是否存在
+				if (copied.find(nbr) != copied.end())
+				{
+					copied[cur]->neighbors.push_back(copied[nbr]);
+				}
+				else
+				{
+					UndirectedGraphNode * new_node = new UndirectedGraphNode(nbr->label);
+					copied[nbr] = new_node;
+					copied[cur]->neighbors.push_back(new_node);
+					q.push(nbr);
+				}
+			}
+		}
+		return copied[node];
+	}
+	/*Clone Graph DFS,时间复杂度 O(n)，空间复杂度 O(n)*/
+	UndirectedGraphNode *cloneGraph_v2(const UndirectedGraphNode *node)
+	{
+		if (node == nullptr) return nullptr;
+		// key is original node， value is copied node
+		unordered_map<const UndirectedGraphNode *,
+			UndirectedGraphNode *> copied;
+		cloneGraph_dfs(node, copied);
+		return copied[node];
+	}
+	// DFS辅助函数
+	static UndirectedGraphNode* cloneGraph_dfs(const UndirectedGraphNode *node,
+		unordered_map<const UndirectedGraphNode *,
+		UndirectedGraphNode *> &copied)
+	{
+		// a copy already exists
+		if (copied.find(node) != copied.end()) return copied[node];
+		UndirectedGraphNode *new_node = new UndirectedGraphNode(node->label);
+		copied[node] = new_node;
+		for (auto nbr : node->neighbors)
+			new_node->neighbors.push_back(cloneGraph_dfs(nbr, copied));
+		return new_node;
+	}
 private:
 	/*Surrounded Regions BFS*/
 	void bfs(vector<vector<char>> &board, int i, int j)
@@ -1481,9 +1699,12 @@ int main()
 
 
 	Solution sol;
-	vector<int> vec = { 3, 2, 1, 0, 4 };
-	auto res = sol.isScramble("aa","ab");
-	cout << res;
+	unordered_set<string> s = { "a" };
+	auto res = sol.wordBreak2("a", s);
+	for each (auto var in res)
+	{
+		cout << var << endl;
+	}
 	/*for each (auto var in res)
 	{
 	for each (auto var1 in var)

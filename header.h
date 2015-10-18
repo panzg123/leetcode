@@ -62,6 +62,13 @@ struct Input
 		return value > rhs.value;
 	}
 };
+//图结构定义
+typedef struct UndirectedGraphNode 
+{
+	int label;
+	std::vector<UndirectedGraphNode*> neighbors;
+	UndirectedGraphNode(int x):label(x) {}
+}UndirectedGraphNode;
 
 //leetcode上二叉树的节点定义如下
 typedef struct TreeNode
