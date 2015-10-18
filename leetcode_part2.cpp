@@ -1630,6 +1630,35 @@ public:
 			new_node->neighbors.push_back(cloneGraph_dfs(nbr, copied));
 		return new_node;
 	}
+	/*reverse integer*/
+	int reverse_int(int x)
+	{
+		long result = 0;
+		while (x)
+		{
+			result = 10 * result + x % 10;
+			x /= 10;
+		}
+		if (result<INT_MIN || result >INT_MAX) return 0;
+		return result;
+	}
+	/*Palindrome Number
+	思路：不断地取第一位和最后一位（ 10 进制下）进行比较，相等则取第二位和倒数第二位，直到完成比较或者中途找到了不一致的位。*/
+	bool isPalindrome(int x)
+	{
+		if (x < 0) return false;
+		int d = 1; // 除数
+		while (x / d >= 10) d *= 10;
+		while (x > 0) 
+		{
+			int q = x / d; // 前
+			int r = x % 10; // 后
+			if (q != r) return false;
+			x = x % d / 10; //先取余，再除，就去除了收尾两位
+			d /= 100;
+		}
+		return true;
+	}
 private:
 	/*Surrounded Regions BFS*/
 	void bfs(vector<vector<char>> &board, int i, int j)
@@ -1700,11 +1729,8 @@ int main()
 
 	Solution sol;
 	unordered_set<string> s = { "a" };
-	auto res = sol.wordBreak2("a", s);
-	for each (auto var in res)
-	{
-		cout << var << endl;
-	}
+	auto res = sol.reverse_int(-123);
+	cout << res;
 	/*for each (auto var in res)
 	{
 	for each (auto var1 in var)
