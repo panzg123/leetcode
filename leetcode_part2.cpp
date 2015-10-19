@@ -1577,7 +1577,7 @@ public:
 	}
 
 	/*Clone Graph BFS，时间复杂度 O(n)，空间复杂度 O(n)*/
-	
+
 	UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node)
 	{
 		if (node == nullptr) return nullptr;
@@ -1649,7 +1649,7 @@ public:
 		if (x < 0) return false;
 		int d = 1; // 除数
 		while (x / d >= 10) d *= 10;
-		while (x > 0) 
+		while (x > 0)
 		{
 			int q = x / d; // 前
 			int r = x % 10; // 后
@@ -1658,6 +1658,57 @@ public:
 			d /= 100;
 		}
 		return true;
+	}
+	/*Insert Interval 时间复杂度O(N)*/
+	vector<Interval> insert_interval(vector<Interval>& intervals, Interval newInterval)
+	{
+		vector<Interval>::iterator it = intervals.begin();
+		while (it != intervals.end()) 
+		{
+			if (newInterval.end < it->start) 
+			{
+				intervals.insert(it, newInterval);
+				return intervals;
+			}
+			else if (newInterval.start > it->end)
+			{
+				it++;
+				continue;
+			}
+			else 
+			{
+				newInterval.start = min(newInterval.start, it->start);
+					newInterval.end = max(newInterval.end, it->end);
+				it = intervals.erase(it);
+			}
+		}
+		intervals.insert(intervals.end(), newInterval);
+		return intervals;
+	}
+	vector<Interval> insert_interval2(vector<Interval>& intervals, Interval new_interval) 
+	{
+		// calculate the beginning of the affected range
+		auto iter_s = lower_bound(intervals.begin(), intervals.end(), new_interval,
+			[](const Interval & first, const Interval & second){
+			return first.start < second.start;
+		});
+		if (iter_s != intervals.begin() && prev(iter_s)->end >= new_interval.start)
+			new_interval.start = (--iter_s)->start;
+
+		// calculate the end (pass-end by 1 actually) of the affected range
+		auto iter_e = lower_bound(intervals.begin(), intervals.end(), new_interval,
+			[](const Interval & first, const Interval & second){
+			return first.end < second.end;
+		});
+		if (iter_e != intervals.end() && iter_e->start <= new_interval.end)
+			new_interval.end = (iter_e++)->end;
+
+		//copy unaffected range to results
+		vector<Interval> results;
+		copy(intervals.begin(), iter_s, back_inserter(results));
+		results.push_back(new_interval);
+		copy(iter_e, intervals.end(), back_inserter(results));
+		return results;
 	}
 private:
 	/*Surrounded Regions BFS*/
