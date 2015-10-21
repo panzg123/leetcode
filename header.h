@@ -70,6 +70,14 @@ typedef struct UndirectedGraphNode
 	UndirectedGraphNode(int x):label(x) {}
 }UndirectedGraphNode;
 
+typedef struct Interval {
+	int start;
+	int end;
+	Interval() : start(0), end(0) {}
+	Interval(int s, int e) : start(s), end(e) {}
+}Interval;
+
+
 //leetcode上二叉树的节点定义如下
 typedef struct TreeNode
 {
