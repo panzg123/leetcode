@@ -1710,6 +1710,7 @@ public:
 		copy(iter_e, intervals.end(), back_inserter(results));
 		return results;
 	}
+	
 	/*merge intervals
 	复用Insert Intervals
 	时间复杂度 O(n1+n2+...)，空间复杂度 O(1)
@@ -1770,6 +1771,11 @@ public:
 		}
 		if (minWidth == INT_MAX) return "";
 		else return S.substr(min_start, minWidth);
+	}
+	/*Multiply Strings*/
+	string multiply(string num1, string num2)
+	{
+
 	}
 private:
 	/*Surrounded Regions BFS*/
