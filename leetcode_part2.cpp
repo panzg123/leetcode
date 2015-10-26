@@ -1817,6 +1817,39 @@ public:
 		}
 		return result;
 	}
+	/*Pascal’s Triangle*/
+	vector<vector<int>> pascal_generate(int numRows)
+	{
+		vector<vector<int>> result;
+		if (numRows == 0) return result;
+		result.push_back(vector<int>(1,1));
+		for (int i = 1; i < numRows;i++)
+		{
+			vector<int> temp = {1};
+			for (int j = 1; j < i;j++)
+			{
+				temp.push_back(result[i - 1][j - 1] + result[i - 1][j]);
+			}
+			temp.push_back(1);
+			result.push_back(temp);
+		}
+		return result;
+	}
+	/*Pascal’s Triangle 2 
+	滚动数组，时间复杂度 O(n^2)，空间复杂度 O(n)*/
+	vector<int> getRow(int rowIndex)
+	{
+		vector<int> array;
+		for (int i = 0; i <= rowIndex;i++)
+		{
+			for (int j = i - 1; j > 0;j--)
+			{
+				array[j] = array[j - 1] + array[j];
+			}
+			array.push_back(1);
+		}
+		return array;
+	}
 public:
 	/*Surrounded Regions BFS*/
 	void bfs(vector<vector<char>> &board, int i, int j)
@@ -1912,6 +1945,8 @@ public:
 		return z;
 	}
 };
+
+#if 0
 int main()
 {
 
@@ -1919,17 +1954,18 @@ int main()
 	Solution sol;
 	unordered_set<string> s = { "a" };
 	//auto res = sol.reverse_int(-123);
-	auto res = sol.multiply("9", "9");
-		cout << res;
-	/*for each (auto var in res)
+	auto res = sol.pascal_generate(5);
+		//cout << res;
+	for each (auto var in res)
 	{
 	for each (auto var1 in var)
 	{
 	cout << var1 << "  ";
 	}
 	cout << endl;
-	}*/
+	}
 
 	system("pause");
 	return 0;
 }
+#endif
