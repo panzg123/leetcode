@@ -1728,7 +1728,7 @@ public:
 	双指针，动态维护一个区间。尾指针不断往后扫，当扫到有一个窗口包含了所有 T 的字符后，
 	然后再收缩头指针，直到不能再收缩为止。最后记录所有可能的情况中窗口最小的
 	*/
-	string minWindow(string s, string t)
+	string minWindow(string S, string T)
 	{
 		if (S.empty()) 
 			return "";
@@ -1772,12 +1772,52 @@ public:
 		if (minWidth == INT_MAX) return "";
 		else return S.substr(min_start, minWidth);
 	}
-	/*Multiply Strings*/
+	/**
+	*Multiply Strings
+	*常见的做法是将字符转化为一个 int，一一对应，形成一个 int 数组
+	*时间复杂度 O(n*m)，空间复杂度 O(n+m)
+	*/
 	string multiply(string num1, string num2)
 	{
-
+		if (num1 == "0" || num2 == "0") return "0";
+		return to_string(bigint_add(make_bigint(num1),make_bigint(num2)));
 	}
-private:
+
+	/*Substring with Concatenation of All Word 
+	时间复杂度 O(n*m)，空间复杂度 O(m)*/
+	vector<int> findSubstring(string s, vector<string>& dict)
+	{
+		size_t wordLength = dict.front().length();
+		size_t catLength = wordLength*dict.size(); //计算dict的总长度
+
+		vector<int> result; 
+		if (s.length() < catLength) return result;
+		unordered_map<string, int> wordCount; //将dict表示为map键值对形式
+ 		for (auto const & word:dict)
+		{
+			++wordCount[word];
+		}
+		for (auto i = begin(s);i<=prev(end(s),catLength);++i)
+		{
+			//在[i,i+catLength)的范围内判断是否符合要求
+			unordered_map<string, int> unused(wordCount);
+			for (auto j = i;j!=next(i,catLength);j+=wordLength)
+			{
+				auto pos = unused.find(string(j, next(j, wordLength)));
+
+				if (pos == unused.end() || pos -> second == 0) 
+					break;
+				//减少unused次数
+				if (--pos->second == 0) 
+					unused.erase(pos);
+			}
+			//正好全部包含
+			if (unused.size() == 0)
+				result.push_back(distance(begin(s), i));
+		}
+		return result;
+	}
+public:
 	/*Surrounded Regions BFS*/
 	void bfs(vector<vector<char>> &board, int i, int j)
 	{
@@ -1840,6 +1880,37 @@ private:
 		return start >= end;
 	}
 	vector<string> keyboard;// = { " ", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz" };
+	bigint make_bigint(string const& repr)
+	{
+		bigint n;
+		transform(repr.rbegin(), repr.rend(), back_inserter(n), [](char c){return c - '0';});
+		return n;
+	}
+
+	string to_string(bigint const & n)
+	{
+		string str;
+		transform(find_if(n.rbegin(), prev(n.rend()),
+			[](char c){return c > '\0'; }), n.rend(), back_inserter(str),
+			[](char c){return c + '0'; });
+		return str;
+	}
+
+
+	bigint bigint_add(bigint const& x, bigint const& y)
+	{
+		bigint z(x.size() + y.size());
+		for (size_t i = 0; i < x.size();i++)
+		{
+			for (size_t j = 0; j < y.size();j++)
+			{
+				z[i + j] += x[i] * y[j];
+				z[i + j + 1]  += z[i + j] / 10;
+				z[i + j] %= 10;
+			}
+		}
+		return z;
+	}
 };
 int main()
 {
@@ -1847,8 +1918,9 @@ int main()
 
 	Solution sol;
 	unordered_set<string> s = { "a" };
-	auto res = sol.reverse_int(-123);
-	cout << res;
+	//auto res = sol.reverse_int(-123);
+	auto res = sol.multiply("9", "9");
+		cout << res;
 	/*for each (auto var in res)
 	{
 	for each (auto var1 in var)

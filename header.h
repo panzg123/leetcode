@@ -86,3 +86,5 @@ typedef struct TreeNode
 	TreeNode *right;
 	TreeNode(int x) :val(x), left(nullptr), right(nullptr){}
 }TreeNode;
+
+typedef std::vector<int> bigint;
