@@ -37,4 +37,12 @@
 	Unique Binary Search Trees II 求给定n的所有可能的搜索二叉树组合。 递归
 	Validate Binary Search Tree，判断是否是搜索二叉树，递归
 	Convert Sorted List to Binary Search Tree，自底向上,时间复杂度 O(n)，空间复杂度 O(logn)
+	Minimum Depth of Binary Tree,二叉树的递归
+	Maximum Depth of Binary Tree，二叉树的递归
+	Path Sum，二叉树的递归，求根到叶子节点的路径之和等于给定的数字。
+	Path Sum II，二叉树的递归，求所有的路径。
+	Binary Tree Maximum Path Sum，递归会超时，用dfs。
+	Populating Next Right Pointers in Each Node，兄弟节点的链接
+	Sum Root to Leaf Numbers，计算所有根到叶子路径的和。
+	
 	Updating....
