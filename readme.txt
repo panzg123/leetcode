@@ -46,3 +46,10 @@
 	Sum Root to Leaf Numbers，计算所有根到叶子路径的和。
 	
 	Updating....
+	Spiral Matrix,模拟题，细节实现
+	Spiral Matrix 2 模拟题
+	Divide Two Integers,模拟题，用减法实现除法，注意溢出
+	LeetCode, Text Justification,时间复杂度 O(n)，空间复杂度 O(1)
+	Max Points on a Line，暴力枚举法，以边为中心，时间复杂度 O(n^3)，空间复杂度 O(1)
+	
+	to be continued....
