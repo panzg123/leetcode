@@ -44,8 +44,24 @@
 	Binary Tree Maximum Path Sum，递归会超时，用dfs。
 	Populating Next Right Pointers in Each Node，兄弟节点的链接
 	Sum Root to Leaf Numbers，计算所有根到叶子路径的和。
+	Merge Sorted Array,合并已排序的两个数组
+	Merge Two Sorted Lists，合并两个已排序的链表
+	Merge k Sorted Lists，合并k个已排序的链表
+	Sort List,对链表进行排序，常数空间且 O(nlogn)，单链表适合用归并排序，双向链表适合用快速排序。
+	Sort Colors，双指针，计数
+	Search for a Range，查询范围，stl，Low_bound,upper_bound
+	Search Insert Position,新元素插入位置查询，stl-->low_bound
+	Search a 2D Matrix,矩阵元素位置查询，二分查找
+	Search a 2D Matrix II，矩阵元素位置查询
+	Subsets，递归，全组合
+	Subsets II，不重复组合
+	Permutations，全排列，stl-->next_premutation或者递归
+	Permutations II，有重复数据的全排列，stl->next_premutation或者递归
+	Combinations，递归
+	Letter Combinations of a Phone Number，递归
 	
 	Updating....
+	[2015-10-22]
 	Spiral Matrix,模拟题，细节实现
 	Spiral Matrix 2 模拟题
 	Divide Two Integers,模拟题，用减法实现除法，注意溢出
