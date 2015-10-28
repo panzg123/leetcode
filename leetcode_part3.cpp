@@ -256,15 +256,53 @@ namespace panzg_leetcode
 			else
 				return findKthSortedArrays(nums1, m, nums2 + nk, n - nk, k - nk);
 		}
+		/*Swap Nodes in Pairs*/
+		ListNode* swapPairs(ListNode* head)
+		{
+			if (head == nullptr || head->next == nullptr)
+				return head;
+			ListNode my_head(-1);
+			my_head.next = head;
+			ListNode * pre = head, *cur = head->next,*last = &my_head;
+			while (1)
+			{
+				last->next = cur;
+				pre->next = cur->next;
+				cur->next = pre;
+				if (!(pre->next && pre->next->next))
+					break;
+				else
+				{
+					last = pre;
+					pre = pre->next;
+					cur = pre->next;
+				}
+			}
+			return my_head.next;
+		}
 	};
 }
 int main()
 {
 	panzg_leetcode::Solution sol;
+	ListNode node1(1);
+	ListNode node2(2);
+	ListNode node3(3);
+	ListNode node4(4);
+	node1.next = &node2;
+	node2.next = &node3;
+	node3.next = &node4;
+
 	vector<vector<int>> vec(1, vector<int>(2, 3));
 	//auto res = sol.divide(-2147483648,-1);
 	//cout << res;
-	ngx_str_t_2 test = ngx_string("test");
-	cout << test.len <<" "<< test.data << endl;
+	ListNode * p = sol.swapPairs(&node1);
+	 
+	while (p)
+	{
+		cout << p->val << "  ";
+		p = p->next;
+	}
+
 	system("pause");
 }
