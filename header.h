@@ -96,3 +96,15 @@ typedef struct Point
 	Point() :x(0), y(0){}
 	Point(int a, int b) :x(a), y(b){}
 }Point;
+
+typedef struct {
+	size_t      len;
+	char     *data;
+} ngx_str_t;
+
+typedef struct {
+	size_t      len;
+	char     *data;
+} ngx_str_t_2;
+
+#define ngx_string(str)     { sizeof(str) - 1, (char *) str }

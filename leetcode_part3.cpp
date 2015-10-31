@@ -280,6 +280,67 @@ namespace panzg_leetcode
 			}
 			return my_head.next;
 		}
+		/*Reverse Nodes in k-Group 使用栈进行保存*/
+		ListNode* reverseKGroup(ListNode* head, int k)
+		{
+			stack<ListNode*> stack_node;
+			int flag = 0; //判断是否是整个链表的第一个节点
+			ListNode * last_node=nullptr;  //记录最后一个节点
+			ListNode * my_head = nullptr; //记录首节点，进行返回
+			ListNode * temp = nullptr; //临时节点
+			int count = 0; //计数器，入栈一个count++
+			while (head)
+			{
+				//压入k个节点
+				while (head && count<k)
+				{
+					stack_node.push(head);
+					head = head->next;
+					count++;
+				}
+				//如果个数足够
+				if (count == k)
+				{
+					for (int i = 0; i < k;i++)
+					{
+						temp = stack_node.top();
+						if (!flag) //第一个节点，需要赋值给my_head
+						{
+							flag = 1;
+							my_head = temp;
+						}
+						if (last_node !=nullptr)  //链到尾部
+						{
+							last_node->next = temp;
+						}
+						last_node = temp;
+						stack_node.pop();
+					}
+					last_node->next = nullptr;
+					count = 0;
+				}
+				//尾部个数不够
+				else
+				{
+					for(int i = 0; i < count; i++)
+					{
+						temp = stack_node.top();
+						stack_node.pop();
+					}
+					if (!flag) //第一个节点，需要赋值给my_head
+					{
+						flag = 1;
+						my_head = temp;
+					}
+					if (last_node != nullptr)  //链到尾部
+					{
+						last_node->next = temp;
+					}
+				}
+			}
+			return my_head;
+		}
+
 	};
 }
 int main()
@@ -289,15 +350,16 @@ int main()
 	ListNode node2(2);
 	ListNode node3(3);
 	ListNode node4(4);
+	ListNode node5(5);
 	node1.next = &node2;
 	node2.next = &node3;
 	node3.next = &node4;
-
+	node4.next = &node5;
 	vector<vector<int>> vec(1, vector<int>(2, 3));
 	//auto res = sol.divide(-2147483648,-1);
 	//cout << res;
-	ListNode * p = sol.swapPairs(&node1);
-	 
+	ListNode * p = sol.reverseKGroup(&node1,2);
+	//ListNode *p = &node1;
 	while (p)
 	{
 		cout << p->val << "  ";
