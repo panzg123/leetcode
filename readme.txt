@@ -71,4 +71,6 @@
 	Median of Two Sorted Arrays,求两个已排序数组中的中位数，hard.
 	Swap Nodes in Pairs,链表，节点交换
 	Reverse Nodes in k-Group,链表节点交换，用栈。
+	[2015-11-1]
+	First Missing Positive,找出第一个未出现的正整数，常数空间复杂度
 	to be continued....

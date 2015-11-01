@@ -1,0 +1,24 @@
+﻿生成启动时间为 2015/11/1 20:15:59。
+     1>项目“G:\code\leetcode\leetcode\leetcode\leetcode.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         H:\Program Files\vs2013\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /D _MBCS /D _CRT_SECURE_NO_WARNINGS /D _SCL_SECURE_NO_WARNINGS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt leetcode_part3.cpp
+         leetcode_part3.cpp
+     1>g:\code\leetcode\leetcode\leetcode\leetcode_part3.cpp(71): warning C4018: “<”: 有符号/无符号不匹配
+     1>g:\code\leetcode\leetcode\leetcode\leetcode_part3.cpp(76): warning C4018: “<”: 有符号/无符号不匹配
+     1>g:\code\leetcode\leetcode\leetcode\leetcode_part3.cpp(120): warning C4018: “>”: 有符号/无符号不匹配
+     1>g:\code\leetcode\leetcode\leetcode\leetcode_part3.cpp(151): warning C4018: “<”: 有符号/无符号不匹配
+     1>g:\code\leetcode\leetcode\leetcode\leetcode_part3.cpp(177): warning C4018: “<”: 有符号/无符号不匹配
+     1>g:\code\leetcode\leetcode\leetcode\leetcode_part3.cpp(179): warning C4018: “<”: 有符号/无符号不匹配
+     1>g:\code\leetcode\leetcode\leetcode\leetcode_part3.cpp(192): warning C4018: “<”: 有符号/无符号不匹配
+     1>g:\code\leetcode\leetcode\leetcode\leetcode_part3.cpp(347): warning C4018: “<”: 有符号/无符号不匹配
+     1>g:\code\leetcode\leetcode\leetcode\leetcode_part3.cpp(352): warning C4018: “<”: 有符号/无符号不匹配
+       Link:
+         H:\Program Files\vs2013\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"G:\code\leetcode\leetcode\Debug\leetcode.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"G:\code\leetcode\leetcode\Debug\leetcode.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"G:\code\leetcode\leetcode\Debug\leetcode.lib" /MACHINE:X86 Debug\leetcode_part1.obj
+         Debug\leetcode_part2.obj
+         Debug\leetcode_part3.obj
+         leetcode.vcxproj -> G:\code\leetcode\leetcode\Debug\leetcode.exe
+     1>已完成生成项目“G:\code\leetcode\leetcode\leetcode\leetcode.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:01.28
