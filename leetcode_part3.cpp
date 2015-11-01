@@ -407,6 +407,20 @@ namespace panzg_leetcode
 				digits.insert(digits.begin(), flag);
 			return digits;
 		}
+		/*Search in Rotated Sorted Array II*/
+		bool search(vector<int>& nums, int target)
+		{
+			auto res = find(nums.begin(), nums.end(), target);
+			if (res == nums.end())
+				return false;
+			else
+				return true;
+		}
+		/*Symmetric Tree dfs*/
+		bool isSymmetric(TreeNode* root)
+		{
+			
+		}
 	};
 }
 int main()
