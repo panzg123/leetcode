@@ -389,6 +389,24 @@ namespace panzg_leetcode
 			}
 			return size + 1;
 		}
+		/*Plus One 将数组代表的整数加1*/
+		vector<int> plusOne(vector<int>& digits)
+		{
+			int flag = 0;
+			for (auto iter = digits.rbegin(); iter != digits.rend();iter++)
+			{
+				int temp = (*iter + flag);
+				if (iter == digits.rbegin())
+				{
+					temp += 1;
+				}
+				flag = temp / 10;
+				*iter = temp % 10;
+			}
+			if (flag > 0)
+				digits.insert(digits.begin(), flag);
+			return digits;
+		}
 	};
 }
 int main()
@@ -404,12 +422,16 @@ int main()
 	node3.next = &node4;
 	node4.next = &node5;
 	vector<vector<int>> vec(1, vector<int>(2, 3));
-	vector<int> nums = { 3,4,-1,1};
+	vector<int> nums = { 9,9,9,1};
 	//auto res = sol.divide(-2147483648,-1);
 	//cout << res;
 	//ListNode * p = sol.reverseKGroup(&node1,2);
 	//ListNode *p = &node1;
-	cout << sol.firstMissingPositive_v2(nums);
+	sol.plusOne(nums);
+	for each (auto var in nums)
+	{
+		cout << var;
+	}
 
 	system("pause");
 }
