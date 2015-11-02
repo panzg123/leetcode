@@ -87,6 +87,13 @@ typedef struct TreeNode
 	TreeNode(int x) :val(x), left(nullptr), right(nullptr){}
 }TreeNode;
 
+//Definition for singly-linked list with a random pointer.
+typedef struct RandomListNode {
+	int label;
+	RandomListNode *next, *random;
+	RandomListNode(int x) : label(x), next(NULL), random(NULL) {}
+}RandomListNode;
+
 typedef std::vector<int> bigint;
 
 typedef struct Point

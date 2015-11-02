@@ -416,10 +416,86 @@ namespace panzg_leetcode
 			else
 				return true;
 		}
-		/*Symmetric Tree dfs*/
+		/*Symmetric Tree 递归*/
 		bool isSymmetric(TreeNode* root)
 		{
-			
+			if (root == nullptr)
+				return true;
+			else
+				return isSymmetric_helper(root->left, root->right);
+		}
+		bool isSymmetric_helper(TreeNode* left,TreeNode* right)
+		{
+			if (left == nullptr && right == nullptr)
+				return true;
+			if (left == nullptr || right == nullptr)
+				return false;
+			return left->val == right->val && isSymmetric_helper(left->left, right->right)
+				&& isSymmetric_helper(left->right, right->left);
+		}
+		/*Maximum Depth of Binary Tree 递归*/
+		int maxDepth(TreeNode* root) 
+		{
+			return maxDepth_helper(root, 0);
+		}
+		int maxDepth_helper(TreeNode* root, int depth)
+		{
+			if (root == nullptr)
+				return depth;
+			else
+				return max(maxDepth_helper(root->left,depth+1), maxDepth_helper(root->right,depth+1));
+		}
+		/*Longest Consecutive Sequence 偷懒不符合O(n)要求*/
+		int longestConsecutive_v1(vector<int>& nums)
+		{
+			sort(nums.begin(), nums.end());
+			int count = 1;
+			int result = 1;
+			for (size_t i = 1; i < nums.size();i++)
+			{
+				if (nums[i] == nums[i - 1]+1)
+					count++;
+				else if (nums[i] == nums[i-1])
+				{
+					continue;
+				}
+				else
+				{
+					result = max(result, count);
+					count = 1;
+				}
+			}
+			return max(result, count);
+		}
+		/*Longest Consecutive Sequence,用unordered_set，O(n)*/
+		int longestConsecutive(vector<int>& nums) 
+		{
+			int len = 0, candidate, val;
+			unordered_set<int> set(nums.begin(), nums.end());
+			while (!set.empty()) 
+			{
+				val = *set.begin();
+				set.erase(val);
+				candidate = 1;
+				//处理比val大的数
+				for (int i = val + 1; set.find(i) != set.end(); ++i) 
+				{
+					set.erase(i);
+					candidate++;
+				}
+				//处理比val小的数
+				for (int i = val - 1; set.find(i) != set.end(); --i)
+				{
+					set.erase(i);
+					candidate++;
+				}
+				len = max(len, candidate);
+			}
+			return len;
+		}
+		RandomListNode *copyRandomList(RandomListNode *head)
+		{
+
 		}
 	};
 }
@@ -436,16 +512,13 @@ int main()
 	node3.next = &node4;
 	node4.next = &node5;
 	vector<vector<int>> vec(1, vector<int>(2, 3));
-	vector<int> nums = { 9,9,9,1};
+	vector<int> nums = { 3,2,1,2,3,4,};
 	//auto res = sol.divide(-2147483648,-1);
 	//cout << res;
 	//ListNode * p = sol.reverseKGroup(&node1,2);
 	//ListNode *p = &node1;
-	sol.plusOne(nums);
-	for each (auto var in nums)
-	{
-		cout << var;
-	}
+	cout << sol.longestConsecutive(nums);
+	
 
 	system("pause");
 }
