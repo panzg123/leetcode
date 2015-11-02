@@ -73,4 +73,8 @@
 	Reverse Nodes in k-Group,链表节点交换，用栈。
 	[2015-11-1]
 	First Missing Positive,找出第一个未出现的正整数，常数空间复杂度
+	[2015-11-2]
+	Longest Consecutive Sequence, 数组，unordered_map
+	Maximum Depth of Binary Tree,递归
+	Symmetric Tree,递归
 	to be continued....
