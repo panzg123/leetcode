@@ -66,12 +66,12 @@ namespace panzg_leetcode
 			if (numRows <= 1 || s.size() <= 1)
 				return s;
 			string result;
-			for (int i = 0; i < numRows; i++) 
+			for (int i = 0; i < numRows; i++)
 			{
-				for (int j = 0, index = i; index < s.size();j++, index = (2 * numRows - 2) * j + i) 
+				for (int j = 0, index = i; index < s.size(); j++, index = (2 * numRows - 2) * j + i)
 				{
 					result.append(1, s[index]); // 垂直元素
-					if (i == 0 || i == numRows - 1) 
+					if (i == 0 || i == numRows - 1)
 						continue; // 斜对角元素
 					if (index + (numRows - i - 1) * 2 < s.size())
 						result.append(1, s[index + (numRows - i - 1) * 2]);
@@ -111,13 +111,13 @@ namespace panzg_leetcode
 		//}
 		// LeetCode, Text Justification
 		// 时间复杂度 O(n)，空间复杂度 O(1)
-		vector<string> fullJustify(vector<string> &words, int L) 
+		vector<string> fullJustify(vector<string> &words, int L)
 		{
 			vector<string> result;
 			const int n = words.size();
 			int begin = 0, len = 0; // 当前行的起点，当前长度
 			for (int i = 0; i < n; ++i) {
-				if (len + words[i].size() + (i - begin) > L) 
+				if (len + words[i].size() + (i - begin) > L)
 				{
 					result.push_back(connect(words, begin, i - 1, len, L, false));
 					begin = i;
@@ -139,11 +139,11 @@ namespace panzg_leetcode
 		* @param[in] is_last 是否是最后一行
 		* @return 对齐后的当前行
 		*/
-		string connect(vector<string> &words, int begin, int end,int len, int L, bool is_last) 
+		string connect(vector<string> &words, int begin, int end, int len, int L, bool is_last)
 		{
 			string s;
 			int n = end - begin + 1;
-			for (int i = 0; i < n; ++i) 
+			for (int i = 0; i < n; ++i)
 			{
 				s += words[begin + i];
 				addSpaces(s, i, n - 1, L - len, is_last);
@@ -160,7 +160,7 @@ namespace panzg_leetcode
 		* @param[in] is_last 是否是最后一行
 		* @return 无
 		*/
-		void addSpaces(string &s, int i, int n, int L, bool is_last) 
+		void addSpaces(string &s, int i, int n, int L, bool is_last)
 		{
 			if (n < 1 || i > n - 1) return;
 			int spaces = is_last ? 1 : (L / n + (i < (L % n) ? 1 : 0));
@@ -174,9 +174,9 @@ namespace panzg_leetcode
 				return points.size();
 			int result = 0;
 
-			for (int i = 0; i < points.size()-1;i++)
+			for (int i = 0; i < points.size() - 1; i++)
 			{
-				for (int j = i + 1; j < points.size();j++)
+				for (int j = i + 1; j < points.size(); j++)
 				{
 					int sign = 0;
 					int a, b, c;
@@ -189,7 +189,7 @@ namespace panzg_leetcode
 						c = a*points[i].y - b*points[i].x;
 					}
 					int count = 0;
-					for (int k = 0; k < points.size();k++)
+					for (int k = 0; k < points.size(); k++)
 					{
 						if ((0 == sign && a*points[k].y == c + b*points[k].x) ||
 							(1 == sign && points[k].x == points[j].x))
@@ -232,7 +232,7 @@ namespace panzg_leetcode
 			else
 				return findKthSortedArrays(nums1.begin(), nums1.size(), nums2.begin(), nums2.size(), k / 2 + 1);
 		}
-		double findKthSortedArrays(vector<int>::const_iterator nums1, int m, vector<int>::const_iterator nums2, int n, int k) 
+		double findKthSortedArrays(vector<int>::const_iterator nums1, int m, vector<int>::const_iterator nums2, int n, int k)
 		{
 			if (m > n)
 				return findKthSortedArrays(nums2, n, nums1, m, k);
@@ -263,7 +263,7 @@ namespace panzg_leetcode
 				return head;
 			ListNode my_head(-1);
 			my_head.next = head;
-			ListNode * pre = head, *cur = head->next,*last = &my_head;
+			ListNode * pre = head, *cur = head->next, *last = &my_head;
 			while (1)
 			{
 				last->next = cur;
@@ -285,14 +285,14 @@ namespace panzg_leetcode
 		{
 			stack<ListNode*> stack_node;
 			int flag = 0; //判断是否是整个链表的第一个节点
-			ListNode * last_node=nullptr;  //记录最后一个节点
+			ListNode * last_node = nullptr;  //记录最后一个节点
 			ListNode * my_head = nullptr; //记录首节点，进行返回
 			ListNode * temp = nullptr; //临时节点
 			int count = 0; //计数器，入栈一个count++
 			while (head)
 			{
 				//压入k个节点
-				while (head && count<k)
+				while (head && count < k)
 				{
 					stack_node.push(head);
 					head = head->next;
@@ -301,7 +301,7 @@ namespace panzg_leetcode
 				//如果个数足够
 				if (count == k)
 				{
-					for (int i = 0; i < k;i++)
+					for (int i = 0; i < k; i++)
 					{
 						temp = stack_node.top();
 						if (!flag) //第一个节点，需要赋值给my_head
@@ -309,7 +309,7 @@ namespace panzg_leetcode
 							flag = 1;
 							my_head = temp;
 						}
-						if (last_node !=nullptr)  //链到尾部
+						if (last_node != nullptr)  //链到尾部
 						{
 							last_node->next = temp;
 						}
@@ -322,7 +322,7 @@ namespace panzg_leetcode
 				//尾部个数不够
 				else
 				{
-					for(int i = 0; i < count; i++)
+					for (int i = 0; i < count; i++)
 					{
 						temp = stack_node.top();
 						stack_node.pop();
@@ -341,15 +341,15 @@ namespace panzg_leetcode
 			return my_head;
 		}
 		/*First Missing Positive 时间复杂度和空间复杂度都是o(n)，不符合要求*/
-		int firstMissingPositive(vector<int>& nums) 
+		int firstMissingPositive(vector<int>& nums)
 		{
 			unordered_map<int, bool> m_map;
-			for (int i = 0; i < nums.size();i++)
+			for (int i = 0; i < nums.size(); i++)
 			{
 				m_map[nums[i]] = true;
 			}
 			int index = 1;
-			for (int i = 0; i < nums.size();i++)
+			for (int i = 0; i < nums.size(); i++)
 			{
 				auto res = m_map.find(index);
 				if (res == m_map.end())
@@ -367,13 +367,13 @@ namespace panzg_leetcode
 		int firstMissingPositive_v2(vector<int> &nums)
 		{
 			int size = nums.size();
-			if(size == 0) return 1;
-			for (int i = 1; i <= size;i++)
+			if (size == 0) return 1;
+			for (int i = 1; i <= size; i++)
 			{
 				//将元素放入合适的位置
-				while (nums[i-1] != i)
+				while (nums[i - 1] != i)
 				{
-					if (nums[i-1]<0 || nums[i-1]>size||nums[i-1] == nums[nums[i-1]-1])
+					if (nums[i - 1]<0 || nums[i - 1]>size || nums[i - 1] == nums[nums[i - 1] - 1])
 					{
 						break;
 					}
@@ -382,7 +382,7 @@ namespace panzg_leetcode
 					nums[temp - 1] = temp;
 				}
 			}
-			for (int i = 1; i <= size;i++)
+			for (int i = 1; i <= size; i++)
 			{
 				if (nums[i - 1] != i)
 					return i;
@@ -393,7 +393,7 @@ namespace panzg_leetcode
 		vector<int> plusOne(vector<int>& digits)
 		{
 			int flag = 0;
-			for (auto iter = digits.rbegin(); iter != digits.rend();iter++)
+			for (auto iter = digits.rbegin(); iter != digits.rend(); iter++)
 			{
 				int temp = (*iter + flag);
 				if (iter == digits.rbegin())
@@ -424,7 +424,7 @@ namespace panzg_leetcode
 			else
 				return isSymmetric_helper(root->left, root->right);
 		}
-		bool isSymmetric_helper(TreeNode* left,TreeNode* right)
+		bool isSymmetric_helper(TreeNode* left, TreeNode* right)
 		{
 			if (left == nullptr && right == nullptr)
 				return true;
@@ -434,7 +434,7 @@ namespace panzg_leetcode
 				&& isSymmetric_helper(left->right, right->left);
 		}
 		/*Maximum Depth of Binary Tree 递归*/
-		int maxDepth(TreeNode* root) 
+		int maxDepth(TreeNode* root)
 		{
 			return maxDepth_helper(root, 0);
 		}
@@ -443,7 +443,7 @@ namespace panzg_leetcode
 			if (root == nullptr)
 				return depth;
 			else
-				return max(maxDepth_helper(root->left,depth+1), maxDepth_helper(root->right,depth+1));
+				return max(maxDepth_helper(root->left, depth + 1), maxDepth_helper(root->right, depth + 1));
 		}
 		/*Longest Consecutive Sequence 偷懒不符合O(n)要求*/
 		int longestConsecutive_v1(vector<int>& nums)
@@ -451,11 +451,11 @@ namespace panzg_leetcode
 			sort(nums.begin(), nums.end());
 			int count = 1;
 			int result = 1;
-			for (size_t i = 1; i < nums.size();i++)
+			for (size_t i = 1; i < nums.size(); i++)
 			{
-				if (nums[i] == nums[i - 1]+1)
+				if (nums[i] == nums[i - 1] + 1)
 					count++;
-				else if (nums[i] == nums[i-1])
+				else if (nums[i] == nums[i - 1])
 				{
 					continue;
 				}
@@ -468,17 +468,17 @@ namespace panzg_leetcode
 			return max(result, count);
 		}
 		/*Longest Consecutive Sequence,用unordered_set，O(n)*/
-		int longestConsecutive(vector<int>& nums) 
+		int longestConsecutive(vector<int>& nums)
 		{
 			int len = 0, candidate, val;
 			unordered_set<int> set(nums.begin(), nums.end());
-			while (!set.empty()) 
+			while (!set.empty())
 			{
 				val = *set.begin();
 				set.erase(val);
 				candidate = 1;
 				//处理比val大的数
-				for (int i = val + 1; set.find(i) != set.end(); ++i) 
+				for (int i = val + 1; set.find(i) != set.end(); ++i)
 				{
 					set.erase(i);
 					candidate++;
@@ -497,6 +497,84 @@ namespace panzg_leetcode
 		{
 
 		}
+		/*Reverse Words in a String 用栈*/
+		void reverseWords(string &s)
+		{
+			stack<string> st;
+			st = reverseWords_helper(s, " ");
+			s.clear();
+			while (!st.empty())
+			{
+				string str = st.top();
+				if (str != "")
+					s += (str + " ");
+				st.pop();
+			}
+			if (s.size()>1)
+				s.erase(s.size() - 1);
+		}
+		/*Reverse Words in a String 局部翻转，然后整体翻转*/
+		void reverseWords_v2(string &s)
+		{
+			reverseWords_v2_remove_space(s);
+			if (s[0] == ' ')
+				s.erase(0, 1);
+			if (s == "") return;
+			int prev = 0;
+			if(s[s.size()-1]!=' ')
+				s += " ";
+			for (int i = 1; i < s.size();i++)
+			{
+				if (s[i] != ' '&& s[i - 1] == ' ')
+					prev = i;
+				else if (s[i] == ' ')
+					reverseWords_v2_helper(s, prev, i - 1);
+			}
+			if(s[s.size()-1]==' ')
+				s.erase(s.size() - 1);
+			reverseWords_v2_helper(s, 0, s.size() - 1);
+		}
+		void reverseWords_v2_helper(string& s, int start, int end)
+		{
+			while (start<end)
+			{
+				char temp = s[start];
+				s[start] = s[end];
+				s[end] = temp;
+				start++;
+				end--;
+			}
+		}
+		void reverseWords_v2_remove_space(string& s)
+		{
+			int i = 1;
+			while (i<s.size())
+			{
+				if (s[i - 1] == ' '&&s[i] == ' ')
+					s.erase(i,1);
+				else
+					i++;
+			}
+		}
+		/*字符串分割函数，结果存储在stack中*/
+		stack<std::string> reverseWords_helper(std::string str, std::string pattern)
+		{
+			std::string::size_type pos;
+			std::stack<std::string> result;
+			str += pattern;//扩展字符串以方便操作
+			int size = str.size();
+			for (int i = 0; i < size; i++)
+			{
+				pos = str.find(pattern, i);
+				if (pos < size)
+				{
+					std::string s = str.substr(i, pos - i);
+					result.push(s);
+					i = pos + pattern.size() - 1;
+				}
+			}
+			return result;
+		}
 	};
 }
 int main()
@@ -512,13 +590,15 @@ int main()
 	node3.next = &node4;
 	node4.next = &node5;
 	vector<vector<int>> vec(1, vector<int>(2, 3));
-	vector<int> nums = { 3,2,1,2,3,4,};
+	vector<int> nums = { 3, 2, 1, 2, 3, 4, };
 	//auto res = sol.divide(-2147483648,-1);
 	//cout << res;
 	//ListNode * p = sol.reverseKGroup(&node1,2);
 	//ListNode *p = &node1;
-	cout << sol.longestConsecutive(nums);
-	
+	string str = "the sky is blue   ";
+	cout << str << endl;
+	sol.reverseWords_v2(str);
+	cout << str << endl;
 
 	system("pause");
 }
