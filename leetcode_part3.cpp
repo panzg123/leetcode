@@ -493,9 +493,27 @@ namespace panzg_leetcode
 			}
 			return len;
 		}
+		/*Copy List with Random Pointer 使用unordered_map,时间复杂度、空间复杂度都为O(N)*/
 		RandomListNode *copyRandomList(RandomListNode *head)
 		{
-
+			unordered_map<RandomListNode*, RandomListNode*> result;
+			RandomListNode* m_head = head;
+			while (m_head != nullptr)
+			{
+				RandomListNode * node = new RandomListNode(m_head->label);
+				result[m_head] = node;
+				m_head = m_head->next;
+			}
+			m_head = head;
+			while (m_head)
+			{
+				if (m_head->next != nullptr)
+					result[m_head]->next = result[m_head->next];
+				if (m_head->random != nullptr)
+					result[m_head]->random = result[m_head->random];
+				m_head = m_head->next;
+			}
+			return result[head];
 		}
 		/*Reverse Words in a String 用栈*/
 		void reverseWords(string &s)
