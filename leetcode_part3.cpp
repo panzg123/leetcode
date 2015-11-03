@@ -528,7 +528,7 @@ namespace panzg_leetcode
 					s += (str + " ");
 				st.pop();
 			}
-			if (s.size()>1)
+			if (s.size() > 1)
 				s.erase(s.size() - 1);
 		}
 		/*Reverse Words in a String 局部翻转，然后整体翻转*/
@@ -539,22 +539,22 @@ namespace panzg_leetcode
 				s.erase(0, 1);
 			if (s == "") return;
 			int prev = 0;
-			if(s[s.size()-1]!=' ')
+			if (s[s.size() - 1] != ' ')
 				s += " ";
-			for (int i = 1; i < s.size();i++)
+			for (int i = 1; i < s.size(); i++)
 			{
 				if (s[i] != ' '&& s[i - 1] == ' ')
 					prev = i;
 				else if (s[i] == ' ')
 					reverseWords_v2_helper(s, prev, i - 1);
 			}
-			if(s[s.size()-1]==' ')
+			if (s[s.size() - 1] == ' ')
 				s.erase(s.size() - 1);
 			reverseWords_v2_helper(s, 0, s.size() - 1);
 		}
 		void reverseWords_v2_helper(string& s, int start, int end)
 		{
-			while (start<end)
+			while (start < end)
 			{
 				char temp = s[start];
 				s[start] = s[end];
@@ -566,10 +566,10 @@ namespace panzg_leetcode
 		void reverseWords_v2_remove_space(string& s)
 		{
 			int i = 1;
-			while (i<s.size())
+			while (i < s.size())
 			{
 				if (s[i - 1] == ' '&&s[i] == ' ')
-					s.erase(i,1);
+					s.erase(i, 1);
 				else
 					i++;
 			}
@@ -592,6 +592,48 @@ namespace panzg_leetcode
 				}
 			}
 			return result;
+		}
+		/*Linked List Cycle,判断链表是否有环,经典快慢指针问题*/
+		bool hasCycle(ListNode *head)
+		{
+			ListNode* fast = head;
+			ListNode* slow = head;
+			while (fast)
+			{
+				if (fast->next)
+					fast = fast->next->next;
+				else
+					return false;
+				slow = slow->next;
+				if (fast == slow)
+					return true;
+			}
+			return false;
+		}
+		/*Linked List Cycle 2，找环的起点，经典快慢指针问题*/
+		ListNode *detectCycle(ListNode *head)
+		{
+			if (!head) return 0;
+
+			ListNode *fast = head, *slow = head;
+			if (fast->next && fast->next->next)
+			{
+				do
+				{
+					fast = fast->next->next;
+					slow = slow->next;
+				} while (fast != slow && fast->next && fast->next->next);
+
+				// the point is when two pointers meet, the distance from the position 
+				// to the entry is equal to the distance from head to the entry
+
+				if (fast == slow)
+				{
+					for (fast = head; fast != slow; fast = fast->next, slow = slow->next);
+					return fast;
+				}
+			}
+			return 0;
 		}
 	};
 }
