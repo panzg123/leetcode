@@ -635,6 +635,56 @@ namespace panzg_leetcode
 			}
 			return 0;
 		}
+		/*Reorder List 用栈或者数组记录位置，空间复杂度有点高*/
+		void reorderList(ListNode* head) 
+		{
+			ListNode *my_head = head;
+			vector<ListNode*> node_vec; //记录指针
+			while (my_head)
+			{
+				node_vec.push_back(my_head);
+				my_head = my_head->next;
+			}
+			int length = node_vec.size();
+			int i = 0, j = length - 1;
+			ListNode *m_head = new ListNode(-1);
+			m_head->next = head;
+			ListNode *cur = m_head;
+			while (i<j)  //交替链接
+			{
+				cur->next = node_vec[i];
+				cur = cur->next;
+				i++;
+				cur->next = node_vec[j];
+				cur = cur->next;
+				j--;
+			}
+			if (i == j)
+			{
+				cur->next = node_vec[i];
+				cur->next->next = nullptr;
+			}
+			else
+				cur->next = nullptr;		
+		}
+		class LRUCache
+		{
+		public:
+			LRUCache(int capacity)
+			{
+
+			}
+
+			int get(int key) 
+			{
+
+			}
+
+			void set(int key, int value)
+			{
+
+			}
+		};
 	};
 }
 int main()
@@ -648,17 +698,17 @@ int main()
 	node1.next = &node2;
 	node2.next = &node3;
 	node3.next = &node4;
-	node4.next = &node5;
+//	node4.next = &node5;
 	vector<vector<int>> vec(1, vector<int>(2, 3));
 	vector<int> nums = { 3, 2, 1, 2, 3, 4, };
-	//auto res = sol.divide(-2147483648,-1);
-	//cout << res;
-	//ListNode * p = sol.reverseKGroup(&node1,2);
-	//ListNode *p = &node1;
-	string str = "the sky is blue   ";
-	cout << str << endl;
-	sol.reverseWords_v2(str);
-	cout << str << endl;
+
+	sol.reorderList(&node1);
+	ListNode *p = &node1;
+	while (p)
+	{
+		cout << p->val << endl;
+		p = p->next;
+	}
 
 	system("pause");
 }
