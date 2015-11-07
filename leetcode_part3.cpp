@@ -723,6 +723,11 @@ namespace panzg_leetcode
 				}
 			}
 		};
+		/*Maximum Product Subarray*/
+		int maxProduct(vector<int>& nums)
+		{
+
+		}
 	};
 }
 int main()
