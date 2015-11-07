@@ -79,4 +79,6 @@
 	Symmetric Tree,递归
 	Reverse Words in a String,字符串翻转
 	reorder list,链表操作
+	[2015-11-7]
+	LRU Cache, 实现LRU算法，unorderd_map + list,
 	to be continued....
