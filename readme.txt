@@ -81,4 +81,7 @@
 	reorder list,链表操作
 	[2015-11-7]
 	LRU Cache, 实现LRU算法，unorderd_map + list,
+	[2015-11-8]
+	Maximum Product Subarray,最大连续乘积，动态规划
+	Find Minimum in Rotated Sorted Array,找最小，二分法
 	to be continued....
