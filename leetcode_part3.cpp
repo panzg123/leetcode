@@ -804,6 +804,38 @@ namespace panzg_leetcode
 			}
 		}
 	};
+	/*Min Stack*/
+	class MinStack
+	{
+	public:
+		//int1记录当前节点的值，int2记录到当前节点的最小值
+		stack<pair<int, int>> st;
+		void push(int x)
+		{
+			int min_value;
+			if (st.empty())
+				min_value = x;
+			else
+				min_value = st.top().second < x ? st.top().second : x;
+			pair<int, int> p(x, min_value);
+			st.push(p);
+		}
+
+		void pop()
+		{
+			st.pop();
+		}
+
+		int top()
+		{
+			return st.top().first;
+		}
+
+		int getMin()
+		{
+			return st.top().second;
+		}
+	};
 }
 int main()
 {
@@ -820,13 +852,18 @@ int main()
 	vector<vector<int>> vec(1, vector<int>(2, 3));
 	vector<int> nums = { 3, 2, 1, 2, 3, 4, };
 
-	sol.reorderList(&node1);
-	ListNode *p = &node1;
-	while (p)
-	{
-		cout << p->val << endl;
-		p = p->next;
-	}
+	//sol.reorderList(&node1);
+	//ListNode *p = &node1;
+	//while (p)
+	//{
+	//	cout << p->val << endl;
+	//	p = p->next;
+	//}
+
+	panzg_leetcode::MinStack st;
+	st.push(-3);
+	cout << st.getMin();
+
 
 	system("pause");
 }

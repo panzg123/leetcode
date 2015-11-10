@@ -85,4 +85,5 @@
 	Maximum Product Subarray,最大连续乘积，动态规划
 	Find Minimum in Rotated Sorted Array,找最小，二分法
 	Find Minimum in Rotated Sorted Array 2,可重复数组，找最小数，二分法
+	Min Stack,实现栈，能够常数时间输出最小值
 	to be continued....
