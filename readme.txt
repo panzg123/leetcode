@@ -92,4 +92,7 @@
 	Compare Version Numbers,比较两个字符串
 	[2015-11-11]
 	Maximum gap,桶排序，基数排序
+	[2015-11-14]
+	Excel Sheet Column Title,26进制处理
+	
 	to be continued....

@@ -636,7 +636,7 @@ namespace panzg_leetcode
 			return 0;
 		}
 		/*Reorder List 用栈或者数组记录位置，空间复杂度有点高*/
-		void reorderList(ListNode* head) 
+		void reorderList(ListNode* head)
 		{
 			ListNode *my_head = head;
 			vector<ListNode*> node_vec; //记录指针
@@ -650,7 +650,7 @@ namespace panzg_leetcode
 			ListNode *m_head = new ListNode(-1);
 			m_head->next = head;
 			ListNode *cur = m_head;
-			while (i<j)  //交替链接
+			while (i < j)  //交替链接
 			{
 				cur->next = node_vec[i];
 				cur = cur->next;
@@ -665,7 +665,7 @@ namespace panzg_leetcode
 				cur->next->next = nullptr;
 			}
 			else
-				cur->next = nullptr;		
+				cur->next = nullptr;
 		}
 		class Entry
 		{
@@ -685,7 +685,7 @@ namespace panzg_leetcode
 			{
 
 			}
-			int get(int key) 
+			int get(int key)
 			{
 				Entry *entry = nullptr;
 				auto it = hash.find(key);
@@ -710,7 +710,7 @@ namespace panzg_leetcode
 						hash.erase(lru.back()->key);
 						delete lru.back();
 						lru.pop_back();
-					} 
+					}
 					else
 						currentSize++;
 					lru.push_front(entry);
@@ -728,10 +728,10 @@ namespace panzg_leetcode
 		{
 			int length = nums.size();
 			int result = INT_MIN;
-			for (int i = 0; i < length;i++)
+			for (int i = 0; i < length; i++)
 			{
 				int temp = 1;
-				for (int j = i; j < length;j++)
+				for (int j = i; j < length; j++)
 				{
 					temp *= nums[j];
 					result = max(result, temp);
@@ -754,7 +754,7 @@ namespace panzg_leetcode
 			int curMax = nums[0];
 			int curMin = nums[0];
 			int result = nums[0];
-			for (int i = 1; i < length;i++)
+			for (int i = 1; i < length; i++)
 			{
 				int temp_max = nums[i] * curMax;
 				int temp_min = nums[i] * curMin;
@@ -768,14 +768,14 @@ namespace panzg_leetcode
 		int findMin(vector<int>& nums)
 		{
 			//也可以一行代码搞定，直接 return *(min_element(nums.begin(),nums.end()));
-			int begin=0, end=nums.size()-1;
+			int begin = 0, end = nums.size() - 1;
 			if (end == 0) return nums[0];
 			if (nums[end] > nums[0]) return nums[0];
 			while (begin < end)
 			{
-				if (begin == end - 1) 
+				if (begin == end - 1)
 					return min(nums[begin], nums[end]);
-				int mid = (begin + end)/ 2;
+				int mid = (begin + end) / 2;
 				if (nums[mid] < nums[begin])
 					end = mid;
 				else
@@ -867,7 +867,7 @@ namespace panzg_leetcode
 			if (length == 1 || nums[0] > nums[1])
 				return 0;
 			int i = 0;
-			for (i = 1; i < length - 1;i++)
+			for (i = 1; i < length - 1; i++)
 			{
 				if (nums[i] > nums[i + 1] && nums[i] > nums[i - 1])
 					return i;
@@ -913,7 +913,7 @@ namespace panzg_leetcode
 		{
 			sort(nums.begin(), nums.end());
 			int max_value = 0;
-			for (int i = 1; i < nums.size();i++)
+			for (int i = 1; i < nums.size(); i++)
 			{
 				max_value = max(max_value, nums[i] - nums[i - 1]);
 			}
@@ -932,7 +932,7 @@ namespace panzg_leetcode
 			vector<int> buck_max(n, INT_MIN);
 			vector<int> buck_min(n, INT_MAX);
 
-			for (int i = 0; i < n; i++) 
+			for (int i = 0; i < n; i++)
 			{
 				// note the divide and multiply order and the double cast
 				// it's used to avoid the overflow and underflow during calculation
@@ -942,7 +942,7 @@ namespace panzg_leetcode
 			}
 
 			int gap = 0, pre = buck_max[0];
-			for (int i = 1; i < n; i++) 
+			for (int i = 1; i < n; i++)
 			{
 				if (buck_max[i] == INT_MIN) continue;
 				gap = max(gap, buck_min[i] - pre);
@@ -950,37 +950,49 @@ namespace panzg_leetcode
 			}
 			return gap;
 		}
-	/*Min Stack*/
-	class MinStack
-	{
-	public:
-		//int1记录当前节点的值，int2记录到当前节点的最小值
-		stack<pair<int, int>> st;
-		void push(int x)
+		/*Excel Sheet Column Title*/
+		string convertToTitle(int n)
 		{
-			int min_value;
-			if (st.empty())
-				min_value = x;
-			else
-				min_value = st.top().second < x ? st.top().second : x;
-			pair<int, int> p(x, min_value);
-			st.push(p);
+			string res;
+			while (n >= 1)
+			{
+				res = (char)('A' + (n - 1) % 26) + res;
+				n = (n - 1) / 26;
+			}
+			return res;
 		}
+		/*Min Stack*/
+		class MinStack
+		{
+		public:
+			//int1记录当前节点的值，int2记录到当前节点的最小值
+			stack<pair<int, int>> st;
+			void push(int x)
+			{
+				int min_value;
+				if (st.empty())
+					min_value = x;
+				else
+					min_value = st.top().second < x ? st.top().second : x;
+				pair<int, int> p(x, min_value);
+				st.push(p);
+			}
 
-		void pop()
-		{
-			st.pop();
-		}
+			void pop()
+			{
+				st.pop();
+			}
 
-		int top()
-		{
-			return st.top().first;
-		}
+			int top()
+			{
+				return st.top().first;
+			}
 
-		int getMin()
-		{
-			return st.top().second;
-		}
+			int getMin()
+			{
+				return st.top().second;
+			}
+		};
 	};
 }
 int main()
@@ -1006,7 +1018,7 @@ int main()
 	//	p = p->next;
 	//}
 
-	cout << log(256);
+	cout << sol.convertToTitle(28);
 
 
 	system("pause");
