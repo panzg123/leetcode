@@ -1102,9 +1102,31 @@ namespace panzg_leetcode
 			int result = 0;
 			for (int i = 0; i < length;i++)
 			{
-				result = 10*result+s[i]-'A'+1;
+				result = 26*result+s[i]-'A'+1;
 			}
 			return result;
+		}
+		/*Factorial Trailing Zeroes 
+		n!后缀0的个数 = n!质因子中5的个数 = floor(n/5) + floor(n/25) + floor(n/125) + ....
+		*/
+		int trailingZeroes(int n)
+		{
+			int res = 0;
+			while (n)
+			{
+				res += n / 5;
+				n /= 5;
+			}
+			return res;
+		}
+		long long jiesheng(int n)
+		{
+			long long  count = 1;
+			for (int i = 1; i <= n;i++)
+			{
+				count *= i;
+			}
+			return count;
 		}
 	};
 }
@@ -1131,7 +1153,7 @@ int main()
 	//	p = p->next;
 	//}
 
-	cout << sol.convertToTitle(28);
+	cout << sol.jiesheng(25);
 
 
 	system("pause");

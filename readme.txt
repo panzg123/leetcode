@@ -98,4 +98,5 @@
 	Majority_Element2,求1/3的元素，Moore voting algorithm.
 	[2015-11-16]
 	Excel Sheet Column Number,字符串
+	Factorial Trailing Zeroes ,求n得阶乘后缀为0的个数
 	to be continued....
