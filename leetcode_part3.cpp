@@ -1128,6 +1128,31 @@ namespace panzg_leetcode
 			}
 			return count;
 		}
+		/*Rotate Array 分成前后两端分别旋转*/
+		void rotate(vector<int>& nums, int k)
+		{
+			int length = nums.size();
+			if (k == length) //直接返回
+			{
+				return;
+			}
+			else if (k > length) //取余
+				k %= length;
+			rotate_helper(nums, 0, length-k-1);
+			rotate_helper(nums, length-k, length - 1);
+			rotate_helper(nums, 0, length - 1);
+		}
+		void rotate_helper(vector<int> &nums,int start,int end)
+		{
+			while (start<end)
+			{
+				int temp = nums[start];
+				nums[start] = nums[end];
+				nums[end] = temp;
+				start++;
+				end--;
+			}
+		}
 	};
 }
 int main()
@@ -1143,7 +1168,7 @@ int main()
 	node3.next = &node4;
 //	node4.next = &node5;
 	vector<vector<int>> vec(1, vector<int>(2, 3));
-	vector<int> nums = { 3, 2, 1, 2, 3, 4, };
+	vector<int> nums = { 1,2};
 
 	//sol.reorderList(&node1);
 	//ListNode *p = &node1;
@@ -1153,7 +1178,11 @@ int main()
 	//	p = p->next;
 	//}
 
-	cout << sol.jiesheng(25);
+	sol.rotate(nums, 3);
+	for each (auto var in nums)
+	{
+		cout << var << " ";
+	}
 
 
 	system("pause");
