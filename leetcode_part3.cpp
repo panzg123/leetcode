@@ -1095,6 +1095,17 @@ namespace panzg_leetcode
 				return st.top().second;
 			}
 		};
+		/*Excel Sheet Column Number*/
+		int titleToNumber(string s)
+		{
+			int length = s.size();
+			int result = 0;
+			for (int i = 0; i < length;i++)
+			{
+				result = 10*result+s[i]-'A'+1;
+			}
+			return result;
+		}
 	};
 }
 int main()

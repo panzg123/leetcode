@@ -96,4 +96,6 @@
 	Excel Sheet Column Title,26进制处理
 	Majority Element,求半数的元素，Moore voting algorithm。
 	Majority_Element2,求1/3的元素，Moore voting algorithm.
+	[2015-11-16]
+	Excel Sheet Column Number,字符串
 	to be continued....
