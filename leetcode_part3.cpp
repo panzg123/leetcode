@@ -1192,6 +1192,18 @@ namespace panzg_leetcode
 				return res;
 			}
 		};
+		/*Largest Number*/
+		string largestNumber(vector<int>& nums)
+		{
+			/*定义匿名函数，进行排序*/
+			sort(nums.begin(), nums.end(),
+				[](const int& l_num, const int& r_num){
+				return to_string(l_num) + to_string(r_num) > to_string(r_num) + to_string(l_num);
+			});
+			if (nums[0] == 0) return "0";
+			//累加
+			return std::accumulate(nums.begin(), nums.end(), string(""), [](const string& a, int b){return a + to_string(b);});
+		}
 	};
 }
 int main()
@@ -1207,7 +1219,7 @@ int main()
 	node3.next = &node4;
 //	node4.next = &node5;
 	vector<vector<int>> vec(1, vector<int>(2, 3));
-	vector<int> nums = { 1,2};
+	vector<int> nums = { 3,30,34,5,9};
 
 	//sol.reorderList(&node1);
 	//ListNode *p = &node1;
@@ -1217,11 +1229,7 @@ int main()
 	//	p = p->next;
 	//}
 
-	sol.rotate(nums, 3);
-	for each (auto var in nums)
-	{
-		cout << var << " ";
-	}
+	cout<<sol.largestNumber(nums);
 
 
 	system("pause");
