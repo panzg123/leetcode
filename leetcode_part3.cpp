@@ -1153,6 +1153,45 @@ namespace panzg_leetcode
 				end--;
 			}
 		}
+		class BSTIterator
+		{
+		private:
+			stack<TreeNode*> s;
+		public:
+			BSTIterator(TreeNode *root)
+			{
+				while (root!=nullptr)
+				{
+					s.push(root);
+					root = root->left;
+				}
+			}
+			bool hasNext()
+			{
+				return !s.empty();
+			}
+			int next()
+			{
+				if (!hasNext())
+				{
+					return INT_MIN;
+				}
+				TreeNode *node = s.top();
+				int res = node->val;
+				s.pop();
+				if (node->right != nullptr)
+				{
+					node = node->right;
+					s.push(node);
+					while (node->left!=nullptr)
+					{
+						node = node->left;
+						s.push(node);
+					}
+				}
+				return res;
+			}
+		};
 	};
 }
 int main()
