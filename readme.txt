@@ -104,4 +104,7 @@
 	Binary Search Tree Iterator,BST,栈
 	largestNumber,自定义排序，字典
 	Repeated DNA Sequences,字符串，位运算，unordered_map
+	[2015-11-20]
+	Reverse Bits,位运算，bitset
+	Number of 1 Bits,位运算
 	to be continued....

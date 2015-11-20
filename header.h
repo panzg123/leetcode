@@ -12,7 +12,7 @@
 #include<random>
 #include<regex>
 #include<functional>
-
+#include <bitset>
 
 typedef struct ListNode
 {

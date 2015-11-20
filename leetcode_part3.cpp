@@ -966,7 +966,7 @@ namespace panzg_leetcode
 		{
 			unordered_map<int, int> count;
 			int length = nums.size();
-			for (int i = 0; i < length;i++)
+			for (int i = 0; i < length; i++)
 			{
 				auto res = count.find(nums[i]);
 				if (res == count.end())
@@ -980,8 +980,8 @@ namespace panzg_leetcode
 		/*Moore's voting algorithm 常数空间复杂度*/
 		int majorityElement_v2(vector<int>& nums)
 		{
-			int curValue=0, curCount = 0;
-			for (int i = 0; i < nums.size();i++)
+			int curValue = 0, curCount = 0;
+			for (int i = 0; i < nums.size(); i++)
 			{
 				if (curCount == 0)
 				{
@@ -1054,7 +1054,7 @@ namespace panzg_leetcode
 			{
 				if (nums[i] == n1)
 					cn1++;
-				if (nums[i] == n2) 
+				if (nums[i] == n2)
 					cn2++;
 			}
 			if (cn1>size / 3)
@@ -1100,13 +1100,13 @@ namespace panzg_leetcode
 		{
 			int length = s.size();
 			int result = 0;
-			for (int i = 0; i < length;i++)
+			for (int i = 0; i < length; i++)
 			{
-				result = 26*result+s[i]-'A'+1;
+				result = 26 * result + s[i] - 'A' + 1;
 			}
 			return result;
 		}
-		/*Factorial Trailing Zeroes 
+		/*Factorial Trailing Zeroes
 		n!后缀0的个数 = n!质因子中5的个数 = floor(n/5) + floor(n/25) + floor(n/125) + ....
 		*/
 		int trailingZeroes(int n)
@@ -1122,7 +1122,7 @@ namespace panzg_leetcode
 		long long jiesheng(int n)
 		{
 			long long  count = 1;
-			for (int i = 1; i <= n;i++)
+			for (int i = 1; i <= n; i++)
 			{
 				count *= i;
 			}
@@ -1138,13 +1138,13 @@ namespace panzg_leetcode
 			}
 			else if (k > length) //取余
 				k %= length;
-			rotate_helper(nums, 0, length-k-1);
-			rotate_helper(nums, length-k, length - 1);
+			rotate_helper(nums, 0, length - k - 1);
+			rotate_helper(nums, length - k, length - 1);
 			rotate_helper(nums, 0, length - 1);
 		}
-		void rotate_helper(vector<int> &nums,int start,int end)
+		void rotate_helper(vector<int> &nums, int start, int end)
 		{
-			while (start<end)
+			while (start < end)
 			{
 				int temp = nums[start];
 				nums[start] = nums[end];
@@ -1160,7 +1160,7 @@ namespace panzg_leetcode
 		public:
 			BSTIterator(TreeNode *root)
 			{
-				while (root!=nullptr)
+				while (root != nullptr)
 				{
 					s.push(root);
 					root = root->left;
@@ -1183,7 +1183,7 @@ namespace panzg_leetcode
 				{
 					node = node->right;
 					s.push(node);
-					while (node->left!=nullptr)
+					while (node->left != nullptr)
 					{
 						node = node->left;
 						s.push(node);
@@ -1202,7 +1202,7 @@ namespace panzg_leetcode
 			});
 			if (nums[0] == 0) return "0";
 			//累加
-			return std::accumulate(nums.begin(), nums.end(), string(""), [](const string& a, int b){return a + to_string(b);});
+			return std::accumulate(nums.begin(), nums.end(), string(""), [](const string& a, int b){return a + to_string(b); });
 		}
 		/*Repeated DNA Sequences 暴力破解法*/
 		vector<string> findRepeatedDnaSequences(string s)
@@ -1210,18 +1210,18 @@ namespace panzg_leetcode
 			int i = 0, j = 0;
 			int length = s.size();
 			vector<string> result;
-			for (i = 0; i < length - 20;i++)
+			for (i = 0; i < length - 20; i++)
 			{
 				for (j = i + 10; j < length - 10; j++)
 				{
 					int index = 0;
-					while (index<10 && s[i+index]==s[j+index])
+					while (index < 10 && s[i + index] == s[j + index])
 					{
 						index++;
 					}
 					if (index == 10)
 					{
-						result.push_back(string(s, i,10));
+						result.push_back(string(s, i, 10));
 					}
 				}
 			}
@@ -1246,7 +1246,7 @@ namespace panzg_leetcode
 			unordered_map<string, int> count;
 			vector<string> result;
 			if (s.size() < 11) return result;
-			for (size_t i = 0; i <= s.size()-10;i++)
+			for (size_t i = 0; i <= s.size() - 10; i++)
 			{
 				string temp(s, i, 10);
 				auto find_res = count.find(temp);
@@ -1259,6 +1259,36 @@ namespace panzg_leetcode
 					count[temp]++;
 			}
 			return result;
+		}
+		/*Reverse Bits 使用bitset对整数和二进制进行转换*/
+		typedef unsigned  int uint32_t;
+		uint32_t reverseBits(uint32_t n)
+		{
+			string s = bitset<32>(n).to_string();
+			reverse(s.begin(), s.end());
+			return bitset<32>(s).to_ulong();
+		}
+		/*Reverse Bits 位运算*/
+		uint32_t reverseBits_v2(uint32_t n)
+		{
+			uint32_t res = 0;
+			for (int i = 0; i < 32; i++, n >>= 1)
+				res = (res << 1) | (n & 1);
+			return res;
+		}
+		/*Number of 1 Bits 位运算*/
+		int hammingWeight(uint32_t n)
+		{
+			int count = 0;
+			for (int i = 0; i < 32 && n>0; i++, n >>= 1)
+		    	if (n & 0x1)
+					count++;
+			return count;
+		}
+		/*House Robber*/
+		int rob(vector<int>& nums)
+		{
+
 		}
 	};
 }
@@ -1273,9 +1303,9 @@ int main()
 	node1.next = &node2;
 	node2.next = &node3;
 	node3.next = &node4;
-//	node4.next = &node5;
+	//	node4.next = &node5;
 	vector<vector<int>> vec(1, vector<int>(2, 3));
-	vector<int> nums = { 3,30,34,5,9};
+	vector<int> nums = { 3, 30, 34, 5, 9 };
 	string s = "AAAAAAAAAAA";
 	//sol.reorderList(&node1);
 	//ListNode *p = &node1;
@@ -1285,11 +1315,11 @@ int main()
 	//	p = p->next;
 	//}
 
-	auto res = sol.findRepeatedDnaSequences_v3(s);
-	for each (auto var in res)
+	cout<<sol.hammingWeight(11);
+	/*for each (auto var in res)
 	{
-		cout << var << endl;
-	}
+	cout << var << endl;
+	}*/
 
 	system("pause");
 }
