@@ -107,4 +107,9 @@
 	[2015-11-20]
 	Reverse Bits,位运算，bitset
 	Number of 1 Bits,位运算
+	[2015-11-21]
+	House Robber,动态规划
+	House Robber 2,动态规划
+	Binary Tree Right Side View,树的层次遍历
+	Number of Islands,并查集，DFS
 	to be continued....

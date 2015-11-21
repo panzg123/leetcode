@@ -1285,11 +1285,198 @@ namespace panzg_leetcode
 					count++;
 			return count;
 		}
-		/*House Robber*/
+		/*House Robber ，简单动态规划*/
 		int rob(vector<int>& nums)
 		{
+			if (nums.empty())
+			{
+				return 0;
+			}
+			else if (nums.size() == 1)
+			{
+				return nums[0];
+			}
 
+			vector<int> dp(nums.size(), 0);
+			dp[nums.size() - 1] = nums[nums.size() - 1];
+			dp[nums.size() - 2] = max(nums[nums.size() - 2], nums[nums.size() - 1]);
+
+			for (int i = (int)nums.size() - 3; i >= 0; --i)
+			{
+				dp[i] = max(nums[i] + dp[i + 2],
+					dp[i + 1]);
+			}
+
+			return dp[0];
 		}
+		/*House Robber II 动态规划*/
+		int rob2(vector<int>& nums)
+		{
+			if (nums.empty())
+			{
+				return 0;
+			}
+			else if (nums.size() == 1)
+			{
+				return nums[0];
+			}
+			//不选最后一个节点
+			vector<int> temp1(next(nums.begin()),nums.end());
+			int value1 = rob2_helper(temp1);
+			//不选第一个节点
+			vector<int> temp2(nums.begin(), prev(nums.end()));
+			int value2 = rob2_helper(temp2);
+			return max(value1, value2);
+			
+		}
+		//求nums的rob value
+		int rob2_helper(vector<int> nums)
+		{
+			if (nums.empty())
+			{
+				return 0;
+			}
+			else if (nums.size() == 1)
+			{
+				return nums[0];
+			}
+
+			vector<int> dp(nums.size(), 0);
+			dp[nums.size() - 1] = nums[nums.size() - 1];
+			dp[nums.size() - 2] = max(nums[nums.size() - 2], nums[nums.size() - 1]);
+
+			for (int i = (int)nums.size() - 3; i >= 0; --i)
+			{
+				dp[i] = max(nums[i] + dp[i + 2],
+					dp[i + 1]);
+			}
+			return dp[0];
+		}
+		/*Binary Tree Right Side View 层次遍历*/
+		vector<int> rightSideView(TreeNode* root)
+		{
+			queue<TreeNode*> q1,q2;
+			if (root!=nullptr)
+				q1.push(root);
+			vector<int> result;
+			while (!q1.empty())
+			{
+				result.push_back(q1.back()->val);
+				while (!q1.empty())
+				{
+					TreeNode *top = q1.front();
+					q1.pop();
+					if (top->left)
+						q2.push(top->left);
+					if (top->right)
+						q2.push(top->right);
+				}
+				swap(q1, q2);
+			}
+			return result;
+		}
+		/*Number of Islands,两种方法，并查集，DFS*/
+		class numIslandsss
+		{
+			#define MAX 1005
+			/* father[x]表示x的父节点 */
+			int father[MAX];
+			/* rank[x]表示x的秩 */
+			int rank[MAX];
+
+			/* 初始化集合 */
+			void Make_Set(int x)
+			{
+				father[x] = x;
+				rank[x] = 0;
+			}
+
+			/* 查找x元素所在的集合,回溯时压缩路径 */
+			int Find_Set(int x)
+			{
+
+				if (x != father[x])
+				{
+					father[x] = Find_Set(father[x]);
+				}
+				return father[x];
+			}
+
+			/* 按秩合并x,y所在的集合 */
+			void Union(int x, int y)
+			{
+				x = Find_Set(x);
+				y = Find_Set(y);
+				if (x == y) return;
+				if (rank[x] > rank[y])
+				{
+					father[y] = x;
+				}
+				else
+				{
+					if (rank[x] == rank[y])
+					{
+						rank[y]++;
+					}
+					father[x] = y;
+				}
+			}
+		public:
+			/*Number of Islands 并查集*/
+			int numIslands(vector<vector<int>>& grid)
+			{
+				int m = grid.size();
+				if (m == 0) return 0;
+				int n = grid[0].size();
+				for (int i = 0; i < m*n; ++i)
+					Make_Set(i);
+				for (int i = 0; i < m;i++)
+				{
+					for (int j = 0; j < n;j++)
+					{
+						if (grid[i][j] == 1)
+						{
+							//上
+							if (i>0 && grid[i - 1][j] == 1)
+								Union(i*n + j, (i - 1)*n + j);
+							//左
+							if (j>0 && grid[i][j-1] == 1)
+								Union(i*n + j, i*n + j-1);
+						}
+					}
+				}
+				int cnt = 0;
+				for (int i = 0; i < m*n;i++)
+				{
+					if (grid[i/n][i%n]==1 && father[i] == i)
+						cnt++;
+				}
+				return cnt;
+			}
+			/*Number of Islands,DFS*/
+			int numIslands_dfs(vector<vector<char>>& grid) {
+				if (grid.size() == 0) return 0;
+				int numIld = 0;
+				for (int i = 0; i < grid.size(); ++i){
+					for (int j = 0; j < grid[0].size(); ++j){
+						if (grid[i][j] == '1'){
+							numIld++;
+							dfs(i, j, grid);
+						}
+					}
+				}
+				return numIld;
+			}
+			void dfs(int i, int j, vector<vector<char>>& grid){
+				if (i < 0 || i >= grid.size() || j < 0 || j >= grid[0].size() || grid[i][j] == '0') return;
+				grid[i][j] = '0';
+				dfs(i + 1, j, grid);
+				dfs(i, j + 1, grid);
+				dfs(i - 1, j, grid);
+				dfs(i, j - 1, grid);
+			}
+		};
+		
 	};
 }
 int main()
@@ -1305,7 +1492,7 @@ int main()
 	node3.next = &node4;
 	//	node4.next = &node5;
 	vector<vector<int>> vec(1, vector<int>(2, 3));
-	vector<int> nums = { 3, 30, 34, 5, 9 };
+	vector<int> nums = {1,1,1,1 };
 	string s = "AAAAAAAAAAA";
 	//sol.reorderList(&node1);
 	//ListNode *p = &node1;
@@ -1315,11 +1502,16 @@ int main()
 	//	p = p->next;
 	//}
 
-	cout<<sol.hammingWeight(11);
+	//cout<<sol.rob2(nums);
 	/*for each (auto var in res)
 	{
 	cout << var << endl;
 	}*/
+
+	vector<vector<int>> grid = { { 1 } };
+
+	panzg_leetcode::Solution::numIslandsss sol1;
+	cout<<sol1.numIslands(grid);
 
 	system("pause");
 }
