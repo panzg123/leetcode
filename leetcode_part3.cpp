@@ -1281,8 +1281,8 @@ namespace panzg_leetcode
 		{
 			int count = 0;
 			for (int i = 0; i < 32 && n>0; i++, n >>= 1)
-		    	if (n & 0x1)
-					count++;
+			if (n & 0x1)
+				count++;
 			return count;
 		}
 		/*House Robber ，简单动态规划*/
@@ -1321,13 +1321,13 @@ namespace panzg_leetcode
 				return nums[0];
 			}
 			//不选最后一个节点
-			vector<int> temp1(next(nums.begin()),nums.end());
+			vector<int> temp1(next(nums.begin()), nums.end());
 			int value1 = rob2_helper(temp1);
 			//不选第一个节点
 			vector<int> temp2(nums.begin(), prev(nums.end()));
 			int value2 = rob2_helper(temp2);
 			return max(value1, value2);
-			
+
 		}
 		//求nums的rob value
 		int rob2_helper(vector<int> nums)
@@ -1355,8 +1355,8 @@ namespace panzg_leetcode
 		/*Binary Tree Right Side View 层次遍历*/
 		vector<int> rightSideView(TreeNode* root)
 		{
-			queue<TreeNode*> q1,q2;
-			if (root!=nullptr)
+			queue<TreeNode*> q1, q2;
+			if (root != nullptr)
 				q1.push(root);
 			vector<int> result;
 			while (!q1.empty())
@@ -1378,7 +1378,7 @@ namespace panzg_leetcode
 		/*Number of Islands,两种方法，并查集，DFS*/
 		class numIslandsss
 		{
-			#define MAX 1005
+#define MAX 1005
 			/* father[x]表示x的父节点 */
 			int father[MAX];
 			/* rank[x]表示x的秩 */
@@ -1430,9 +1430,9 @@ namespace panzg_leetcode
 				int n = grid[0].size();
 				for (int i = 0; i < m*n; ++i)
 					Make_Set(i);
-				for (int i = 0; i < m;i++)
+				for (int i = 0; i < m; i++)
 				{
-					for (int j = 0; j < n;j++)
+					for (int j = 0; j < n; j++)
 					{
 						if (grid[i][j] == 1)
 						{
@@ -1440,15 +1440,15 @@ namespace panzg_leetcode
 							if (i>0 && grid[i - 1][j] == 1)
 								Union(i*n + j, (i - 1)*n + j);
 							//左
-							if (j>0 && grid[i][j-1] == 1)
-								Union(i*n + j, i*n + j-1);
+							if (j>0 && grid[i][j - 1] == 1)
+								Union(i*n + j, i*n + j - 1);
 						}
 					}
 				}
 				int cnt = 0;
-				for (int i = 0; i < m*n;i++)
+				for (int i = 0; i < m*n; i++)
 				{
-					if (grid[i/n][i%n]==1 && father[i] == i)
+					if (grid[i / n][i%n] == 1 && father[i] == i)
 						cnt++;
 				}
 				return cnt;
@@ -1476,7 +1476,83 @@ namespace panzg_leetcode
 				dfs(i, j - 1, grid);
 			}
 		};
-		
+		/*
+		Bitwise AND of Numbers Range，位运算
+		当m!=n，那么最末位必定等0，因为[m,n]必定包含奇偶数，相与最末位等0。当m=n的时候，后面都是0，前面的就是这个范围内的数按位相与的相同部分。
+		举例来说：m=4(0000 0100), n=6(0000 0110), 那么范围[4,6]中包含4、5、6，即0000 0100, 0000 0101, 0000 0110，所有的结果按位与得到0000 0100。
+		初始：m!=n，于是m,n分别右移一位得到0000 0010, 0000 0011，同时偏移量offset+1；
+		m!=n，于是m,n继续右移一位得到0000 0001, 0000 0001，同时偏移量offset+1；
+		m=n，得到结果m<<offset。
+		*/
+		int rangeBitwiseAnd(int m, int n)
+		{
+			int res = 0;
+			int offset = 0;
+			while (m != n){
+				m >>= 1;
+				n >>= 1;
+				offset++;
+			}
+			return m << offset;
+		}
+		/*Happy Number*/
+		bool isHappy(int n)
+		{
+			unordered_set<int> set;
+			while (n!=1)
+			{
+				int res = 0;
+				while (n)
+				{
+					int a = n % 10;
+					res += a*a;
+					n /= 10;
+				}
+				n = res;
+				auto find_res = set.find(n);
+				if (find_res != set.end())
+					return false;
+				else
+					set.insert(n);
+				cout << n << endl;
+			}
+			return true;
+		}
+		/*Remove Linked List Elements*/
+		ListNode* removeElements(ListNode* head, int val)
+		{
+			ListNode m_head(-1);
+			m_head.next = head;
+			ListNode *prev = &m_head;
+			ListNode *cur = head;
+			while (cur)
+			{
+				if (cur->val == val)
+				{
+					prev->next = cur->next;
+					cur = prev->next;
+				}
+				else
+				{
+					prev = cur;
+					cur = cur->next;
+				}
+			}
+			return m_head.next;
+		}
+		/*
+		Delete Node in a Linked List
+		这道题让我们删除链表的一个节点，更通常不同的是，没有给我们链表的起点，只给我们了一个要删的节点，
+		跟我们以前遇到的情况不太一样，我们之前要删除一个节点的方法是要有其前一个节点的位置，然后将其前一个节点的next连向要删节点的下一个，然后delete掉要删的节点即可。
+		这道题的处理方法是先把当前节点的值用下一个节点的值覆盖了，然后我们删除下一个节点即可，代码如下：
+		*/
+		void deleteNode(ListNode* node)
+		{
+			node->val = node->next->val;
+			ListNode* temp = node->next;
+			node->next = node->next->next;
+			delete temp;
+		}
 	};
 }
 int main()
@@ -1492,7 +1568,7 @@ int main()
 	node3.next = &node4;
 	//	node4.next = &node5;
 	vector<vector<int>> vec(1, vector<int>(2, 3));
-	vector<int> nums = {1,1,1,1 };
+	vector<int> nums = { 1, 1, 1, 1 };
 	string s = "AAAAAAAAAAA";
 	//sol.reorderList(&node1);
 	//ListNode *p = &node1;
@@ -1508,10 +1584,7 @@ int main()
 	cout << var << endl;
 	}*/
 
-	vector<vector<int>> grid = { { 1 } };
-
-	panzg_leetcode::Solution::numIslandsss sol1;
-	cout<<sol1.numIslands(grid);
+	cout<<sol.isHappy(7);
 
 	system("pause");
 }

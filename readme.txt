@@ -112,4 +112,9 @@
 	House Robber 2,动态规划
 	Binary Tree Right Side View,树的层次遍历
 	Number of Islands,并查集，DFS
+	[2015-11-22]
+	Bitwise AND of Numbers Range,位运算
+	Happy Number
+	Remove Linked List Elements,链表删除节点
+	Delete Node in a Linked List,链表删除节点
 	to be continued....
