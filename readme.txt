@@ -117,4 +117,7 @@
 	Happy Number
 	Remove Linked List Elements,链表删除节点
 	Delete Node in a Linked List,链表删除节点
+	[2015-11-29]
+	Count Primes,计算素数的个数
+	Isomorphic Strings，单词替换，hash映射
 	to be continued....

@@ -1499,7 +1499,7 @@ namespace panzg_leetcode
 		bool isHappy(int n)
 		{
 			unordered_set<int> set;
-			while (n!=1)
+			while (n != 1)
 			{
 				int res = 0;
 				while (n)
@@ -1553,6 +1553,80 @@ namespace panzg_leetcode
 			node->next = node->next->next;
 			delete temp;
 		}
+		/*Count Primes*/
+		int countPrimes(int n)
+		{
+			if (n <= 2)
+				return 0;
+
+			bool *prime = new bool[n];
+			int i, j, k;
+
+			for (i = 0; i < n; i++)
+				prime[i] = true;
+
+			for (i = 2; i < n; i++)
+			{
+				if (prime[i] == true)
+				{
+					for (j = i; j + i < n; j += i)
+						prime[j + i] = false;
+				}
+			}
+			for (i = 2, k = 0; i < n; i++)
+			{
+				if (prime[i])
+					k++;
+			}
+			return k;
+		}
+		/*Isomorphic Strings 分别记录s到t,t到s的单词映射,用hash，32ms*/
+		bool isIsomorphic(string s, string t) 
+		{
+			if (s.length() != t.length()) return false;
+			//记录s到t的映射
+			unordered_map<char, char> mp;
+			for (int i = 0; i < s.length(); ++i) 
+			{
+				if (mp.find(s[i]) == mp.end())
+					mp[s[i]] = t[i];
+				else if (mp[s[i]] != t[i]) 
+					return false;
+			}
+			//记录t到s的映射
+			mp.clear();
+			for (int i = 0; i < s.length(); ++i)
+			{
+				if (mp.find(t[i]) == mp.end()) 
+					mp[t[i]] = s[i];
+				else if (mp[t[i]] != s[i]) 
+					return false;
+			}
+			return true;
+		}
+		/*Isomorphic Strings 分别记录s到t,t到s的单词映射,用数组，8ms*/
+		bool isIsomorphic_v2(string s, string t)
+		{
+			if (s.length() != t.length())
+				return false;
+			int map1[256], map2[256];
+			fill_n(map1, 256, 0);
+			fill_n(map2, 256, 0);
+			for (int i = 0; i < s.length();i++)
+			{
+				//s到t的映射检查
+				if (map1[s[i]] == 0)
+					map1[s[i]] = t[i];
+				else if (map1[s[i]] != t[i])
+					return false;
+				//t到s的映射检查
+				if (map2[t[i]] == 0)
+					map2[t[i]] = s[i];
+				else if (map2[t[i]] != s[i])
+					return false;
+			}
+			return true;
+		}
 	};
 }
 int main()
@@ -1578,13 +1652,16 @@ int main()
 	//	p = p->next;
 	//}
 
-	//cout<<sol.rob2(nums);
+	cout << sol.isIsomorphic_v2("egg", "add")<<endl;
+	cout << sol.isIsomorphic_v2("foo", "bar")<<endl;
+	cout << sol.isIsomorphic_v2("paper", "title")<<endl;
 	/*for each (auto var in res)
 	{
 	cout << var << endl;
 	}*/
 
-	cout<<sol.isHappy(7);
+
+	//cout << std::numeric_limits<short>::max();
 
 	system("pause");
 }
