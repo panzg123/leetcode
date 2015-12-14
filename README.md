@@ -1,14 +1,14 @@
 我自己的leetcode刷题记录
-
-
-	Valid Palindrome
-	Implement strStr()
-	String to Integer (atoi)
-	addBinary
-	longestPalindrome 
-	maximal rectangle :dp问题，较难
-	largestRectangleArea 求直方图的最大面积，左右两次扫面+剪枝优化
-	Valid Parentheses 用栈判断括号匹配
+=========================
+###[20150920]
+    Valid Palindrome
+    Implement strStr()
+    String to Integer (atoi)
+    addBinary
+    longestPalindrome 
+    maximal rectangle :dp问题，较难
+    largestRectangleArea 求直方图的最大面积，左右两次扫面+剪枝优化
+    Valid Parentheses 用栈判断括号匹配
 	Regular Expression Matching 递归匹配
 	wildcard matching 动态规划
 	longest common prefix , 简单
@@ -61,63 +61,80 @@
 	Letter Combinations of a Phone Number，递归
 	
 	Updating....
-	[2015-10-22]
+    
+###[2015-10-22]
 	Spiral Matrix,模拟题，细节实现
 	Spiral Matrix 2 模拟题
 	Divide Two Integers,模拟题，用减法实现除法，注意溢出
 	LeetCode, Text Justification,时间复杂度 O(n)，空间复杂度 O(1)
 	Max Points on a Line，暴力枚举法，以边为中心，时间复杂度 O(n^3)，空间复杂度 O(1)
-	[2015-10-28]
+###[2015-10-28]
 	Median of Two Sorted Arrays,求两个已排序数组中的中位数，hard.
 	Swap Nodes in Pairs,链表，节点交换
 	Reverse Nodes in k-Group,链表节点交换，用栈。
-	[2015-11-1]
+    
+###[2015-11-1]
 	First Missing Positive,找出第一个未出现的正整数，常数空间复杂度
-	[2015-11-2]
+	
+###[2015-11-2]
 	Longest Consecutive Sequence, 数组，unordered_map
 	Maximum Depth of Binary Tree,递归
 	Symmetric Tree,递归
 	Reverse Words in a String,字符串翻转
 	reorder list,链表操作
-	[2015-11-7]
+	
+###[2015-11-7]
 	LRU Cache, 实现LRU算法，unorderd_map + list,
-	[2015-11-8]
+	
+###[2015-11-8]
 	Maximum Product Subarray,最大连续乘积，动态规划
 	Find Minimum in Rotated Sorted Array,找最小，二分法
 	Find Minimum in Rotated Sorted Array 2,可重复数组，找最小数，二分法
-	[2015-11-10]
+	
+###[2015-11-10]
 	Min Stack,实现栈，能够常数时间输出最小值
 	Intersection of Two Linked Lists,两个链表找交点
 	Find Peak Element,找点
 	Compare Version Numbers,比较两个字符串
-	[2015-11-11]
+	
+###[2015-11-11]
 	Maximum gap,桶排序，基数排序
-	[2015-11-14]
+	
+###[2015-11-14]
 	Excel Sheet Column Title,26进制处理
 	Majority Element,求半数的元素，Moore voting algorithm。
 	Majority_Element2,求1/3的元素，Moore voting algorithm.
-	[2015-11-16]
+	
+###[2015-11-16]
 	Excel Sheet Column Number,字符串
 	Factorial Trailing Zeroes ,求n得阶乘后缀为0的个数
 	Rotate Array,字符串翻转
-	[2015-11-19]
+	
+###[2015-11-19]
 	Binary Search Tree Iterator,BST,栈
 	largestNumber,自定义排序，字典
 	Repeated DNA Sequences,字符串，位运算，unordered_map
-	[2015-11-20]
+	
+###[2015-11-20]
 	Reverse Bits,位运算，bitset
 	Number of 1 Bits,位运算
-	[2015-11-21]
+	
+###[2015-11-21]
 	House Robber,动态规划
 	House Robber 2,动态规划
 	Binary Tree Right Side View,树的层次遍历
 	Number of Islands,并查集，DFS
-	[2015-11-22]
+	
+###[2015-11-22]
 	Bitwise AND of Numbers Range,位运算
 	Happy Number
 	Remove Linked List Elements,链表删除节点
 	Delete Node in a Linked List,链表删除节点
-	[2015-11-29]
+	
+###[2015-11-29]
 	Count Primes,计算素数的个数
 	Isomorphic Strings，单词替换，hash映射
-	to be continued....
+###20151214
+* Reverse Linked List,逆转链表，栈，或者递归或者遍历
+
+###to be continued....

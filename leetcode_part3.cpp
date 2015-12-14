@@ -1627,6 +1627,55 @@ namespace panzg_leetcode
 			}
 			return true;
 		}
+		/*逆转链表，用栈,时间复杂度O(N)，空间复杂度O(N)*/
+		ListNode* reverseList(ListNode* head)
+		{
+			if (head == nullptr)
+				return head;
+			stack<ListNode*> node_stack;
+			while (head)
+			{
+				node_stack.push(head);
+				head = head->next;
+			}
+			ListNode *myhead = node_stack.top();
+			head = myhead;
+			node_stack.pop();
+			while (!node_stack.empty())
+			{
+				ListNode * node = node_stack.top();
+				node_stack.pop();
+				head->next = node;
+				head = head->next;
+			}
+			head->next = nullptr;
+			return myhead;
+		}
+		/*逆转链表，遍历，时间复杂度O(N)，空间复杂度O(1)*/
+		ListNode* reverseListv2(ListNode* head)
+		{
+			ListNode *pos = nullptr,*cur = nullptr;
+			if (head && head->next)
+			{
+				pos = head->next->next;
+				cur = head->next;
+				head->next->next = head;
+				head->next = nullptr;
+				head = cur;
+				cur = pos;
+			}
+			else
+				return head;
+			while (head && cur)
+			{
+				pos = cur->next;
+				cur->next = head;
+				head = cur;
+				cur = pos;
+
+			}
+			return head;
+		}
 	};
 }
 int main()
@@ -1646,15 +1695,13 @@ int main()
 	string s = "AAAAAAAAAAA";
 	//sol.reorderList(&node1);
 	//ListNode *p = &node1;
-	//while (p)
-	//{
-	//	cout << p->val << endl;
-	//	p = p->next;
-	//}
+	auto p = sol.reverseListv2(&node1);
+	while (p)
+	{
+		cout << p->val << endl;
+		p = p->next;
+	}
 
-	cout << sol.isIsomorphic_v2("egg", "add")<<endl;
-	cout << sol.isIsomorphic_v2("foo", "bar")<<endl;
-	cout << sol.isIsomorphic_v2("paper", "title")<<endl;
 	/*for each (auto var in res)
 	{
 	cout << var << endl;
