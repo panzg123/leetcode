@@ -134,7 +134,7 @@
 ###[2015-11-29]
 	Count Primes,计算素数的个数
 	Isomorphic Strings，单词替换，hash映射
-###20151214
-* Reverse Linked List,逆转链表，栈，或者递归或者遍历
-
+###[20151214]
+   Reverse Linked List,逆转链表，栈，或者递归或者遍历
+   Course Schedule, dfs,bfs,拓扑排序
 ###to be continued....
