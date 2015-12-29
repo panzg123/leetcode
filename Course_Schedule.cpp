@@ -58,30 +58,51 @@ public:
         flags[start] = false;
         return true;
     }
-    /*Course Schedule,拓扑排序,来自 https://leetcode.com/discuss/34791/bfs-topological-sort-and-dfs-finding-cycle-by-c */
-    bool canFinish_Topological(int numCourses, vector<vector<int>>& prerequisites)
+    /*Course Schedule,拓扑排序*/
+    bool canFinish_Top(int numCourses, vector<pair<int,int>>& prerequisites)
     {
-        vector<unordered_set<int>> matrix(numCourses); // save this directed graph
-        for (int i = 0; i < prerequisites.size(); ++i)
-            matrix[prerequisites[i][1]].insert(prerequisites[i][0]);
-
-        vector<int> d(numCourses, 0); // in-degree
-        for (int i = 0; i < numCourses; ++i)
-            for (auto it = matrix[i].begin(); it != matrix[i].end(); ++it)
-                ++d[*it];
-
-        for (int j = 0, i; j < numCourses; ++j)
+        vector<int> in_degree(numCourses,0); //存储入度
+        vector<unordered_set<int>> matrix(numCourses);//存储图
+        for (int i = 0; i < prerequisites.size(); i++)
         {
-            for (i = 0; i < numCourses && d[i] != 0; ++i); // find a node whose in-degree is 0
-
-            if (i == numCourses) // if not find
-                return false;
-
-            d[i] = -1;
-            for (auto it = matrix[i].begin(); it != matrix[i].end(); ++it)
-                --d[*it];
+            matrix[prerequisites[i].second].insert(prerequisites[i].first);
         }
-
-        return true;
+        //计算入度
+        for (int i = 0; i < numCourses; i++)
+        {
+            for (auto it = matrix[i].begin(); it != matrix[i].end(); it++)
+            {
+                in_degree[*it]++;
+            }
+        }
+        stack<int> zeor_degree_stack;//存储入度为0的节点
+        int count = 0;//入度0的节点计数器
+        for (int i = 0; i < numCourses; i++)
+        {
+            if (in_degree[i] == 0)
+            {
+                zeor_degree_stack.push(i);
+                count++; //入度为0，计数加1
+            }
+        }
+        //循环抽取入度为0的节点
+        while (!zeor_degree_stack.empty())
+        {
+            int top = zeor_degree_stack.top();
+            zeor_degree_stack.pop();
+            for (auto it = matrix[top].begin(); it != matrix[top].end(); it++)
+            {
+                in_degree[*it]--;
+                if (in_degree[*it] == 0)
+                {
+                    zeor_degree_stack.push(*it);
+                    count++;
+                }
+            }
+        }
+        if (count == numCourses)
+            return true;
+        else
+            return false;
     }
 };
