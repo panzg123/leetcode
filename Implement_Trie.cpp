@@ -1,4 +1,4 @@
-/*Ç°×ºÊ÷µÄÊµÏÖ*/
+/*å‰ç¼€æ ‘*/
 class TrieNode
 {
 public:
