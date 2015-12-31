@@ -1,4 +1,4 @@
-/*前缀树*/
+/*前缀树 */
 class TrieNode
 {
 public:
