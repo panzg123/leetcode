@@ -2126,6 +2126,8 @@ namespace panzg_leetcode
 		};
 	};
 }
+
+#if 0
 int main()
 {
 	panzg_leetcode::Solution sol;
@@ -2178,3 +2180,5 @@ int main()
 
 	system("pause");
 }
+
+#endif

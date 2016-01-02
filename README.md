@@ -140,4 +140,6 @@
    Minimum Size Subarray Sum,数组
    Add and Search Word,字典树
    Word Search II, dfs+字典树
+   Course Schedule II, 拓扑排序
+   Different Ways to Add Parentheses,递归
 ###to be continued....
