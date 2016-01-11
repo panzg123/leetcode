@@ -144,4 +144,5 @@
    Different Ways to Add Parentheses,递归
 ###[20160109]
 	Contains Duplicate, hash or sort 
+	Shortest Palindrome,kmp匹配
 ###to be continued....
