@@ -119,6 +119,7 @@ namespace panzg_leetcode
 		{
 			string temp;
 			int index = s.length();
+			//从字符串末尾查找，最长的回文串
 			while (index>1)
 			{
 				temp.assign(s, 0, index);
@@ -127,6 +128,7 @@ namespace panzg_leetcode
 				else
 					index--;
 			}
+			//找到最长回文串，构造结果
 			if (index != s.length())
 				temp.assign(s, index, string::npos);
 			else
@@ -153,28 +155,31 @@ namespace panzg_leetcode
 			}
 			return true;
 		}
-
+		//Shortest Palindrome,kmp匹配法，具体可以参考讲解：https://leetcode.com/discuss/64309/clean-kmp-solution-with-super-detailed-explanation
 		string shortestPalindrome_kmp(string s)
 		{
+			//先构造字符串:s+"#"+reverse(s),比如catacb的构造结果为：catacb # bcatac，保存到temp
 			string temp = s;
 			string str_res;
 			temp += "#";
 			string temp2 = s;
 			reverse(temp2.begin(), temp2.end());
 			temp += temp2;
-
+			//获取kmp表
 			vector<int> res(temp.size(), 0);
 			kmp_get_next(temp, res);
-
+			//取得最kmp末尾的值
 			int index = res[temp.size() - 1];
 			if (index != s.length()-1)
 				str_res.assign(s, index+1, string::npos);
 			else
 				return s;
 			reverse(str_res.begin(), str_res.end());
+			//存储结果
 			str_res += s;
 			return str_res;
 		}
+		//kmp table，时间复杂度为O(N)，返回结果存储在next中
 		void kmp_get_next(string s, vector<int>& next)
 		{
 			int length = s.size();
@@ -197,6 +202,33 @@ namespace panzg_leetcode
 				else
 					k = next[k];
 			}
+		}
+		//描述：kmp匹配，时间复杂度为O(N+M)
+		//@src：主串
+		//@start_pos:主串匹配起始位置
+		//@dest:模式串
+		//@kmp_table:kmp表，用kmp_get_next函数求得
+		//@return:返回主串匹配的位置，无匹配则返回-1
+		int kmp_match(string src,int start_pos,string dest,const vector<int>& kmp_table)
+		{
+			int i = start_pos;
+			int j = 0;
+			int res=0;
+			while (i<src.length() && j<dest.length())
+			{
+				if (j == -1 || src[i] == dest[j]) //分别增加1
+				{
+					i++;
+					j++;
+				}
+				else
+					j = kmp_table[j]; //模式串右移
+			}
+			if (j == dest.length())
+				res = i - dest.length();
+			else
+				res = -1;
+			return res;
 		}
 	};
 }
