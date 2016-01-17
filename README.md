@@ -145,4 +145,5 @@
 ###[20160109]
 	Contains Duplicate, hash or sort 
 	Shortest Palindrome,kmp匹配
+	Ugly Number,递归
 ###to be continued....
