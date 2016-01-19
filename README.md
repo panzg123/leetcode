@@ -9,7 +9,7 @@
     maximal rectangle :dp问题，较难
     largestRectangleArea 求直方图的最大面积，左右两次扫面+剪枝优化
     Valid Parentheses 用栈判断括号匹配
-	Regular Expression Matching 递归匹配
+    Regular Expression Matching 递归匹配
 	wildcard matching 动态规划
 	longest common prefix , 简单
 	valid number, hard, 用有限自动机
@@ -135,17 +135,18 @@
 	Count Primes,计算素数的个数
 	Isomorphic Strings，单词替换，hash映射
 ###[20151214]
-   Reverse Linked List,逆转链表，栈，或者递归或者遍历
-   Course Schedule, dfs,bfs,拓扑排序
-   Minimum Size Subarray Sum,数组
-   Add and Search Word,字典树
-   Word Search II, dfs+字典树
-   Course Schedule II, 拓扑排序
-   Different Ways to Add Parentheses,递归
+    Reverse Linked List,逆转链表，栈，或者递归或者遍历
+    Course Schedule, dfs,bfs,拓扑排序
+    Minimum Size Subarray Sum,数组
+    Add and Search Word,字典树
+    Word Search II, dfs+字典树
+    Course Schedule II, 拓扑排序
+    Different Ways to Add Parentheses,递归
 ###[20160109]
 	Contains Duplicate, hash or sort 
 	Shortest Palindrome,kmp匹配
 	Ugly Number,递归
 	Fraction to Recurring Decimal, hashmap.字符串
 	Dungeon Game, 动态规划
+	Best Time to Buy and Sell Stock IV，动态规划，需要使用局部最优和全局最优两种状态
 ###to be continued....

@@ -1273,9 +1273,11 @@ public:
 		return max(states[cur][1], states[cur][3]);
 	}
 	/*
-	Best Time to Buy and Sell Stock3 动态规划
-	思路：设状态 f(i)，表示区间 [0, i](0 ≤ i ≤ n −1) 的最大利润，
-	状态 g(i)，表示区间 [i, n −1](0 ≤ i ≤ n − 1) 的最大利润，则最终答案为 max {f(i) + g(i)} ,0 ≤ i ≤ n − 1。
+	Best Time to Buy and Sell Stock3 动态规划,将区间分成前后两部分
+	思路：
+	设状态 f(i)，表示区间 [0, i](0 ≤ i ≤ n −1) 的最大利润，
+	状态 g(i)，表示区间 [i, n −1](0 ≤ i ≤ n − 1) 的最大利润，
+	则最终答案为 max {f(i) + g(i)} ,0 ≤ i ≤ n − 1。
 	*/
 	int maxProfit3_v2(vector<int>& prices)
 	{
@@ -1299,10 +1301,26 @@ public:
 		return max_profit;
 	}
 
-	/*Best Time to Buy and Sell Stock IV*/
+	/*
+	Best Time to Buy and Sell Stock IV，动态规划，需要使用局部最优和全局最优两种状态
+	参考：http://www.cnblogs.com/grandyang/p/4295761.html
+	*/
 	int maxProfit4(int k, vector<int>& prices)
 	{
-
+		if (prices.empty()) 
+			return 0;
+		if (k >= prices.size()) 
+			return maxProfit2(prices);
+		vector<int> g(k + 1, 0);
+		vector<int> l(k + 1, 0);
+		for (int i = 0; i < prices.size() - 1; ++i) {
+			int diff = prices[i + 1] - prices[i];
+			for (int j = k; j >= 1; --j) {
+				l[j] = max(g[j - 1] + max(diff, 0), l[j] + diff);
+				g[j] = max(g[j], l[j]);
+			}
+		}
+		return g[k];
 	}
 	/*Longest Substring Without Repeating Characters*/
 	int lengthOfLongestSubstring(string s)
