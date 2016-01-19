@@ -240,6 +240,65 @@ namespace panzg_leetcode
 			else if (num % 5 == 0) return isUgly(num / 5);
 			else return false;
 		}
+		//string fractionToDecimal(int numerator, int denominator)
+		//思路是用unordered_map来记录出现的数，如果重复出现，则是循环
+		string fractionToDecimal(int numerator, int denominator)
+		{
+			string result;
+			if (numerator == 0)
+				return "0";
+			if (denominator == 0)
+				return "";
+			//异号
+			if ((numerator < 0) ^ (denominator < 0))
+				result += "-";
+			long long a = abs((long long)numerator);
+			long long b = abs((long long)denominator);
+			//求得整数部分
+			result += to_string(abs(a) / abs(b));
+			if (numerator%denominator == 0)
+				return result;
+			result += ".";
+			//求小数部分
+			unordered_map<int, int> map;
+			for (long long r = a%b; r; r %= b)
+			{
+				if (map.count(r) > 0)
+				{
+					//在数r位置的前面插入'('
+					result.insert(map[r], 1, '(');
+					result += ")";
+					break;
+				}
+				//保存数r出现的位置
+				map[r] = result.size();
+				r *= 10;
+				result += to_string(r / b);
+			}
+			return result;
+		}
+		//Dungeon Game,动态规划，重点是从右下角开始循环
+		int calculateMinimumHP(vector<vector<int>> &dungeon)
+		{
+			int row = dungeon.size();
+			int col = dungeon[0].size();
+			//res记录节点res[i][j]所需要的最少hp
+			vector<vector<int>> res(row+1, vector<int>(col+1, INT_MAX));
+			res[row - 1][col] = 1;
+			res[row][col - 1] = 1;
+			for (int i = row - 1; i >= 0; --i)
+			{
+				for (int j = col - 1; j >= 0; --j)
+				{
+					//选择右边或者下边中较小的hp值
+					int t = min(res[i + 1][j], res[i][j + 1]) - dungeon[i][j];
+					//最小为1
+					res[i][j] = max(t, 1);
+				}
+			}
+			//返回左上顶点需要的hp值
+			return res[0][0];
+		}
 	};
 }
 
@@ -260,9 +319,11 @@ int main()
 	}*/
 
 
-	string s = "aacecaaa";
+	vector<vector<int>> vec= {
+		{0,-3}
+	};
 	panzg_leetcode::Solution sol;
-	cout<<sol.shortestPalindrome_kmp(s);
+	cout << sol.calculateMinimumHP(vec);
 	getchar();
 }
 #endif

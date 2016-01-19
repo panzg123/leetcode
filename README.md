@@ -146,4 +146,6 @@
 	Contains Duplicate, hash or sort 
 	Shortest Palindrome,kmp匹配
 	Ugly Number,递归
+	Fraction to Recurring Decimal, hashmap.字符串
+	Dungeon Game, 动态规划
 ###to be continued....
