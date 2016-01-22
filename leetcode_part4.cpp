@@ -299,10 +299,66 @@ namespace panzg_leetcode
 			//返回左上顶点需要的hp值
 			return res[0][0];
 		}
-		//Best Time to Buy and Sell Stock IV
-		int maxProfit(int k, vector<int>& prices)
+		//Kth Largest Element in an Array ,直接用排序,12ms
+		int findKthLargest(vector<int>& nums, int k)
 		{
-			
+			sort(nums.begin(), nums.end());
+			return nums[nums.size() - k];
+		}
+		//Kth Largest Element in an Array ,堆,28ms,其它方法请参考：https://leetcode.com/discuss/36966/solution-explained
+		int findKthLargest_v2(vector<int>& nums, int k)
+		{
+			vector<int> temp_vec = nums;
+			make_heap(temp_vec.begin(), temp_vec.end());
+			while (k > 1)
+			{
+				std::pop_heap(temp_vec.begin(), temp_vec.end()); 
+				temp_vec.pop_back();
+				k--;
+			}
+			return temp_vec.front();
+		}
+
+		void PrintfVectorInt(vector<int> &vet)
+		{
+			for (vector<int>::iterator pos = vet.begin(); pos != vet.end(); pos++)
+				printf("%d ", *pos);
+			putchar('\n');
+		}
+		int test_make_heap()
+		{
+			const int MAXN = 20;
+			int a[MAXN];
+			int i;
+			for (i = 0; i < MAXN; ++i)
+				a[i] = rand() % (MAXN * 2);
+
+			//动态申请vector 并对vector建堆
+			vector<int> *pvet = new vector<int>(40);
+			pvet->assign(a, a + MAXN);
+
+			//建堆
+			make_heap(pvet->begin(), pvet->end());
+			PrintfVectorInt(*pvet);
+
+			//加入新数据 先在容器中加入，再调用push_heap()
+			pvet->push_back(25);
+			push_heap(pvet->begin(), pvet->end());
+			PrintfVectorInt(*pvet);
+
+			//删除数据  要先调用pop_heap()，再在容器中删除
+			pop_heap(pvet->begin(), pvet->end());
+			pvet->pop_back();
+			pop_heap(pvet->begin(), pvet->end());
+			pvet->pop_back();
+			PrintfVectorInt(*pvet);
+
+			//堆排序
+			sort_heap(pvet->begin(), pvet->end());
+			PrintfVectorInt(*pvet);
+
+			delete pvet;
+			return 0;
 		}
 	};
 }
@@ -324,12 +380,10 @@ int main()
 	}*/
 
 
-	vector<vector<int>> vec= {
-		{0,-3}
-	};
+	vector<int> vec = { 3, 2, 1, 5, 6, 4 };
 	panzg_leetcode::Solution sol;
 	
-	cout << sol.calculateMinimumHP(vec);
+	cout << sol.findKthLargest_v2(vec,3);
 	getchar();
 }
 #endif
