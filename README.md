@@ -150,4 +150,7 @@
 	Dungeon Game, 动态规划
 	Best Time to Buy and Sell Stock IV，动态规划，需要使用局部最优和全局最优两种状态
 	Kth Largest Element in an Array，分治、堆排序
+###[20160123]
+	Contains Duplicate II, unordered_map
+	Contains Duplicate III,sort or multimap
 ###to be continued....

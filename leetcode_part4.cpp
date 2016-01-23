@@ -104,7 +104,7 @@ namespace panzg_leetcode
 		bool containsDuplicate(vector<int>& nums)
 		{
 			unordered_map<int, int> map_;
-			for (int i = 0; i < nums.size();i++)
+			for (int i = 0; i < nums.size(); i++)
 			{
 				auto it = map_.find(nums[i]);
 				if (it != map_.end())
@@ -120,7 +120,7 @@ namespace panzg_leetcode
 			string temp;
 			int index = s.length();
 			//从字符串末尾查找，最长的回文串
-			while (index>1)
+			while (index > 1)
 			{
 				temp.assign(s, 0, index);
 				if (is_palindrome(temp))
@@ -142,8 +142,8 @@ namespace panzg_leetcode
 		{
 			if (s.length() == 1)
 				return true;
-			int i=0,j=s.length()-1;
-			while (i<j)
+			int i = 0, j = s.length() - 1;
+			while (i < j)
 			{
 				if (s[i] != s[j])
 					return false;
@@ -170,8 +170,8 @@ namespace panzg_leetcode
 			kmp_get_next(temp, res);
 			//取得最kmp末尾的值
 			int index = res[temp.size() - 1];
-			if (index != s.length()-1)
-				str_res.assign(s, index+1, string::npos);
+			if (index != s.length() - 1)
+				str_res.assign(s, index + 1, string::npos);
 			else
 				return s;
 			reverse(str_res.begin(), str_res.end());
@@ -186,7 +186,7 @@ namespace panzg_leetcode
 			int j = 1, k = 0;
 			next[0] = -1;
 			next[1] = 0;
-			while (j<length-1)
+			while (j < length - 1)
 			{
 				if (s[j] == s[k])
 				{
@@ -209,12 +209,12 @@ namespace panzg_leetcode
 		//@dest:模式串
 		//@kmp_table:kmp表，用kmp_get_next函数求得
 		//@return:返回主串匹配的位置，无匹配则返回-1
-		int kmp_match(string src,int start_pos,string dest,const vector<int>& kmp_table)
+		int kmp_match(string src, int start_pos, string dest, const vector<int>& kmp_table)
 		{
 			int i = start_pos;
 			int j = 0;
-			int res=0;
-			while (i<src.length() && j<dest.length())
+			int res = 0;
+			while (i < src.length() && j < dest.length())
 			{
 				if (j == -1 || src[i] == dest[j]) //分别增加1
 				{
@@ -231,7 +231,7 @@ namespace panzg_leetcode
 			return res;
 		}
 		//Ugly Number,递归
-		bool isUgly(int num) 
+		bool isUgly(int num)
 		{
 			if (num == 1) return true;
 			if (num == 0) return false;
@@ -283,7 +283,7 @@ namespace panzg_leetcode
 			int row = dungeon.size();
 			int col = dungeon[0].size();
 			//res记录节点res[i][j]所需要的最少hp
-			vector<vector<int>> res(row+1, vector<int>(col+1, INT_MAX));
+			vector<vector<int>> res(row + 1, vector<int>(col + 1, INT_MAX));
 			res[row - 1][col] = 1;
 			res[row][col - 1] = 1;
 			for (int i = row - 1; i >= 0; --i)
@@ -312,7 +312,7 @@ namespace panzg_leetcode
 			make_heap(temp_vec.begin(), temp_vec.end());
 			while (k > 1)
 			{
-				std::pop_heap(temp_vec.begin(), temp_vec.end()); 
+				std::pop_heap(temp_vec.begin(), temp_vec.end());
 				temp_vec.pop_back();
 				k--;
 			}
@@ -364,7 +364,7 @@ namespace panzg_leetcode
 		bool containsNearbyDuplicate(vector<int>& nums, int k)
 		{
 			int length = nums.size();
-			if (length == 0 || k==0)
+			if (length == 0 || k == 0)
 				return false;
 			//用vector<int>来记录nums[i]出现的位置索引
 			unordered_map<int, vector<int>> map_index;
@@ -401,9 +401,9 @@ namespace panzg_leetcode
 				return false;
 			for (int i = 0; i < length; i++)
 			{
-				for (int j = i + 1; j <= i+k; j++)
+				for (int j = i + 1; j <= i + k; j++)
 				{
-					if (j<length && nums[i] == nums[j])
+					if (j < length && nums[i] == nums[j])
 						return true;
 					else if (j >= length)
 						break;
@@ -418,13 +418,70 @@ namespace panzg_leetcode
 			if (length == 0 || k == 0)
 				return false;
 			unordered_map<int, int> map_record;
-			for (int i = 0; i < length;i++)
+			for (int i = 0; i < length; i++)
 			{
 				auto find_res = map_record.find(nums[i]);
 				if (find_res != map_record.end() && map_record[nums[i]] + k >= i)
 					return true;
 				else
 					map_record[nums[i]] = i;
+			}
+			return false;
+		}
+		//Contains Duplicate III，直接使用sort排序
+		bool containsNearbyAlmostDuplicate(vector<int>& nums, int k, int t)
+		{
+			if (nums.size() < 2) return false;
+			vector<pair<long, int>> v;
+			for (int i = 0; i < nums.size(); i++)
+			{
+				v.push_back(pair<long, int>((long)nums[i], i));
+			}
+			//排序
+			sort(v.begin(), v.end(), cmp);
+			for (int i = 0; i < nums.size(); i++)
+			{
+				int j = i + 1;
+				while (j < v.size())
+				{
+					if (v[j].first - v[i].first > t)  break;
+					else if (abs(v[i].second - v[j].second) <= k)
+					{
+						return true;
+					}
+					else
+						j++;
+				}
+			}
+			return false;
+		}
+
+		static bool cmp(pair<long, int> a, pair<long, int> b)
+		{
+			return a.first < b.first;
+		}
+		//Contains Duplicate III,使用multimap排序，和上面的思想一样
+		//reference：https://leetcode.com/discuss/60011/c-28ms-solution-using-multimap
+		bool containsNearbyAlmostDuplicate_multimap(vector<int>& nums, int k, int t)
+		{
+			multimap<long, int> map;
+			//插入multimap中排序
+			for (int i = 0; i < nums.size(); i++)
+			{
+				map.insert(make_pair(nums[i], i));
+			}
+			auto p1 = map.begin();
+			while (p1 != map.end())
+			{
+				auto p2 = p1;
+				p2++;
+				while (p2 != map.end() && p2->first - p1->first <= t)
+				{
+					if (abs(p1->second - p2->second) <= k)
+						return true;
+					p2++;
+				}
+				p1++;
 			}
 			return false;
 		}
@@ -444,14 +501,14 @@ int main()
 	auto res = sol.findOrder(4, req);
 	for each (auto var in res)
 	{
-		cout << var << endl;
+	cout << var << endl;
 	}*/
 
 
-	vector<int> vec = { 4,1,2,3,1,5};
+	vector<int> vec = { 4, 1, 2, 3, 1, 5 };
 	panzg_leetcode::Solution sol;
-	
-	cout << sol.containsNearbyDuplicate_v3(vec,3);
+
+	cout << sol.containsNearbyDuplicate_v3(vec, 3);
 	getchar();
 }
 #endif
