@@ -153,4 +153,7 @@
 ###[20160123]
 	Contains Duplicate II, unordered_map
 	Contains Duplicate III,sort or multimap
+	Rectangle Area,求两个矩形的全部覆盖面积
+	Implement Stack using Queues,用两个队列来实现栈
+	Invert Binary Tree,反转二叉树
 ###to be continued....

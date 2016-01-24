@@ -485,6 +485,87 @@ namespace panzg_leetcode
 			}
 			return false;
 		}
+		//Rectangle Area,求两个矩形的全部覆盖面积
+		int computeArea(int A, int B, int C, int D, int E, int F, int G, int H)
+		{
+			int x = get_union(A, C, E, G);
+			int y = get_union(B, D, F, H);
+
+			int area1 = abs((A - C)*(B - D));
+			int area2 = abs((E - G)*(F - H));
+			return area1 + area2 - x*y;
+		}
+		//求区间[x1,x2]与区间[x3,x4]之间的交集距离
+		int get_union(int x1, int x2, int x3, int x4)
+		{
+			if (x1 <= x3 && x2 >= x4)
+				return x4 - x3;
+			else if (x1 <= x3 && x2 <= x4 && x2 <= x3)
+				return 0;
+			else if (x1 <= x3 && x2 <= x4 && x2 >= x3)
+				return x2 - x3;
+			else if (x1 >= x3 && x2 <= x4)
+				return x2 - x1;
+			else if (x1 >= x3 && x2 >= x4 && x1 >= x4)
+				return 0;
+			else
+				return x4 - x1;
+		}
+		//Implement Stack using Queues
+		class Stack {
+		public:
+			queue<int> q;
+			queue<int> q_swap;
+
+			// Push element x onto stack.
+			void push(int x) {
+				if (q.empty())
+					q.push(x);
+				else
+				{
+					while (!q.empty())
+					{
+						auto temp = q.front();
+						q_swap.push(temp);
+						q.pop();
+					}
+					q.push(x);
+					while (!q_swap.empty())
+					{
+						auto tmp = q_swap.front();
+						q.push(tmp);
+						q_swap.pop();
+					}
+				}
+			}
+
+			// Removes the element on top of the stack.
+			void pop() {
+				q.pop();
+			}
+
+			// Get the top element.
+			int top() {
+				return q.front();
+			}
+
+			// Return whether the stack is empty.
+			bool empty() {
+				return q.empty();
+			}
+		};
+		// Invert Binary Tree
+		TreeNode* invertTree(TreeNode* root) 
+		{
+			if (root == nullptr)
+				return nullptr;
+			TreeNode *tmp = root->right;
+			root->right = root->left;
+			root->left = tmp;
+			invertTree(root->left);
+			invertTree(root->right);
+			return root;
+		}
 	};
 }
 
@@ -508,7 +589,7 @@ int main()
 	vector<int> vec = { 4, 1, 2, 3, 1, 5 };
 	panzg_leetcode::Solution sol;
 
-	cout << sol.containsNearbyDuplicate_v3(vec, 3);
+	cout << sol.computeArea(0,0,0,0,-1,-1,1,1);
 	getchar();
 }
 #endif
