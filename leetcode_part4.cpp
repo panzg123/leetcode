@@ -566,6 +566,28 @@ namespace panzg_leetcode
 			invertTree(root->right);
 			return root;
 		}
+		//221. Maximal Square
+		int maximalSquare(vector<vector<char>>& matrix)
+		{
+			if (matrix.size() == 0) return 0;
+			int maxSq = 0;
+			int nRow = matrix.size();
+			int nCol = matrix[0].size();
+			vector<vector<int>> dp(nRow + 1, vector<int>(nCol + 1, 0));
+			//dp[i][j] represents max square ending at position (i-1, j-1)
+			for (int i = 1; i <= nRow; ++i)
+			{
+				for (int j = 1; j <= nCol; ++j)
+				{
+					if (matrix[i - 1][j - 1] == '1')
+					{
+						dp[i][j] = min(min(dp[i - 1][j - 1], dp[i - 1][j]), dp[i][j - 1]) + 1;
+						maxSq = max(maxSq, dp[i][j]);
+					}
+				}
+			}
+			return maxSq*maxSq;
+		}
 	};
 }
 
@@ -585,11 +607,17 @@ int main()
 	cout << var << endl;
 	}*/
 
-
+	vector<vector<char>> vec1 = {
+		{ '0', '0', '0', '1'},
+		{ '1', '1', '0', '1'},
+		{ '1', '1', '1', '1'},
+		{ '0', '1', '1', '1'},
+		{ '0', '1', '1', '1'}
+	};
 	vector<int> vec = { 4, 1, 2, 3, 1, 5 };
 	panzg_leetcode::Solution sol;
 
-	cout << sol.computeArea(0,0,0,0,-1,-1,1,1);
+	cout << sol.maximalSquare(vec1);
 	getchar();
 }
 #endif
