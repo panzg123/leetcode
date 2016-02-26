@@ -684,6 +684,59 @@ namespace panzg_leetcode
 					j++;
 			}
 		}
+		//Summary Ranges,2ms
+		vector<string> summaryRanges(vector<int>& nums)
+		{
+			vector<string> result;
+			int begin = nums[0];
+			int end = nums[0];
+			if (nums.size() == 0)
+				return result;
+			if (nums.size() == 1)
+			{
+				result.push_back(to_string(begin));
+				return result;
+			}
+
+			for (size_t i = 1; i < nums.size(); i++)
+			{
+				if (nums[i] == nums[i - 1] + 1)
+					end++;
+				else
+				{
+					if (begin != end)
+						result.push_back(to_string(begin) + "->" + to_string(end));
+					else
+						result.push_back(to_string(begin));
+					begin = nums[i];
+					end = nums[i];
+				}
+			}
+			if (begin != end)
+				result.push_back(to_string(begin) + "->" + to_string(end));
+			else
+				result.push_back(to_string(begin));
+			return result;
+		}
+		//Summary Ranges更快的方法，0ms
+		vector<string> summaryRanges_v2(vector<int>& nums) 
+		{
+			const int size_n = nums.size();
+			vector<string> res;
+			if (0 == size_n) return res;
+			for (int i = 0; i < size_n;) 
+			{
+				int start = i, end = i;
+				while (end + 1 < size_n && nums[end + 1] == nums[end] + 1) 
+					end++;
+				if (end > start) 
+					res.push_back(to_string(nums[start]) + "->" + to_string(nums[end]));
+				else 
+					res.push_back(to_string(nums[start]));
+				i = end + 1;
+			}
+			return res;
+		}
 	};
 }
 
@@ -710,12 +763,12 @@ int main()
 		{ '0', '1', '1', '1'},
 		{ '0', '1', '1', '1'}
 	};
-	vector<int> vec = { 1, 3, 2, 2, 3, 1 };
+	vector<int> vec = { 0,1,2,4,5,7 };
 	panzg_leetcode::Solution sol;
 
 	string s = "(1+(4+5+2)-3)+(6+8)";
-	sol.wiggleSort(vec);
-	for each (auto var in vec)
+	auto res = sol.summaryRanges(vec);
+	for each (auto var in res)
 	{
 		cout << var << " ";
 	}
