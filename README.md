@@ -161,5 +161,6 @@
     Basic Calculator,栈
     Wiggle Sort II,部分排序，荷兰国旗问题
 	Summary Ranges,数组问题
-	Power of Two,判断是否是2的指数
+	Power of Two,判断是否是2的指数，数学问题
+	Power of Three，判断是否是2的幂，数学问题
 ###to be continued....

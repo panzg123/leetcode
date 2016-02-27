@@ -737,7 +737,7 @@ namespace panzg_leetcode
 			}
 			return res;
 		}
-		//Power of Two
+		//Power of Two，判断是否是2的幂
 		bool isPowerOfTwo(int n)
 		{
 			/*
@@ -753,6 +753,23 @@ namespace panzg_leetcode
 			return result==1?true:false;
 			*/
 			return n > 0 && !(n&(n - 1));
+		}
+		//用log来计算，判断是否是3的幂
+		bool isPowerOfThree(int n)
+		{
+			if(n<=0)
+				return false;
+			const double ratio = 1/log2(3);
+			double diff = log2(n)*ratio;
+			//如果是3的幂，则diff应该为整数
+			return abs(diff-round(diff))<1e-13;
+		}
+		//循环除
+		bool isPowerOfThree_v2(int n) 
+		{
+			if(n>1)
+				while(n%3==0) n /= 3;
+			return n==1;
 		}
 	};
 }
