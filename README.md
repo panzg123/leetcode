@@ -166,4 +166,6 @@
 	Power of Three，判断是否是2的幂，数学问题
     Count Complete Tree Nodes，计算完全树的节点个数，递归
     Expression Add Operators,表达式计算，DFS
+###[20160301]
+    Kth Smallest Element in a BST,递归，即中序遍历的思想；或者用栈
 ###to be continued....
