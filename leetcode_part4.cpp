@@ -875,7 +875,7 @@ namespace panzg_leetcode
 		}
 		//dfs遍历
 		//result-->保存结果;cur-->目前的字符串；pos-->目前位置；cv-->目前值；pv-->前一个操作数；op-->上一个操作符
-		void addOperators_dfs(vector<string>& result, const string& num, const int target, string cur,int pos, int cv, int pv, char op)
+		void addOperators_dfs(vector<string>& result, const string& num, const int target, string cur,int pos, const long cv, const long pv, char op)
 		{
 			if (pos == num.size() && cv == target)
 			{
