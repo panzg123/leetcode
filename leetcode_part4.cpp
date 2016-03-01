@@ -920,7 +920,7 @@ namespace panzg_leetcode
 			kthSmallest_helper(root->right, result, k);
 		}
 		//不用递归，用栈，时间复杂度O(N)，空间复杂度O(N)
-		int kthSmallest(TreeNode* root, int k) 
+		int kthSmallest_v2(TreeNode* root, int k) 
 		{
 			TreeNode* current = NULL;
 			stack<TreeNode*> s;
@@ -947,6 +947,53 @@ namespace panzg_leetcode
 				}
 			}
 		}
+		//Implement Queue using Stacks,https://leetcode.com/problems/implement-queue-using-stacks/
+		//用两个栈来实现队列
+		class Queue 
+		{
+		private:
+			stack<int> s1;
+			stack<int> s2;
+			void stack_move()
+			{
+				if (!s2.empty())
+					return;
+				while (!s1.empty())
+				{
+					int x = s1.top();
+					s1.pop();
+					s2.push(x);
+				}
+			}
+		public:
+			// Push element x to the back of queue.
+			void push(int x)
+			{
+				s1.push(x);
+			}
+
+			// Removes the element from in front of queue.
+			void pop(void)
+			{
+				if (s2.empty())
+					stack_move();
+				s2.pop();
+			}
+
+			// Get the front element.
+			int peek(void)
+			{
+				if (s2.empty())
+					stack_move();
+				return s2.top();
+			}
+
+			// Return whether the queue is empty.
+			bool empty(void)
+			{
+				return s1.empty() && s2.empty();
+			}
+		};
 	};
 }
 
@@ -976,10 +1023,8 @@ int main()
 	vector<int> vec = { 0,1,2,4,5,7 };
 	panzg_leetcode::Solution sol;
 
-	string s = "2147483648";
-	long target = 2147483648;
-	auto res = sol.addOperators(s,target);
-	//cout << res;
-	getchar();
+	panzg_leetcode::Solution::Queue q;
+	q.push(1);
+	cout << q.peek();
 }
 #endif
