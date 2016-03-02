@@ -169,4 +169,5 @@
 ###[20160301]
     Kth Smallest Element in a BST,递归，即中序遍历的思想；或者用栈
     Implement Queue using Stacks,用两个栈实现队列
+    Number of Digit One,计算1的个数，数学题，找规律
 ###to be continued....
