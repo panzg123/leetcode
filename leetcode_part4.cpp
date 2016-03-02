@@ -996,14 +996,23 @@ namespace panzg_leetcode
 		};
 		int caculate_number1(int n)
 		{
-			int iNum = 0;
-			while (n != 0)
+			int cur = 0;
+			int low = 0;
+			int factor = 1;
+			int count = 0;
+			while (n>=factor)
 			{
-				iNum += (n == 1) ? 1 : 0;
-				n /= 10;
-
+				cur = (n / factor) % 10;
+				low = n % factor;
+				if (cur == 0)
+					continue;
+				else if (cur == 1)
+					count += low + 1;
+				else
+					count += factor;
+				factor *= 10;
 			}
-			return iNum;
+			return count;
 		}
 		//Number of Digit One,https://leetcode.com/problems/number-of-digit-one/
 		//直接遍历，超时
