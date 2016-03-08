@@ -1140,6 +1140,18 @@ namespace panzg_leetcode
 				return lowestCommonAncestor(root->right, p, q);
 			return root;
 		}
+		TreeNode* lowestCommonAncestor_2(TreeNode* root, TreeNode* p, TreeNode* q)
+		{
+
+		}
+		TreeNode* lowestCommonAncestor_helper(TreeNode* root, TreeNode* p, TreeNode* q)
+		{
+			if (p == root)
+				return p;
+			if (q == root)
+				return q;
+			if ()
+		}
 	};
 	
 
