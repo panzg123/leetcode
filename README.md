@@ -172,4 +172,5 @@
     Number of Digit One,计算1的个数，数学题，找规律
     Palindrome Linked List，回文链表，用栈，或者将链表前半段逆转，然后前后依次比较
     Lowest Common Ancestor of a Binary Search Tree,查找两树节点的公共祖先，递归方法
+	Add Digital,数学题，digital root问题
 ###to be continued....
