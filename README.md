@@ -173,4 +173,6 @@
     Palindrome Linked List，回文链表，用栈，或者将链表前半段逆转，然后前后依次比较
     Lowest Common Ancestor of a Binary Search Tree,查找两树节点的公共祖先，递归方法
 	Add Digital,数学题，digital root问题
+###[20160310]
+    Lowest Common Ancestor of a Binary Tree,二叉树中的LCA问题，递归解决
 ###to be continued....
