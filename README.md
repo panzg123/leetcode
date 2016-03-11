@@ -176,4 +176,6 @@
 ###[20160310]
     Lowest Common Ancestor of a Binary Tree,二叉树中的LCA问题，递归解决
     Product of Array Except Self,数组问题，求乘积
+    Sliding Window Maximum,求滑动窗口的最大值，deque
+    Binary Tree Paths,求所有从根节点到叶子节点的路径，DFS问题
 ###to be continued....
