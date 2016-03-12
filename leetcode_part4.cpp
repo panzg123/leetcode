@@ -1314,6 +1314,61 @@ namespace panzg_leetcode
 			}
 			return ret[n - 1];
 		}
+		//Single Number III,https://leetcode.com/problems/single-number-iii/
+		//位运算,先全部数异或运算，得到a^b；然后找a^b某位为1，其他为0的数，再遍历一遍数组，结束时的数就是a或b中的一个。
+		//最后，将得到的数再与a^b异或就是另一个数；
+		vector<int> singleNumber(vector<int>& nums)
+		{
+			vector<int> ret(2);
+			int res1 = 0, res2 = 0;
+			for (int i = 0; i < nums.size(); i++)
+			{
+				res1 ^= nums[i];
+			}
+			//temp只保留a^b中最右的1，其他置0
+			int temp = res1&(~res1 + 1);
+			for (int i = 0; i < nums.size();i++)
+			{
+				if ((nums[i] & temp) != 0)
+					res2 ^= nums[i];
+			}
+			ret[0] = res2;
+			ret[1] = res2^res1;
+			return ret;
+		}
+		//Missing Number,https://leetcode.com/problems/missing-number/
+		//直接先排序，时间复杂度为O(N*N)
+		int missingNumber(vector<int>& nums)
+		{
+			if (nums.size() == 0)
+				return 0;
+			//排序
+			sort(nums.begin(), nums.end());
+			int start = 0;
+			for (int i = 0; i < nums.size(); i++)
+			{
+				if (nums[i] != start)
+					return start;
+				start++;
+			}
+			return start;
+		}
+		//时间复杂度为O(N)，具体参考：《面试指南》P386
+		int missingNumber_v2(vector<int>& nums)
+		{
+			int l = 0;
+			int r = nums.size();
+			while (l<r)
+			{
+				if (nums[l] == l)
+					l++;
+				else if (nums[l] <= l-1 || nums[l]>r-1 || nums[nums[l]] == nums[l])
+					nums[l] = nums[--r];
+				else
+					swap(nums[l], nums[nums[l]]);
+			}
+			return l;
+		}
 	};
 }
 
@@ -1340,7 +1395,7 @@ int main()
 		{ '0', '1', '1', '1'},
 		{ '0', '1', '1', '1'}
 	};
-	vector<int> vec = { 1 };
+
 	panzg_leetcode::Solution sol;
 
 
@@ -1355,7 +1410,9 @@ int main()
 	node3.next = &node4;
 	node4.next = &node5;
 	
-	cout <<  sol.nthUglyNumber_dp(10);
+	vector<int> vec = { 1,0};
+	auto ret = sol.missingNumber_v2(vec);
+	cout << ret;
 
 	system("pause");
 }

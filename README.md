@@ -179,4 +179,6 @@
     Sliding Window Maximum,求滑动窗口的最大值，deque
     Binary Tree Paths,求所有从根节点到叶子节点的路径，DFS问题
     Ugly Number II,求第n个丑数，动态规划问题
+    Single Number III,求数组中出现奇数次的数，位运算
+    Missing Number,求无序数组中未出现的最小整数
 ###to be continued....
