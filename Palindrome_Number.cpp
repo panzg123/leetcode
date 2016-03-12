@@ -17,4 +17,20 @@ public:
 		}
 		return true;
 	}
+    //author:cuiyajun，优化
+    bool isPalindrome(int x) 
+    {
+        int tmp = x;
+        long result = 0;
+        if (tmp < 0)
+        {
+            return false;
+        }
+        while (tmp > 0)
+        {
+            result = result * 10 + tmp % 10;
+            tmp = tmp / 10;
+        }
+        return result == x;
+    }
 };
