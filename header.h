@@ -115,3 +115,6 @@ typedef struct {
 } ngx_str_t_2;
 
 #define ngx_string(str)     { sizeof(str) - 1, (char *) str }
+
+// Forward declaration of isBadVersion API.
+bool isBadVersion(int version);
