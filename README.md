@@ -181,4 +181,5 @@
     Ugly Number II,求第n个丑数，动态规划问题
     Single Number III,求数组中出现奇数次的数，位运算
     Missing Number,求无序数组中未出现的最小整数
+    Integer to English Words,整数转字符串，字符串处理
 ###to be continued....
