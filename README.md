@@ -184,4 +184,5 @@
     Integer to English Words,整数转字符串，字符串处理
 	First Bad Version,二分法
 	H-Index,求影响因子，排序或者hashtable
+    H-Index II,求影响因子，要求O(logN)时间复杂度，二分法
 ###to be continued....
