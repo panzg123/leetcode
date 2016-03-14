@@ -1502,6 +1502,47 @@ namespace panzg_leetcode
 			//citations[low_idx]用来处理全为0的特殊情况
 			return min(citations[low_idx],static_cast<int>(citations.size())-low_idx);
 		}
+		//最小硬币问题，动态规划
+		int minCoins(vector<int>& coins, int sum)
+		{
+			if (coins.size() == 0 || sum < 0)
+				return -1;
+			int length = coins.size();
+			int max = INT_MAX;
+			vector <vector<int>> dp(length, vector<int>(sum+1,0));
+			for (int i = 1; i <= sum;i++)
+			{
+				dp[0][i] = INT_MAX;
+				if (i - coins[0] >= 0 && dp[0][i - coins[0]] != INT_MAX)
+					dp[0][i] = dp[0][i - coins[0]] + 1;
+			}
+			int left = 0;
+			for (int i = 1; i < length;i++)
+			{
+				for (int j = 1; j <= sum;j++)
+				{
+					left = INT_MAX;
+					if (j - coins[i] >= 0 && dp[i][j - coins[i] != INT_MAX])
+						left = dp[i][j - coins[i]] + 1;
+					dp[i][j] = min(left, dp[i - 1][j]);
+				}
+			}
+			return dp[length - 1][sum] != INT_MAX ? dp[length - 1][sum] : -1;
+		}
+		//Perfect Squares,https://leetcode.com/problems/perfect-squares/
+		//memory limit exceede
+		int numSquares(int n)
+		{
+			if (n < 0)
+				return 0;
+			vector<int> num;
+			int len = sqrt(n);
+			for (int i = 1; i <= len; i++)
+			{
+				num.push_back(i*i);
+			}
+			return minCoins(num, n);
+		}
 	};
 }
 
@@ -1543,8 +1584,8 @@ int main()
 	node3.next = &node4;
 	node4.next = &node5;
 	
-	vector<int> vec = { 1,1,1,1};
-	auto ret = sol.hIndex2(vec);
+	vector<int> vec = { 1,4,9,16};
+	auto ret = sol.numSquares(12);
 	cout << ret;
 	
 
