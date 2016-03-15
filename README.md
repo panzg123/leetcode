@@ -185,4 +185,5 @@
 	First Bad Version,二分法
 	H-Index,求影响因子，排序或者hashtable
     H-Index II,求影响因子，要求O(logN)时间复杂度，二分法
+    Perfect Squares,动态规划，最小硬币问题
 ###to be continued....

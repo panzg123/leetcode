@@ -1536,12 +1536,60 @@ namespace panzg_leetcode
 			if (n < 0)
 				return 0;
 			vector<int> num;
-			int len = sqrt(n);
-			for (int i = 1; i <= len; i++)
+			for (int i = 1; i*i <= n; i++)
 			{
 				num.push_back(i*i);
 			}
 			return minCoins(num, n);
+		}
+		//980ms,beat 1.7%
+		int numSquares_v2(int n)
+		{
+			vector<int> nums;
+			vector<int> dp(n + 1, INT_MAX);
+			for (int i = 1; i*i <= n; i++)
+			{
+				nums.push_back(i*i);
+				dp[i*i] = 1;
+			}
+
+			for (int i = 1; i < n; i++)
+				for (int j = 0; j < nums.size(); j++)
+				{
+					if (dp[i] != INT_MAX&&i + nums[j] <= n)
+						dp[i + nums[j]] = min(dp[i + nums[j]], dp[i] + 1);
+				}
+			return dp[n] == INT_MAX ? n : dp[n];
+		}
+		//134ms,beat 0.7%,普通方法太耗时，尝试static dp,bfs,math等方法
+		//更快的方法请参考：https://leetcode.com/discuss/58056/summary-of-different-solutions-bfs-static-and-mathematics
+		int numSquares_v3(int n)
+		{
+			if (n < 0)
+				return 0;
+			vector<int> nums;
+			vector<int> dp(n + 1, 0);
+			for (int i = 1; i*i <= n; i++)
+			{
+				nums.push_back(i*i);
+			}
+			for (int j = 1; j <= n;j++)
+			{
+				if (j - nums[0] >= 0 && dp[j - nums[0]] != INT_MAX)
+					dp[j] = dp[j - nums[0]] + 1;
+			}
+			int left = 0;
+			for (int i = 1; i < nums.size();i++)
+			{
+				for (int j = 1; j <= n;j++)
+				{
+					left = INT_MAX;
+					if (j - nums[i] >= 0 && dp[j - nums[i]] != INT_MAX)
+						left = dp[j - nums[i]] + 1;
+					dp[j] = min(left, dp[j]);
+				}
+			}
+			return dp[n] != INT_MAX ? dp[n] : -1;
 		}
 	};
 }
@@ -1585,7 +1633,7 @@ int main()
 	node4.next = &node5;
 	
 	vector<int> vec = { 1,4,9,16};
-	auto ret = sol.numSquares(12);
+	auto ret = sol.numSquares_v3(13);
 	cout << ret;
 	
 
