@@ -188,4 +188,7 @@
     Perfect Squares,动态规划，最小硬币问题
     Move Zeroes,双指针
     Find the Duplicate Number,抽屉原理，二分查找，快慢指针
+    Word Pattern,哈希表
+    Nim Game,组合博弈问题，取子游戏
+    Find Median from Data Stream,优先队列，最大堆
 ###to be continued....

@@ -1657,6 +1657,92 @@ namespace panzg_leetcode
 			}
 			return find;
 		}
+		//Word Pattern,https://leetcode.com/problems/word-pattern/
+		//hashtable
+		bool wordPattern(string pattern, string str) 
+		{
+			auto str_vec = split(str, " ");
+			if (str_vec.size() != pattern.size())
+				return false;
+			unordered_map<char, string> m1;
+			unordered_map<string, char> m2;
+			//正向匹配
+			for (int i = 0; i < pattern.size();i++)
+			{
+				auto find_ret = m1.find(pattern[i]);
+				if (find_ret != m1.end())
+				{
+					if (m1[pattern[i]] != str_vec[i])
+						return false;
+				}
+				else
+					m1[pattern[i]] = str_vec[i];
+			}
+			//逆向匹配
+			for (int i = 0; i < pattern.size();i++)
+			{
+				auto find_ret = m2.find(str_vec[i]);
+				if (find_ret != m2.end())
+				{
+					if (m2[str_vec[i]] != pattern[i])
+						return false;
+				}
+				else
+					m2[str_vec[i]] = pattern[i];
+			}
+			return true;
+		}
+		//分割字符串
+		vector<std::string> split(std::string str, std::string pattern)
+		{
+			std::string::size_type pos;
+			std::vector<std::string> result;
+			str += pattern;//扩展字符串以方便操作
+			int size = str.size();
+			for (int i = 0; i < size; i++)
+			{
+				pos = str.find(pattern, i);
+				if (pos < size)
+				{
+					std::string s = str.substr(i, pos - i);
+					result.push_back(s);
+					i = pos + pattern.size() - 1;
+				}
+			}
+			return result;
+		}
+		//Nim Game,https://leetcode.com/problems/nim-game/
+		//组合博弈问题，请参考：http://wenku.baidu.com/view/42db0d8e83d049649b6658d3.html?from=search
+		bool canWinNim(int n)
+		{
+			(n % 4 == 0) ? false : true;
+		}
+		//Find Median from Data Stream,https://leetcode.com/problems/find-median-from-data-stream/
+		//时间复杂度为O(logN)
+		//用两个堆, max heap 和 min heap. 维持两个堆的大小相等(min堆可以比max堆多一个)
+		//如元素[1,2,3,4,5,6],则max-heap =[-4,-5,-6],min-heap=[3,2,1],所以median=3-(-4)/2=3.5
+		//如元素[1,2,3,4,5],则max-heap =[-4,-5],min-heap=[3,2,1]，所以median = min-heap.top()=3
+		class MedianFinder 
+		{
+			priority_queue<long> small, large;
+		public:
+
+			void addNum(int num) {
+				small.push(num);
+				large.push(-small.top());
+				small.pop();
+				if (small.size() < large.size()) {
+					small.push(-large.top());
+					large.pop();
+				}
+			}
+
+			double findMedian() {
+				return small.size() > large.size()
+					? small.top()
+					: (small.top() - large.top()) / 2.0;
+			}
+		};
 	};
 }
 
@@ -1699,9 +1785,16 @@ int main()
 	node4.next = &node5;
 	
 	vector<int> vec = {2,4,5,3,1,1};
-	sol.findDuplicate(vec);
+	cout<<sol.wordPattern("abba","dog cat cat fish");
 	//cout << ret;
 	
+	panzg_leetcode::Solution::MedianFinder mf;
+	mf.addNum(1);
+	mf.addNum(2);
+	mf.addNum(3);
+	mf.addNum(4);
+	mf.addNum(5);
+	mf.addNum(6);
 
 	system("pause");
 }
