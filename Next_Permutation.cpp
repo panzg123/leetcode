@@ -47,7 +47,7 @@ public:
         return true;
     }
 	
-	//时间复杂度 O(n)，空间复杂度 O(m)
+	//时间复杂度 O(n)，空间复杂度 O(1)
 	void nextPermutation(vector<int>& nums) {
 		int sz = nums.size();
 		if (sz <= 1)                                      //nums的长度<=1，直接返回
