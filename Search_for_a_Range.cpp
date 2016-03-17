@@ -1,5 +1,6 @@
 class Solution {
 public: 
+	//时间复杂度 O(logn)，空间复杂度 O(1)
     vector<int> searchRange(vector<int>& nums, int target) {
     	vector<int> result({ -1, -1 });
     	if (nums.empty())               //如果nums为空，之间返回
