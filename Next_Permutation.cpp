@@ -46,4 +46,34 @@ public:
         reverse(rfirst, pivot);
         return true;
     }
+	
+	//时间复杂度 O(n)，空间复杂度 O(m)
+	void nextPermutation(vector<int>& nums) {
+		int sz = nums.size();
+		if (sz <= 1)                                      //nums的长度<=1，直接返回
+		{
+			return;
+		}
+
+		int pivot = sz - 1;
+		while (pivot>0 && nums[pivot] <= nums[pivot - 1]) //寻找最后两位满足:nums[pivot] > nums[pivot-1]
+		{
+			--pivot;
+		}
+
+		if (pivot == 0)                                   //数组元素的大小均为递减
+		{
+			sort(nums.begin(), nums.end());
+			return;
+		}
+
+		int tmp = pivot-1;                               //记录第一个非递减组合的第一个数的下标
+		int i = sz - 1;
+		while (nums[tmp] >= nums[i])                     //寻找第一个大于nums[tmp]的数
+		{
+			--i;
+		}
+		swap(nums[tmp], nums[i]);
+		sort(nums.begin() + pivot, nums.end());          //因为从nums.begin()+pivot之后的元素就能为递减，使用sort和reverse均可
+	}
 };
