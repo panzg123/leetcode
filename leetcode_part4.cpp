@@ -1743,6 +1743,66 @@ namespace panzg_leetcode
 					: (small.top() - large.top()) / 2.0;
 			}
 		};
+		//Serialize and Deserialize Binary Tree
+		//二叉树的序列化与反序列化，递归，先序遍历序列化，另外也可以采用层次遍历序列化
+		class Codec 
+		{
+		public:
+			//分割字符串
+			vector<std::string> split(std::string str, std::string pattern)
+			{
+				std::string::size_type pos;
+				std::vector<std::string> result;
+				str += pattern;//扩展字符串以方便操作
+				int size = str.size();
+				for (int i = 0; i < size; i++)
+				{
+					pos = str.find(pattern, i);
+					if (pos < size)
+					{
+						std::string s = str.substr(i, pos - i);
+						result.push_back(s);
+						i = pos + pattern.size() - 1;
+					}
+				}
+				return result;
+			}
+
+			// Encodes a tree to a single string.
+			string serialize(TreeNode* root) 
+			{
+				if (root == nullptr)
+					return "#!";
+				string ret = to_string(root->val) + "!";
+				ret += serialize(root->left);
+				ret += serialize(root->right);
+				return ret;
+			}
+
+			// Decodes your encoded data to tree.
+			TreeNode* deserialize(string data) 
+			{
+				vector<string> split_ret = split(data, "!");
+				split_ret.pop_back();
+				queue<string> q;
+				for (int i = 0; i < split_ret.size();i++)
+				{
+					q.push(split_ret[i]);
+				}
+				return reconOrder(q);
+			}
+			TreeNode* reconOrder(queue<string> &q)
+			{
+				string value = q.front();
+				q.pop();
+				if (value == "#")
+					return nullptr;
+				TreeNode *root = new TreeNode(stoi(value));
+				root->left = reconOrder(q);
+				root->right = reconOrder(q);
+				return root;
+			}
+		};
 	};
 }
 
@@ -1774,27 +1834,19 @@ int main()
 
 
 	TreeNode node1(1);
-	ListNode node2(2);
-	ListNode node3(3);
-	ListNode node4(2);
-	ListNode node5(1);
-	node1.left = nullptr;
-	node1.right = nullptr;
-	node2.next = &node3;
-	node3.next = &node4;
-	node4.next = &node5;
+	TreeNode node2(2);
+	TreeNode node3(3);
+	TreeNode node4(4);
+	TreeNode node5(5);
+	node1.left = &node2;
+	node1.right = &node3;
+	node3.left= &node4;
+	node3.right = &node5;
 	
-	vector<int> vec = {2,4,5,3,1,1};
-	cout<<sol.wordPattern("abba","dog cat cat fish");
-	//cout << ret;
-	
-	panzg_leetcode::Solution::MedianFinder mf;
-	mf.addNum(1);
-	mf.addNum(2);
-	mf.addNum(3);
-	mf.addNum(4);
-	mf.addNum(5);
-	mf.addNum(6);
+
+	panzg_leetcode::Solution::Codec code;
+	auto ret = code.deserialize(code.serialize(&node1));
+
 
 	system("pause");
 }

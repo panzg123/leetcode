@@ -191,4 +191,7 @@
     Word Pattern,哈希表
     Nim Game,组合博弈问题，取子游戏
     Find Median from Data Stream,优先队列，最大堆
+###[20160318]
+    Serialize and Deserialize Binary Tree,二叉树的序列化与反序列化
+    Bulls and Cows,哈希表
 ###to be continued....
