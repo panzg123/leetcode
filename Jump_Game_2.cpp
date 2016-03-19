@@ -20,4 +20,21 @@ public:
 		}
 		return 0;
     }
+	
+	//时间复杂度：O(n),空间复杂度：O(1)
+	int jump(vector<int>& nums) {
+        int last = 0, step = 0, reach = 0;
+
+    	for (int i = 0; i <= reach && i < nums.size(); ++i)      //i<=reach:考虑元素为0的情况
+    	{
+    		if (i > last)                                        //i超过上一步能够到达的最远位置
+    		{
+    			++step;
+    			last = reach;
+    		}
+    		reach = max(reach, nums[i] + i);                     //更新能够到达的最远位置
+    	}
+    
+    	return step;
+    }
 };
