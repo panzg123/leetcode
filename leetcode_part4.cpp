@@ -1803,6 +1803,181 @@ namespace panzg_leetcode
 				return root;
 			}
 		};
+		//最长公共字串，经典DP问题
+		string longestCommonSubstring(const string& str1, const string& str2)
+		{
+			size_t size1 = str1.size();
+			size_t size2 = str2.size();
+			if (size1 == 0 || size2 == 0) return 0;
+
+			vector<vector<int> > dp(size1, vector<int>(size2, 0));
+
+			// 初始化
+			for (int i = 0; i < size1; ++i)
+			{
+				dp[i][0] = (str1[i] == str2[0] ? 1 : 0);
+			}
+			for (int j = 0; j < size2; ++j)
+			{
+				dp[0][j] = (str1[0] == str2[j] ? 1 : 0);
+			}
+			//dp
+			for (int i = 1; i < size1; ++i)
+			{
+				for (int j = 1; j < size2; ++j)
+				{
+					if (str1[i] == str2[j])
+					{
+						dp[i][j] = dp[i - 1][j - 1] + 1;
+					}
+				}
+			}
+			//找字串,max为长度，end_ix表示字串结束位置
+			int max = 0;
+			int end_idx = 0;
+			for (int i = 0; i < size1; ++i)
+			{
+				for (int j = 0; j < size2; ++j)
+				{
+					if (max < dp[i][j])
+					{
+						max = dp[i][j];
+						end_idx = i;
+					}
+				}
+			}
+			//获取字串并返回
+			return str1.substr(end_idx - max + 1, max);
+		}
+		//最长公共子序列,时间辅助度和空间辅助度都是O(M*N)
+		string get_lcs_subsequece(string str1, string str2) 
+		{
+			vector<vector<int>> dp(str1.size(), vector<int>(str2.size(), 0));
+			dp[0][0] = str1[0] == str2[0] ? 1 : 0;
+			for (int i = 1; i < str1.length(); i++) 
+			{
+				dp[i][0] = max(dp[i - 1][0], str1[i] == str2[0] ? 1 : 0);
+			}
+			for (int j = 1; j < str2.length(); j++)
+			{
+				dp[0][j] = max(dp[0][j - 1], str1[0] == str2[j] ? 1 : 0);
+			}
+			for (int i = 1; i < str1.length(); i++)
+			{
+				for (int j = 1; j < str2.length(); j++)
+				{
+					dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+					if (str1[i] == str2[j]) 
+					{
+						dp[i][j] = max(dp[i][j], dp[i - 1][j - 1] + 1);
+					}
+				}
+			}
+			//获取子序列
+			int m = str1.size()-1;
+			int n = str2.size()-1;
+			string res;
+			int index = dp[m][n]-1;
+			while (index >= 0) 
+			{
+				if (n > 0 && dp[m][n] == dp[m][n - 1]) 
+				{
+					n--;
+				}
+				else if (m > 0 && dp[m][n] == dp[m - 1][n]) 
+				{
+					m--;
+				}
+				else 
+				{
+					res.insert(res.begin(), str1[m]);
+					index--;
+					/*res[index--] = str1[m];*/
+					m--;
+					n--;
+				}
+			}
+			return res;
+		}
+
+		//https://leetcode.com/problems/remove-duplicate-letters/
+		string removeDuplicateLetters(string s) 
+		{
+			vector<int> cand(256, 0);
+			vector<bool> visited(256, false);
+			for (char c : s)
+				cand[c]++;
+			string result = "0";
+			for (char c : s) 
+			{
+				cand[c]--;
+				if (visited[c]) continue;
+				while (c < result.back() && cand[result.back()]) 
+				{
+					visited[result.back()] = false;
+					result.pop_back();
+				}
+				result += c;
+				visited[c] = true;
+			}
+			return result.substr(1);
+		}
+	};
+	class LIS
+	{
+	public:
+		LIS(vector<int> _nums) :nums(_nums){}
+		//获得最长递增子序列
+		vector<int> get_lis()
+		{
+			vector<int> len_dp = get_length();
+			vector<int> ret = solve_lis(len_dp);
+			return ret;
+		}
+	private:
+		vector<int> nums;
+		//dp求解长度
+		vector<int> get_length()
+		{
+			//状态转移方程为：dp[i]=max{dp[j]+1(0<=j<i,arr[j]<arr[i])}
+			vector<int> ret(nums.size(), 1);
+			for (int i = 0; i < nums.size(); i++)
+			{
+				for (int j = 0; j < i; j++)
+				{
+					if (nums[j] < nums[i])
+						ret[i] = max(ret[i], ret[j] + 1);
+				}
+			}
+			return ret;
+		}
+		//从右向左获取最长递增子序列
+		vector<int> solve_lis(vector<int> len_dp)
+		{
+			int len = 0;
+			int index = 0;
+			//先找到最大长度和索引
+			for (int i = 0; i < len_dp.size(); i++)
+			{
+				if (len_dp[i] > len)
+				{
+					len = len_dp[i];
+					index = i;
+				}
+			}
+			//从右向左遍历
+			vector<int> ret(len, 0);
+			ret[--len] = nums[index];
+			for (int i = index; i >= 0; i--)
+			{
+				if (nums[i] < nums[index] && len_dp[i] == len_dp[index] - 1)
+				{
+					ret[--len] = nums[i];
+					index = i;
+				}
+			}
+			return ret;
+		}
 	};
 }
 
@@ -1844,8 +2019,10 @@ int main()
 	node3.right = &node5;
 	
 
-	panzg_leetcode::Solution::Codec code;
-	auto ret = code.deserialize(code.serialize(&node1));
+	//panzg_leetcode::Solution::Codec code;
+	//auto ret = code.deserialize(code.serialize(&node1));
+
+	cout << sol.removeDuplicateLetters("cbacdcbc");
 
 
 	system("pause");
