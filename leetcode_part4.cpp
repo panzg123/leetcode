@@ -1948,6 +1948,48 @@ namespace panzg_leetcode
 			if (numI < sum || sum != stol(num.substr(0, len))) return false;
 			else return isAdditiveNumber_helper(num2, sum, num.substr(len));
 		}
+		//小明投票
+		int toupiao(vector<int> vote)
+		{
+			int ret = 0;
+			toupiao_helper(ret, vote);
+			return ret;
+		}
+		void toupiao_helper(int& ret, vector<int> vote)
+		{
+			auto pos = max_element(next(vote.begin(), 1), vote.end());
+			if (*pos > vote[0])
+			{
+				vote[0] += 1;
+				*pos -= 1;
+				ret += 1;
+				toupiao_helper(ret, vote);
+			}
+			else if (*pos == vote[0])
+			{
+				ret += 1;
+				return;
+			}
+			else
+				return;
+		}
+		//https://leetcode.com/problems/longest-increasing-subsequence/
+		//简单动态规划，复杂度O(N^2)
+		int lengthOfLIS(vector<int>& nums)
+		{
+			if (nums.size() == 1 || nums.size() == 0)
+				return nums.size();
+			vector<int> dp(nums.size(), 1);
+			for (int i = 1; i < nums.size();i++)
+			{
+				for (int j = 0; j < i;j++)
+				{
+					if (nums[i] > nums[j])
+						dp[i] = max(dp[i], dp[j] + 1);
+				}
+			}
+			return *max_element(dp.begin(), dp.end());
+		}
 	};
 	class LIS
 	{
@@ -2048,9 +2090,13 @@ int main()
 	//panzg_leetcode::Solution::Codec code;
 	//auto ret = code.deserialize(code.serialize(&node1));
 
-	cout << sol.isAdditiveNumber("112358");
-
+	//cout << sol.isAdditiveNumber("112358");
+	vector<int> nums = { 10, 9, 2, 5, 3, 7, 101, 18 };
+	cout << sol.lengthOfLIS(nums);
 
 	system("pause");
+	
+	return 0;
+
 }
 #endif

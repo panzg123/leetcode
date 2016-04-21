@@ -198,4 +198,5 @@
     Remove Duplicate Letters,字符串处理
 ###[20160406]
     Additive Number,递归
+    Longest Increasing Subsequence ,简单动态规划
 ###to be continued....
