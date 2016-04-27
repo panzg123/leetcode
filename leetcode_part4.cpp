@@ -5,6 +5,63 @@ namespace panzg_leetcode
 	class Solution
 	{
 	public:
+		class LIS
+		{
+		public:
+			LIS(vector<int> _nums) :nums(_nums){}
+			//获得最长递增子序列
+			vector<int> get_lis()
+			{
+				vector<int> len_dp = get_length();
+				vector<int> ret = solve_lis(len_dp);
+				return ret;
+			}
+		private:
+			vector<int> nums;
+			//dp求解长度
+			vector<int> get_length()
+			{
+				//状态转移方程为：dp[i]=max{dp[j]+1(0<=j<i,arr[j]<arr[i])}
+				vector<int> ret(nums.size(), 1);
+				for (int i = 0; i < nums.size(); i++)
+				{
+					for (int j = 0; j < i; j++)
+					{
+						if (nums[j] < nums[i])
+							ret[i] = max(ret[i], ret[j] + 1);
+					}
+				}
+				return ret;
+			}
+			//从右向左获取最长递增子序列
+			vector<int> solve_lis(vector<int> len_dp)
+			{
+				int len = 0;
+				int index = 0;
+				//先找到最大长度和索引
+				for (int i = 0; i < len_dp.size(); i++)
+				{
+					if (len_dp[i] > len)
+					{
+						len = len_dp[i];
+						index = i;
+					}
+				}
+				//从右向左遍历
+				vector<int> ret(len, 0);
+				ret[--len] = nums[index];
+				for (int i = index; i >= 0; i--)
+				{
+					if (nums[i] < nums[index] && len_dp[i] == len_dp[index] - 1)
+					{
+						ret[--len] = nums[i];
+						index = i;
+					}
+				}
+				return ret;
+			}
+		};
+	public:
 		/*Course Schedule II*/
 		vector<int> findOrder(int numCourses, vector<pair<int, int>>& prerequisites)
 		{
@@ -1990,61 +2047,48 @@ namespace panzg_leetcode
 			}
 			return *max_element(dp.begin(), dp.end());
 		}
-	};
-	class LIS
-	{
-	public:
-		LIS(vector<int> _nums) :nums(_nums){}
-		//获得最长递增子序列
-		vector<int> get_lis()
+		//Reverse String,https://leetcode.com/submissions/detail/60166915/
+		string reverseString(string s)
 		{
-			vector<int> len_dp = get_length();
-			vector<int> ret = solve_lis(len_dp);
-			return ret;
+			if (s.size() == 0 || s.size() == 1)
+				return s;
+			else
+			{
+				reverse(s.begin(), s.end());
+				return s;
+			}
 		}
-	private:
-		vector<int> nums;
-		//dp求解长度
-		vector<int> get_length()
+		//是否是元音
+		bool is_vowel(char c)
 		{
-			//状态转移方程为：dp[i]=max{dp[j]+1(0<=j<i,arr[j]<arr[i])}
-			vector<int> ret(nums.size(), 1);
-			for (int i = 0; i < nums.size(); i++)
-			{
-				for (int j = 0; j < i; j++)
-				{
-					if (nums[j] < nums[i])
-						ret[i] = max(ret[i], ret[j] + 1);
-				}
-			}
-			return ret;
+			if (c != 'a' && c != 'e'&& c != 'i' && c != 'o' && c != 'u'&& c != 'A' && c != 'E'&& c != 'I' && c != 'O' && c != 'U')
+				return false;
+			else
+				return true;
 		}
-		//从右向左获取最长递增子序列
-		vector<int> solve_lis(vector<int> len_dp)
+		//Reverse Vowels of a String ,https://leetcode.com/problems/reverse-vowels-of-a-string/
+		string reverseVowels(string s)
 		{
-			int len = 0;
-			int index = 0;
-			//先找到最大长度和索引
-			for (int i = 0; i < len_dp.size(); i++)
+			if (s.size() == 0 || s.size() == 1)
+				return s;
+			int i = 0, j = s.size() - 1;
+			while (i<j)
 			{
-				if (len_dp[i] > len)
+				while (!is_vowel(s[i]))
 				{
-					len = len_dp[i];
-					index = i;
+					i++;
+				}
+				while (!is_vowel(s[j]))
+				{
+					j--;
+				}
+				if (i < j)
+				{
+					swap(s[i], s[j]);
+					i++; j--;
 				}
 			}
-			//从右向左遍历
-			vector<int> ret(len, 0);
-			ret[--len] = nums[index];
-			for (int i = index; i >= 0; i--)
-			{
-				if (nums[i] < nums[index] && len_dp[i] == len_dp[index] - 1)
-				{
-					ret[--len] = nums[i];
-					index = i;
-				}
-			}
-			return ret;
+			return s;
 		}
 	};
 }
@@ -2092,8 +2136,8 @@ int main()
 
 	//cout << sol.isAdditiveNumber("112358");
 	vector<int> nums = { 10, 9, 2, 5, 3, 7, 101, 18 };
-	cout << sol.lengthOfLIS(nums);
-
+	cout << sol.reverseVowels("leetcode");
+	
 	system("pause");
 	
 	return 0;
