@@ -13,6 +13,7 @@
 #include<regex>
 #include<functional>
 #include <bitset>
+#include <climits>
 
 typedef struct ListNode
 {

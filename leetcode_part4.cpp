@@ -2138,8 +2138,9 @@ int main()
 	vector<int> nums = { 10, 9, 2, 5, 3, 7, 101, 18 };
 	cout << sol.reverseVowels("leetcode");
 	
-	system("pause");
-	
+
+	std::cout<<"jetbrains clion hello world"<<std::endl;
+
 	return 0;
 
 }
