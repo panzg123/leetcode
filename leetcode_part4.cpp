@@ -2090,6 +2090,40 @@ namespace panzg_leetcode
 			}
 			return s;
 		}
+        //https://leetcode.com/problems/top-k-frequent-elements/
+        class topKFrequent_Solutions{
+            typedef pair<int,int> myPair;
+
+            class comparePair {
+            public:
+                bool operator() (const myPair& lhs, const myPair& rhs) const
+                {
+                    return lhs.second < rhs.second;
+                }
+            };
+            class Solution {
+            public:
+                vector<int> topKFrequent(vector<int>& nums, int k) {
+                    unordered_map<int,int> counter;
+                    vector<int> res ;
+                    for (auto it: nums) {
+                        counter[it]++;
+                    }
+
+                    priority_queue<myPair,vector<myPair>, comparePair> heap;
+
+                    for (auto it = counter.begin(); it != counter.end(); it++) {
+                        heap.push(make_pair(it->first,it->second));
+                    }
+
+                    for (int i = 0; i < k; i++) {
+                        res.push_back((heap.top()).first);
+                        heap.pop();
+                    }
+                    return res;
+                }
+            };
+        };
 	};
 }
 
@@ -2119,7 +2153,6 @@ int main()
 
 	panzg_leetcode::Solution sol;
 
-
 	//TreeNode node1(1);
 	//TreeNode node2(2);
 	//TreeNode node3(3);
@@ -2135,9 +2168,9 @@ int main()
 	//auto ret = code.deserialize(code.serialize(&node1));
 
 	//cout << sol.isAdditiveNumber("112358");
-	vector<int> nums = { 10, 9, 2, 5, 3, 7, 101, 18 };
-	cout << sol.reverseVowels("leetcode");
-	
+	vector<int> nums = { 4,1,-1,2,-1,2,3};
+
+
 
 	std::cout<<"jetbrains clion hello world"<<std::endl;
 
