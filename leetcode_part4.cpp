@@ -2203,6 +2203,20 @@ namespace panzg_leetcode
 				}
 			};
 		};
+
+		//https://leetcode.com/problems/integer-break/ , DP
+		int integerBreak(int n)
+		{
+			vector<int> dp(n+1,1);
+			for (int i = 2; i <= n;i++)
+			{
+				for (int j = 2; j < i; j++)
+				{
+					dp[i] = max(dp[i], max(dp[j], j)*max(dp[i - j], i - j));
+				}
+			}
+			return dp[n];
+		}
 	};
 }
 
@@ -2249,11 +2263,8 @@ int main()
 	//cout << sol.isAdditiveNumber("112358");
 	vector<int> nums1 = { 1, 2, 2, 1 };
 	vector<int> nums2 = { 2, 2 };
-	auto ret = sol.intersection_v2(nums1, nums2);
-	for each (auto var in ret)
-	{
-		cout << var << " ";
-	}
+	auto ret = sol.integerBreak(10);
+
 
 
 	std::cout<<"jetbrains clion hello world"<<std::endl;
