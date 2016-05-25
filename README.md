@@ -202,4 +202,6 @@
     Intersection of Two Arrays,求集合A和B的交集
     Top K Frequent Elements,最大堆最小堆，priority_queue
     Integer Break,DP
+    Power of Four,数学运算
+    counting-bits,统计二进制中1的个数，位运算
 ###to be continued....

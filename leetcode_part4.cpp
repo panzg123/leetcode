@@ -2217,6 +2217,48 @@ namespace panzg_leetcode
 			}
 			return dp[n];
 		}
+		//https://leetcode.com/problems/power-of-four/, 与isPowerOfThree思路一样
+		bool isPowerOfFour(int num)
+		{
+			if (num < 0)
+				return false;
+			const double ratio = 1/log10(4);
+			double diff = log10(num)*ratio;
+			return abs(diff - round(diff)) < 1e-13;
+		}
+		int valueCountOne(int n)
+		{
+			int count = 0;
+			while (n)
+			{
+				if (n & 1 == 1)
+					count++;
+				n >>= 1;
+			}
+			return count;
+		}
+		//https://leetcode.com/problems/counting-bits/
+		vector<int> countBits(int num)
+		{
+			vector<int> ret;
+			for (size_t i = 0; i <= num; i++)
+			{
+				int count_one = valueCountOne(i);
+				ret.push_back(count_one);
+			}
+			return ret;
+		}
+		//explanation,https://leetcode.com/discuss/92796/four-lines-c-time-o-n-space-o-n
+		//the i&(i-1) drop the lowest set bit 1
+		vector<int> countBits_v2(int num)
+		{
+			vector<int> ret(num + 1, 0);
+			for (size_t i = 1; i <= num;i++)
+			{
+				ret[i] = ret[i&(i - 1)] + 1;
+			}
+			return ret;
+		}
 	};
 }
 
@@ -2263,7 +2305,11 @@ int main()
 	//cout << sol.isAdditiveNumber("112358");
 	vector<int> nums1 = { 1, 2, 2, 1 };
 	vector<int> nums2 = { 2, 2 };
-	auto ret = sol.integerBreak(10);
+	auto ret = sol.countBits_v2(5);
+	for each (auto var in ret)
+	{
+		cout << var << " ";
+	}
 
 
 
