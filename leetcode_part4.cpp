@@ -2259,6 +2259,26 @@ namespace panzg_leetcode
 			}
 			return ret;
 		}
+		//https://leetcode.com/problems/house-robber-iii/
+		unordered_map<TreeNode*, int> cache;
+		int rob(TreeNode* root) {
+			if (root == NULL) return 0;
+			unordered_map<TreeNode*, int>::iterator it = cache.find(root);
+			if (it != cache.end()) return it->second;
+			int sum1 = root->val;//选择root节点
+			int sum2 = 0; //不选择root节点
+			if (root->left != NULL) {
+				sum1 += rob(root->left->left) + rob(root->left->right);
+				sum2 += rob(root->left);
+			}
+			if (root->right != NULL) {
+				sum1 += rob(root->right->left) + rob(root->right->right);
+				sum2 += rob(root->right);
+			}
+			int res = sum1 > sum2 ? sum1 : sum2;
+			cache[root] = res;
+			return res;
+		}
 	};
 }
 
@@ -2288,30 +2308,34 @@ int main()
 
 	panzg_leetcode::Solution sol;
 
-	//TreeNode node1(1);
-	//TreeNode node2(2);
-	//TreeNode node3(3);
-	//TreeNode node4(4);
-	//TreeNode node5(5);
-	//node1.left = &node2;
-	//node1.right = &node3;
-	//node3.left= &node4;
-	//node3.right = &node5;
+	TreeNode node1(3);
+	TreeNode node2(2);
+	TreeNode node3(3);
+	TreeNode node4(3);
+	TreeNode node5(1);
+	TreeNode node6(1);
+	node1.left = &node2;
+	node1.right = &node3;
+	node2.left = &node4;
+	node3.right = &node5;
+	node3.right = &node6;
 	
 
 	//panzg_leetcode::Solution::Codec code;
 	//auto ret = code.deserialize(code.serialize(&node1));
 
 	//cout << sol.isAdditiveNumber("112358");
-	vector<int> nums1 = { 1, 2, 2, 1 };
-	vector<int> nums2 = { 2, 2 };
-	auto ret = sol.countBits_v2(5);
-	for each (auto var in ret)
-	{
-		cout << var << " ";
-	}
+
+	//vector<int> nums1 = { 1, 2, 2, 1 };
+	//vector<int> nums2 = { 2, 2 };
+	//auto ret = sol.countBits_v2(5);
+	//for each (auto var in ret)
+	//{
+	//	cout << var << " ";
+	//}
 
 
+	cout <<sol.rob(&node1);
 
 	std::cout<<"jetbrains clion hello world"<<std::endl;
 	
