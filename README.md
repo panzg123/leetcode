@@ -205,4 +205,5 @@
     Power of Four,数学运算
     counting-bits,统计二进制中1的个数，位运算
     House Robber III,DFS,DP
+    Palindrome Pairs,unordered_map
 ###to be continued....

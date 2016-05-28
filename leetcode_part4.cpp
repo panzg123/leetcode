@@ -2279,6 +2279,109 @@ namespace panzg_leetcode
 			cache[root] = res;
 			return res;
 		}
+		bool isPalindromeString(const string& str)
+		{
+			size_t index_low = 0;
+			size_t index_high = str.size() - 1;
+			while (index_low < index_high)
+			{
+				if (str[index_low] != str[index_high])
+					return false;
+				index_low++;
+				index_high--;
+			}
+			return true;
+		}
+		//https://leetcode.com/problems/palindrome-pairs/
+		//暴力法,O(N^2*K)，超时
+		vector<vector<int>> palindromePairs(vector<string>& words)
+		{
+			vector<vector<int>> ret;
+			for (size_t i = 0; i < words.size();i++)
+			{
+				for (size_t j = 0; j < words.size();j++)
+				{
+					if (i != j)
+					{
+						string temp = words[i] + words[j];
+						bool is_huiwen = isPalindromeString(temp);
+						if (is_huiwen)
+						{
+							vector<int> temp;
+							temp.push_back(i);
+							temp.push_back(j);
+							ret.push_back(temp);
+						}
+					}
+				}
+			}
+			return ret;
+		}
+		//https://leetcode.com/problems/palindrome-pairs/
+		//用unordered_map,平均时间复杂度O(N*K^2),其中N是word列表的元素个数，k是单词的平均长度
+		class palindromePairs_Solution
+		{
+		public:
+			vector<vector<int>> palindromePairs(vector<string>& words) 
+			{
+				unordered_map<string, int> dict;
+				vector<vector<int>> ans;
+				// build dictionary
+				for (int i = 0; i < words.size(); i++) 
+				{
+					string key = words[i];
+					reverse(key.begin(), key.end());
+					dict[key] = i;
+				}
+				// edge case: if empty string "" exists, find all palindromes to become pairs ("", self)
+				if (dict.find("") != dict.end())
+				{
+					for (int i = 0; i < words.size(); i++)
+					{
+						if (i == dict[""]) 
+							continue;
+						if (isPalindrome(words[i])) 
+							ans.push_back({ dict[""], i }); // 1) if self is palindrome, here ans covers concatenate("", self) 
+					}
+				}
+
+				for (int i = 0; i < words.size(); i++) 
+				{
+					for (int j = 0; j < words[i].size(); j++) 
+					{
+						string left = words[i].substr(0, j);
+						string right = words[i].substr(j, words[i].size() - j);
+
+						if (dict.find(left) != dict.end() && isPalindrome(right) && dict[left] != i) 
+						{
+							ans.push_back({ i, dict[left] });    //left | right | candidate
+						}
+
+						if (dict.find(right) != dict.end() && isPalindrome(left) && dict[right] != i) 
+						{
+							ans.push_back({ dict[right], i });  // candidate | left | right.
+						}
+					}
+				}
+
+				return ans;
+			}
+
+			bool isPalindrome(string str)
+			{
+				int i = 0;
+				int j = str.size() - 1;
+
+				while (i < j) 
+				{
+					if (str[i++] != str[j--]) 
+						return false;
+				}
+
+				return true;
+			}
+
+		};
 	};
 }
 
@@ -2334,8 +2437,8 @@ int main()
 	//	cout << var << " ";
 	//}
 
-
-	cout <<sol.rob(&node1);
+	vector<string> vec = { "abcd", "dcba", "lls", "s", "sssll" };
+	auto ret = sol.palindromePairs(vec);
 
 	std::cout<<"jetbrains clion hello world"<<std::endl;
 	
