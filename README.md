@@ -206,4 +206,5 @@
     counting-bits,统计二进制中1的个数，位运算
     House Robber III,DFS,DP
     Palindrome Pairs,unordered_map
+    Self Crossing,数学题，线段相交
 ###to be continued....
