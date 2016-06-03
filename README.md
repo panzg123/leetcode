@@ -207,5 +207,6 @@
     House Robber III,DFS,DP
     Palindrome Pairs,unordered_map
     Self Crossing,数学题，线段相交
-    Increasing Triplet Subsequence,思维题
+    Increasing Triplet Subsequence,思维题，长度位3的递增序列
+    Reconstruct Itinerary,DFS
 ###to be continued....

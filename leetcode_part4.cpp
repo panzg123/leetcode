@@ -2423,21 +2423,45 @@ namespace panzg_leetcode
 			}
 			return false;
 		}
-	};
-	//https://leetcode.com/problems/self-crossing/
-	//数学题，讲解见https://leetcode.com/discuss/89336/best-submission-searching-for-the-crossing-patterns-the-key
-	//以下三种情况会相交：(1)第i条线，相交于第i-3条线；(2)第i条线，相交于i-4条线，即两线重合；(3)第i条线，相交于第i-5条线
-	bool isSelfCrossing(vector<int>& x)
-	{
-		size_t size = x.size();
-		for (int i = 3; i < size; i++)
+		//https://leetcode.com/problems/self-crossing/
+		//数学题，讲解见https://leetcode.com/discuss/89336/best-submission-searching-for-the-crossing-patterns-the-key
+		//以下三种情况会相交：(1)第i条线，相交于第i-3条线；(2)第i条线，相交于i-4条线，即两线重合；(3)第i条线，相交于第i-5条线
+		bool isSelfCrossing(vector<int>& x)
 		{
-			if (x[i] >= x[i - 2] && x[i - 1] <= x[i - 3]) return true;
-			if (i >= 4 && x[i - 1] == x[i - 3] && x[i] + x[i - 4] >= x[i - 2]) return true;
-			if (i >= 5 && x[i - 2] - x[i - 4] >= 0 && x[i] >= x[i - 2] - x[i - 4] && x[i - 1] >= x[i - 3] - x[i - 5] && x[i - 1] <= x[i - 3]) return true;
+			size_t size = x.size();
+			for (int i = 3; i < size; i++)
+			{
+				if (x[i] >= x[i - 2] && x[i - 1] <= x[i - 3]) return true;
+				if (i >= 4 && x[i - 1] == x[i - 3] && x[i] + x[i - 4] >= x[i - 2]) return true;
+				if (i >= 5 && x[i - 2] - x[i - 4] >= 0 && x[i] >= x[i - 2] - x[i - 4] && x[i - 1] >= x[i - 3] - x[i - 5] && x[i - 1] <= x[i - 3]) return true;
+			}
+			return false;
 		}
-		return false;
-	}
+		//https://leetcode.com/problems/reconstruct-itinerary/
+		//explanation:https://leetcode.com/discuss/84659/short-ruby-python-java-c
+		class findItineraryClass
+		{
+		public:
+			vector<string> findItinerary(vector<pair<string, string>> tickets) {
+				for (auto ticket : tickets)
+					targets[ticket.first].insert(ticket.second);
+				visit("JFK");
+				return vector<string>(route.rbegin(), route.rend());
+			}
+
+			map<string, multiset<string>> targets;
+			vector<string> route;
+
+			void visit(string airport) {
+				while (targets[airport].size()) {
+					string next = *targets[airport].begin();
+					targets[airport].erase(targets[airport].begin());
+					visit(next);
+				}
+				route.push_back(airport);
+			}
+		};
+	};
 }
 
 #if 1
@@ -2464,7 +2488,7 @@ int main()
 		{ '0', '1', '1', '1'}
 	};
 
-	panzg_leetcode::Solution sol;
+	//panzg_leetcode::Solution sol;
 
 	TreeNode node1(3);
 	TreeNode node2(2);
@@ -2492,9 +2516,15 @@ int main()
 	//	cout << var << " ";
 	//}
 
-	vector<int> vec = { 8,10,3,4,11 };
-	auto ret = sol.increasingTriplet_v2(vec);
+	panzg_leetcode::Solution::findItineraryClass sol;
+	vector<pair<string, string>> data;
+	data.push_back(make_pair("JFK", "SFO"));
+	data.push_back(make_pair("JFK", "ATL"));
+	data.push_back(make_pair("SFO", "ATL"));
+	data.push_back(make_pair("ATL", "JFK"));
+	data.push_back(make_pair("ATL", "SFO"));
 
+	auto ret = sol.findItinerary(data);
 	std::cout<<"jetbrains clion hello world"<<std::endl;
 	
 	system("pause");
