@@ -210,4 +210,5 @@
     Increasing Triplet Subsequence,思维题，长度位3的递增序列
     Reconstruct Itinerary,DFS
 	Verify Preorder Serialization of a Binary Tree,二叉树性质
+	Patching Array,数组，贪心算法
 ###to be continued....
