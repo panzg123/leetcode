@@ -211,4 +211,7 @@
     Reconstruct Itinerary,DFS
 	Verify Preorder Serialization of a Binary Tree,二叉树性质
 	Patching Array,数组，贪心算法
+### [20160614]
+	Coin Change,找换钱的最小货币数目，动态规划
+	Longest Increasing Path in a Matrix,找矩阵中的最长增长子序列，动态规划+DFS
 ###to be continued....
