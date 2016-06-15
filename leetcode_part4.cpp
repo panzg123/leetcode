@@ -2645,6 +2645,139 @@ namespace panzg_leetcode
 				return max_len;
 			}
 		};
+		//Count of Range Sum, https://leetcode.com/problems/count-of-range-sum/
+		//直接暴力遍历，超时
+		int countRangeSum(vector<int>& nums, int lower, int upper) 
+		{
+			int ret = 0;
+			vector<long long> sum(nums.size()+1, 0);
+			sum[0] = nums[0];
+			for (int i = 1; i <= nums.size();i++)
+			{
+				sum[i] = sum[i - 1] + nums[i-1];
+			}
+			for (int i = 0; i < nums.size();i++)
+			{
+				for (int j = i+1; j <= nums.size();j++)
+				{
+					if (sum[j] - sum[i] <= upper && sum[j] - sum[i] >= lower)
+						ret += 1;
+				}
+			}
+			return ret;
+		}
+		//Count of Smaller Numbers After Self,https://leetcode.com/problems/count-of-smaller-numbers-after-self/
+		//MergeSort方法，暂时不理解
+		class countSmallerSolution {
+		protected:
+			void merge_countSmaller(vector<int>& indices, int first, int last,vector<int>& results, vector<int>& nums) {
+				int count = last - first;
+				if (count > 1) {
+					int step = count / 2;
+					int mid = first + step;
+					merge_countSmaller(indices, first, mid, results, nums);
+					merge_countSmaller(indices, mid, last, results, nums);
+					vector<int> tmp;
+					tmp.reserve(count);
+					int idx1 = first;
+					int idx2 = mid;
+					int semicount = 0;
+					while ((idx1 < mid) || (idx2 < last)) {
+						if ((idx2 == last) || ((idx1 < mid) &&
+							(nums[indices[idx1]] <= nums[indices[idx2]]))) {
+							tmp.push_back(indices[idx1]);
+							results[indices[idx1]] += semicount;
+							++idx1;
+						}
+						else {
+							tmp.push_back(indices[idx2]);
+							++semicount;
+							++idx2;
+						}
+					}
+					move(tmp.begin(), tmp.end(), indices.begin() + first);
+				}
+			}
+		public:
+			vector<int> countSmaller(vector<int>& nums) {
+				int n = nums.size();
+				vector<int> results(n, 0);
+				vector<int> indices(n, 0);
+				iota(indices.begin(), indices.end(), 0);
+				merge_countSmaller(indices, 0, n, results, nums);
+				return results;
+			}
+		};
+		//Count of Smaller Numbers After Self, https://leetcode.com/problems/count-of-smaller-numbers-after-self/
+		//BST方法
+		class countSmallerSolutionBST {
+		public:
+			vector<int> countSmaller(vector<int>& nums) 
+			{
+				vector<int> clone = nums;;
+				int len = (int)nums.size();
+				unordered_map<int, int> reflect;
+				array.resize(len + 1);
+				sort(clone.begin(), clone.end());
+				for (int i = 0; i < len; ++i)
+					reflect[clone[i]] = i + 1;
+
+				for (int i = len - 1; i >= 0; --i) 
+				{
+					clone[i] = query(reflect[nums[i]] - 1);
+					add(reflect[nums[i]], 1);
+				}
+				return clone;
+			}
+
+		private:
+			vector<int> array;
+			inline int lowbit(int pos) 
+			{
+				return pos & -pos;
+			}
+			void add(int pos, int val) 
+			{
+				long len = array.size();
+				while (pos < len) 
+				{
+					array[pos] += val;
+					pos += lowbit(pos);
+				}
+			}
+			int query(int pos) 
+			{
+				int ret = 0;
+				while (pos > 0) 
+				{
+					ret += array[pos];
+					pos -= lowbit(pos);
+				}
+				return ret;
+			}
+		};
+		//https://leetcode.com/problems/odd-even-linked-list/
+		ListNode* oddEvenList(ListNode* head)
+		{
+			if (head == nullptr)
+				return head;
+			ListNode* insert_pos = head;
+			ListNode* del_pos = head->next;
+			while (del_pos && del_pos->next)
+			{
+				ListNode *temp_del = del_pos->next->next;
+				//delete the node
+				ListNode *node_del = del_pos->next;
+				del_pos->next = del_pos->next->next;
+				//insert
+				node_del->next = insert_pos->next;
+				insert_pos->next = node_del;
+				//update the pos
+				insert_pos = insert_pos->next;
+				del_pos = temp_del;
+			}
+			return head;
+		}
 	};
 }
 
@@ -2665,11 +2798,11 @@ int main()
 	}*/
 
 	vector<vector<char>> vec1 = {
-		{ '0', '0', '0', '1'},
-		{ '1', '1', '0', '1'},
-		{ '1', '1', '1', '1'},
-		{ '0', '1', '1', '1'},
-		{ '0', '1', '1', '1'}
+		{ '0', '0', '0', '1' },
+		{ '1', '1', '0', '1' },
+		{ '1', '1', '1', '1' },
+		{ '0', '1', '1', '1' },
+		{ '0', '1', '1', '1' }
 	};
 
 	vector<vector<int>> matrix = {
@@ -2690,7 +2823,7 @@ int main()
 	node2.left = &node4;
 	node3.right = &node5;
 	node3.right = &node6;
-	
+
 
 	//panzg_leetcode::Solution::Codec code;
 	//auto ret = code.deserialize(code.serialize(&node1));
@@ -2714,9 +2847,19 @@ int main()
 	data.push_back(make_pair("ATL", "SFO"));
 
 
-	vector<int> coins = { 186, 419, 83, 408 };
-	auto ret = sol.longestIncreasingPath(matrix);
-	cout << ret;
+	ListNode listnode1(1);
+	ListNode listnode2(2);
+	ListNode listnode3(3);
+	ListNode listnode4(4);
+	ListNode listnode5(5);
+	listnode1.next = &listnode2;
+	listnode2.next = &listnode3;
+	listnode3.next = &listnode4;
+	listnode4.next = &listnode5;
+
+	vector<int> nums = {5, 2, 6, 1};
+	auto ret = sol.oddEvenList(&listnode1);
+
 	std::cout<<"jetbrains clion hello world"<<std::endl;
 	
 	system("pause");
