@@ -2482,6 +2482,67 @@ namespace panzg_leetcode
 				return null_c == node_c + 1;
 			}
 		};
+		//nums代表每步能调的距离，求跳到最右的最小步数
+		//简单动态规划
+		int minSteps(vector<int> nums)
+		{
+			int length = nums.size();
+			vector<int> dp(length, length-1);
+			dp[0] = 0;    
+			for (int i = 0; i < length;i++)
+			{
+				int step = nums[i];
+				for (int j = 1; j <= step && (j + i) < length;j++)
+				{
+					dp[j + i] = min(dp[j + i], dp[i] + 1);
+				}
+			}
+			return dp[length - 1];
+		}
+		//给定一颗二叉树，求此二叉树的最大距离，题目见《程序员代码面试指南》p169,时间复杂度O(N)
+		int maxDistance(TreeNode* root)
+		{
+			auto ret = maxDistance_helper(root);
+			return ret.first;
+		}
+		//一个后续遍历的过程
+		pair<int,int> maxDistance_helper(TreeNode* root)
+		{
+			if(root == nullptr)
+				return make_pair(0,0);
+			auto left = maxDistance_helper(root->left);
+			auto right = maxDistance_helper(root->right);
+			pair<int, int> ret;//first成员记录最远距离，second成员记录距离root节点的最大距离
+			ret.first = max(max(left.first, right.first),left.second+right.second+1);
+			ret.second = max(left.second, right.second) + 1;
+			return ret;
+		}
+		//计算一个完全二叉树的节点数目
+		int nodeNum(TreeNode* root)
+		{
+			if (root == nullptr)
+				return 0;
+			return nodeNum_helper(root,1,mostLeftLevel(root,1));
+		}
+		int nodeNum_helper(TreeNode* root,int cur_level,int high)
+		{
+			if (cur_level == high)
+				return 1;
+			if (mostLeftLevel(root->right, cur_level + 1) == high) //左子树满二叉树
+				return (1 << (high - cur_level)) + nodeNum_helper(root->right, cur_level + 1, high);
+			else //右子树满二叉树
+				return (1 << (high - cur_level - 1)) + nodeNum_helper(root->left, cur_level + 1, high);
+		}
+		//计算当前root节点所在的level
+		int mostLeftLevel(TreeNode* root, int level)
+		{
+			while (root != nullptr)
+			{
+				level++;
+				root = root->left;
+			}
+			return level - 1;
+		}
 	};
 }
 
@@ -2511,17 +2572,19 @@ int main()
 
 	//panzg_leetcode::Solution sol;
 
-	TreeNode node1(3);
+	TreeNode node1(1);
 	TreeNode node2(2);
 	TreeNode node3(3);
-	TreeNode node4(3);
-	TreeNode node5(1);
-	TreeNode node6(1);
+	TreeNode node4(4);
+	TreeNode node5(5);
+	TreeNode node6(6);
+	TreeNode node7(7);
 	node1.left = &node2;
 	node1.right = &node3;
 	node2.left = &node4;
-	node3.right = &node5;
-	node3.right = &node6;
+	node2.right = &node5;
+	node3.left = &node6;
+	node3.right = &node7;
 	
 
 	//panzg_leetcode::Solution::Codec code;
@@ -2537,7 +2600,7 @@ int main()
 	//	cout << var << " ";
 	//}
 
-	panzg_leetcode::Solution::isValidSerializationSolution sol;
+	panzg_leetcode::Solution sol;
 	vector<pair<string, string>> data;
 	data.push_back(make_pair("JFK", "SFO"));
 	data.push_back(make_pair("JFK", "ATL"));
@@ -2546,10 +2609,10 @@ int main()
 	data.push_back(make_pair("ATL", "SFO"));
 
 
-	string str = "9,3,4,#,#,1,#,#,2,#,6,#,#";
-	auto ret = sol.isValidSerialization(str);
+	vector<int> nums = { 3, 2, 3, 1, 1, 4 };
+	auto ret = sol.nodeNum(&node1);
 	
-	std::cout<<"jetbrains clion hello world"<<std::endl;
+	std::cout << ret << std::endl;
 	
 	system("pause");
 	return 0;

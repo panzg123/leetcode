@@ -210,4 +210,7 @@
     Increasing Triplet Subsequence,思维题，长度位3的递增序列
     Reconstruct Itinerary,DFS
 	Verify Preorder Serialization of a Binary Tree,二叉树性质
+###[20160621]
+    Tree Node Num,统计完全二叉树的节点数目，递归
+    Tree Max Distance,二叉树中节点的最大距离，递归
 ###to be continued....
