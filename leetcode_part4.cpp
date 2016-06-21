@@ -2482,6 +2482,7 @@ namespace panzg_leetcode
 				return null_c == node_c + 1;
 			}
 		};
+
 		//nums代表每步能调的距离，求跳到最右的最小步数
 		//简单动态规划
 		int minSteps(vector<int> nums)
@@ -2543,6 +2544,303 @@ namespace panzg_leetcode
 			}
 			return level - 1;
 		}
+		//https://leetcode.com/problems/patching-array/?sort=votes
+		//reference,https://leetcode.com/discuss/102653/c-8ms-greedy-solution-with-explanation
+		int minPatches(vector<int>& nums, int n) 
+		{
+			int cnt = 0, i = 0;
+			long long maxNum = 0;
+			while (maxNum < n)
+			{
+				if (i < nums.size() && nums[i] <= maxNum + 1)
+					maxNum += nums[i++];
+				else
+				{
+					maxNum += maxNum + 1; cnt++;
+				}
+			}
+			return cnt;
+		}
+		//https://leetcode.com/problems/coin-change/
+		//换钱的最小货币数目,动态规划，时间复杂度和空间复杂度均为O(N*amount)
+		//此处，空间复杂度可以优化为O（amount）
+		int coinChange(vector<int>& coins, int amount) 
+		{
+			sort(coins.begin(), coins.end());
+			vector<vector<int>> dp(coins.size(), vector<int>(amount+1,INT_MAX));
+			for (int i = 0; i <= amount; i++)
+			{
+				if (i % coins[0])
+					dp[0][i] = INT_MAX;
+				else
+					dp[0][i] = i / coins[0];
+			}
+			for (int i = 1; i < coins.size(); i++)
+				dp[i][0] = 0;
+			for (int i = 1; i < coins.size(); i++)
+			{
+				for (int j = 1; j <= amount; j++)
+				{
+					int left = INT_MAX;
+					if (j - coins[i] >= 0 && dp[i][j - coins[i]]!=INT_MAX)
+						left = dp[i][j - coins[i]] + 1;
+					dp[i][j] = min(left, dp[i - 1][j]);
+				}
+			}
+			return dp[coins.size() - 1][amount] == INT_MAX ? -1 : dp[coins.size() - 1][amount];
+		}
+		//时间复杂度O(N*amount),空间复杂度O(amount)
+		int coinChange_v2(vector<int>& coins, int amount)
+		{
+			sort(coins.begin(), coins.end());
+			vector<int> dp(amount+1, 0);
+			for (int i = 1; i <= amount;i++)
+			{
+				if (i%coins[0])
+					dp[i] = INT_MAX;
+				else
+					dp[i] = i / coins[0];
+			}
+			for (int i = 1; i < coins.size();i++)
+			{
+				for (int j = 1; j <= amount;j++)
+				{
+					int left = INT_MAX;
+					if (j - coins[i] >= 0 && dp[j - coins[i]] != INT_MAX)
+						left = dp[j - coins[i]] + 1;
+					dp[j] = min(dp[j], left);
+				}
+			}
+			return dp[amount] == INT_MAX ? -1 : dp[amount];
+		}
+		//https://leetcode.com/problems/longest-increasing-path-in-a-matrix/
+		//暴力DFS，超时,可以对长度进行存储，见longestIncreasingPath_dp
+		int longestIncreasingPath(vector<vector<int>>& matrix) 
+		{
+			int ret = 0;
+			for (int i = 0; i < matrix.size();i++)
+			{
+				for (int j = 0; j < matrix.size();j++)
+				{
+					ret = max(ret, longestIncreasingPath_helper(matrix, 1, i, j));
+				}
+			}
+			return ret;
+		}
+		int longestIncreasingPath_helper(vector<vector<int>>& matrix,int cur_length,int cur_x,int cur_y)
+		{
+			int ret = cur_length;
+			if (cur_x > 0 && matrix[cur_x - 1][cur_y] > matrix[cur_x][cur_y])
+				ret = max(ret, longestIncreasingPath_helper(matrix, cur_length + 1, cur_x - 1, cur_y));
+			if (cur_y < matrix[0].size()-1 && matrix[cur_x][cur_y+1] > matrix[cur_x][cur_y])
+				ret = max(ret, longestIncreasingPath_helper(matrix, cur_length + 1, cur_x, cur_y + 1));
+			if (cur_x < matrix.size()-1 && matrix[cur_x + 1][cur_y] > matrix[cur_x][cur_y])
+				ret = max(ret, longestIncreasingPath_helper(matrix, cur_length + 1, cur_x + 1, cur_y));
+			if (cur_y > 0 && matrix[cur_x][cur_y - 1] > matrix[cur_x][cur_y])
+				ret = max(ret, longestIncreasingPath_helper(matrix, cur_length + 1, cur_x, cur_y - 1));
+			return ret;
+		}
+		//dfs+dp,400ms
+		int longestIncreasingPath_dp(vector<vector<int>>& matrix)
+		{
+			int rows = matrix.size();
+			if (!rows) return 0;
+			int cols = matrix[0].size();
+
+			//dp[x][y]表示以(x,y)为起点的最大长度
+			vector<vector<int>> dp(rows, vector<int>(cols, 0));
+			std::function<int(int, int)> dfs = [&](int x, int y) 
+			{
+				if (dp[x][y]) 
+					return dp[x][y];
+				vector<vector<int>> dirs = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 } };
+				for (auto &dir : dirs) //遍历四个方向，找到最大值
+				{
+					int xx = x + dir[0], yy = y + dir[1];
+					if (xx < 0 || xx >= rows || yy < 0 || yy >= cols) 
+						continue;
+					if (matrix[xx][yy] <= matrix[x][y]) 
+						continue;
+					dp[x][y] = std::max(dp[x][y], dfs(xx, yy));
+				}
+				//+1
+				return ++dp[x][y];
+			};
+
+			int ret = 0;
+			for (int i = 0; i < rows; ++i) {
+				for (int j = 0; j < cols; ++j) {
+					ret = std::max(ret, dfs(i, j));
+				}
+			}
+			return ret;
+		}
+		//同样DFS+DP，但只需60ms，优化在function函数对象
+		class longestIncreasingPathSolution {
+			vector<vector<int>> visited;
+			int height = 0, width = 0;
+			int floodfill(vector<vector<int>>& matrix, int cur, int i, int j)
+			{
+				if (i < 0 || i >= height || j < 0 || j >= width)
+					return 0;
+				if (matrix[i][j] <= cur)
+					return 0;
+				if (visited[i][j] > 0)
+					return visited[i][j];
+				int r = floodfill(matrix, matrix[i][j], i + 1, j);
+				int l = floodfill(matrix, matrix[i][j], i - 1, j);
+				int u = floodfill(matrix, matrix[i][j], i, j + 1);
+				int d = floodfill(matrix, matrix[i][j], i, j - 1);
+				visited[i][j] = max(r, max(l, max(u, d))) + 1;
+				return visited[i][j];
+			}
+		public:
+			int longestIncreasingPath(vector<vector<int>>& matrix) {
+				if (matrix.empty())
+					return 0;
+				height = matrix.size(), width = matrix[0].size();
+				visited.resize(height, vector<int>(width));
+				int max_len = 0;
+				for (int i = 0; i < height; ++i)
+					for (int j = 0; j < width; ++j)
+						max_len = max(max_len, floodfill(matrix, INT_MIN, i, j));
+				return max_len;
+			}
+		};
+		//Count of Range Sum, https://leetcode.com/problems/count-of-range-sum/
+		//直接暴力遍历，超时
+		int countRangeSum(vector<int>& nums, int lower, int upper) 
+		{
+			int ret = 0;
+			vector<long long> sum(nums.size()+1, 0);
+			sum[0] = nums[0];
+			for (int i = 1; i <= nums.size();i++)
+			{
+				sum[i] = sum[i - 1] + nums[i-1];
+			}
+			for (int i = 0; i < nums.size();i++)
+			{
+				for (int j = i+1; j <= nums.size();j++)
+				{
+					if (sum[j] - sum[i] <= upper && sum[j] - sum[i] >= lower)
+						ret += 1;
+				}
+			}
+			return ret;
+		}
+		//Count of Smaller Numbers After Self,https://leetcode.com/problems/count-of-smaller-numbers-after-self/
+		//MergeSort方法，暂时不理解
+		class countSmallerSolution {
+		protected:
+			void merge_countSmaller(vector<int>& indices, int first, int last,vector<int>& results, vector<int>& nums) {
+				int count = last - first;
+				if (count > 1) {
+					int step = count / 2;
+					int mid = first + step;
+					merge_countSmaller(indices, first, mid, results, nums);
+					merge_countSmaller(indices, mid, last, results, nums);
+					vector<int> tmp;
+					tmp.reserve(count);
+					int idx1 = first;
+					int idx2 = mid;
+					int semicount = 0;
+					while ((idx1 < mid) || (idx2 < last)) {
+						if ((idx2 == last) || ((idx1 < mid) &&
+							(nums[indices[idx1]] <= nums[indices[idx2]]))) {
+							tmp.push_back(indices[idx1]);
+							results[indices[idx1]] += semicount;
+							++idx1;
+						}
+						else {
+							tmp.push_back(indices[idx2]);
+							++semicount;
+							++idx2;
+						}
+					}
+					move(tmp.begin(), tmp.end(), indices.begin() + first);
+				}
+			}
+		public:
+			vector<int> countSmaller(vector<int>& nums) {
+				int n = nums.size();
+				vector<int> results(n, 0);
+				vector<int> indices(n, 0);
+				iota(indices.begin(), indices.end(), 0);
+				merge_countSmaller(indices, 0, n, results, nums);
+				return results;
+			}
+		};
+		//Count of Smaller Numbers After Self, https://leetcode.com/problems/count-of-smaller-numbers-after-self/
+		//BST方法
+		class countSmallerSolutionBST {
+		public:
+			vector<int> countSmaller(vector<int>& nums) 
+			{
+				vector<int> clone = nums;;
+				int len = (int)nums.size();
+				unordered_map<int, int> reflect;
+				array.resize(len + 1);
+				sort(clone.begin(), clone.end());
+				for (int i = 0; i < len; ++i)
+					reflect[clone[i]] = i + 1;
+
+				for (int i = len - 1; i >= 0; --i) 
+				{
+					clone[i] = query(reflect[nums[i]] - 1);
+					add(reflect[nums[i]], 1);
+				}
+				return clone;
+			}
+
+		private:
+			vector<int> array;
+			inline int lowbit(int pos) 
+			{
+				return pos & -pos;
+			}
+			void add(int pos, int val) 
+			{
+				long len = array.size();
+				while (pos < len) 
+				{
+					array[pos] += val;
+					pos += lowbit(pos);
+				}
+			}
+			int query(int pos) 
+			{
+				int ret = 0;
+				while (pos > 0) 
+				{
+					ret += array[pos];
+					pos -= lowbit(pos);
+				}
+				return ret;
+			}
+		};
+		//https://leetcode.com/problems/odd-even-linked-list/
+		ListNode* oddEvenList(ListNode* head)
+		{
+			if (head == nullptr)
+				return head;
+			ListNode* insert_pos = head;
+			ListNode* del_pos = head->next;
+			while (del_pos && del_pos->next)
+			{
+				ListNode *temp_del = del_pos->next->next;
+				//delete the node
+				ListNode *node_del = del_pos->next;
+				del_pos->next = del_pos->next->next;
+				//insert
+				node_del->next = insert_pos->next;
+				insert_pos->next = node_del;
+				//update the pos
+				insert_pos = insert_pos->next;
+				del_pos = temp_del;
+			}
+			return head;
+
+		}
 	};
 }
 
@@ -2563,13 +2861,18 @@ int main()
 	}*/
 
 	vector<vector<char>> vec1 = {
-		{ '0', '0', '0', '1'},
-		{ '1', '1', '0', '1'},
-		{ '1', '1', '1', '1'},
-		{ '0', '1', '1', '1'},
-		{ '0', '1', '1', '1'}
+		{ '0', '0', '0', '1' },
+		{ '1', '1', '0', '1' },
+		{ '1', '1', '1', '1' },
+		{ '0', '1', '1', '1' },
+		{ '0', '1', '1', '1' }
 	};
 
+	vector<vector<int>> matrix = {
+		{ 3, 4, 5 },
+		{ 3, 2, 6 },
+		{ 2, 2, 1 }
+	};
 	//panzg_leetcode::Solution sol;
 
 	TreeNode node1(1);
@@ -2607,6 +2910,7 @@ int main()
 	data.push_back(make_pair("SFO", "ATL"));
 	data.push_back(make_pair("ATL", "JFK"));
 	data.push_back(make_pair("ATL", "SFO"));
+
 
 
 	vector<int> nums = { 3, 2, 3, 1, 1, 4 };
