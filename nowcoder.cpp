@@ -659,6 +659,212 @@ namespace nowcoder{
 			if (root->right != nullptr)
 				FindPathHelper(root->right, expectVal, curVal, ret, path);
 		}
+		//复杂链表的复制
+		RandomListNode* Clone(RandomListNode* pHead)
+		{
+			RandomListNode *head = pHead;
+			//循环第一次，增加节点
+			while (head != nullptr)
+			{
+				RandomListNode* node = new RandomListNode(head->label);
+				RandomListNode* temp = head->next;
+				head->next = node;
+				node->next = temp;
+				head = temp;
+			}
+			//现在拷贝random指针
+			head = pHead;
+			while (head && head->next)
+			{
+				head->next->random = head->random->next;
+				head = head->next->next;
+			}
+			//现在断开两个链表
+			RandomListNode* ret_head = (pHead == nullptr ? nullptr : pHead->next);
+			RandomListNode* clone_head = ret_head;
+			head = pHead;
+			while (head && clone_head)
+			{
+				head->next = (head->next == nullptr ? nullptr : head->next->next);
+				clone_head->next = (clone_head->next == nullptr ? nullptr : clone_head->next->next);
+				head = head->next;
+				clone_head = clone_head->next;
+			}
+			return ret_head;
+		}
+		//二叉搜索树与双向链表
+		//描述：输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。
+		TreeNode* Convert(TreeNode* pRootOfTree)
+		{
+			TreeNode* pLastodeInList = nullptr;
+			ConvertNode(pRootOfTree, &pLastodeInList);
+			TreeNode* head = pLastodeInList;
+			while (head != nullptr && head->left != nullptr)
+				head = head->left;
+			return head;
+		}
+		void ConvertNode(TreeNode* root, TreeNode** pLastNodeInList)
+		{
+			if (root == nullptr)
+				return;
+			TreeNode* pCur = root;
+			if (pCur->left != nullptr)
+				ConvertNode(pCur->left, pLastNodeInList);
+			pCur->left = *pLastNodeInList;
+			if (*pLastNodeInList != nullptr)
+				(*pLastNodeInList)->right = pCur;
+			*pLastNodeInList = pCur;
+			if (pCur->right != nullptr)
+				ConvertNode(pCur->right, pLastNodeInList);
+		}
+		//字符串的排列
+		vector<string> Permutation(string str)
+		{
+			vector<string> ret;
+			if (str == "")
+				return ret;
+			std::sort(str.begin(), str.end());
+			ret.push_back(str);
+			while(next_permutation(str.begin(), str.end()))
+				ret.push_back(str);
+			return ret;
+		}
+		//数组中出现次数超过一半的数字,时间复杂度O(N)
+		bool checkMoreThanHalf(vector<int> numbers, int value){
+			int cnt = count(numbers.begin(), numbers.end(), value);
+			if (cnt * 2 <= numbers.size())
+				return false;
+			return true;
+
+		}
+		int MoreThanHalfNum_Solution(vector<int> numbers) {
+			if (numbers.size() == 0)
+				return 0;
+			int value = numbers[0];
+			int cnt = 1;
+			for (int i = 1; i < numbers.size(); i++){
+				if (cnt == 0){
+					value = numbers[i];
+					cnt = 1;
+				}
+				if (value == numbers[i])
+					cnt++;
+				else
+					cnt--;
+			}
+			if (!checkMoreThanHalf(numbers, value))
+				return 0;
+			return value;
+		}
+		//最小的K个数,时间复杂度为O（N）
+		vector<int> GetLeastNumbers_Solution(vector<int> input, int k)
+		{
+			vector<int> ret;
+			if (input.size() == 0 || k==0  || k> input.size())
+				return ret;
+			int start = 0;
+			int end = input.size() - 1;
+			int index = Partition(input, start, end);
+			while (index != k-1)
+			{
+				if (index > k - 1)
+				{
+					end = index - 1;
+					index = Partition(input, start, end);
+				}
+				else
+				{
+					start = index + 1;
+					index = Partition(input, start, end);
+				}
+			}
+			for (int i = 0; i < k;i++)
+			{
+				ret.push_back(input[i]);
+			}
+			return ret;
+		}
+		int Partition(vector<int>& numbers, int start, int end)
+		{
+			int partition_idx = start;
+			int temp = numbers[partition_idx];
+			int low = start, high = end;
+			while (high > low)
+			{
+				while (low < high && numbers[high] >= temp)
+					high--;
+				if (low < high)
+				{
+					numbers[low] = numbers[high];
+					low++;
+				}
+				while (low < high && numbers[low] <= temp)
+					low++;
+				if (low < high)
+				{
+					numbers[high] = numbers[low];
+					high--;
+				}
+			}
+			numbers[low] = temp;
+			return low;
+		}
+		//采用红黑树，用multiset来保存k个窗口的数据,时间复杂度为N*logK
+		vector<int> GetLeastNumbers_Solution_v2(vector<int> input, int k)
+		{
+			vector<int> ret;
+			multiset<int, greater<int>> kdata_set;
+			if (input.size() == 0 || k == 0 || k>input.size())
+				return ret;
+			for (auto iter = input.begin(); iter != input.end();iter++)
+			{
+				if (kdata_set.size() < k)
+					kdata_set.insert(*iter);
+				else
+				{
+					if (*iter < *kdata_set.begin())
+					{
+						kdata_set.erase(kdata_set.begin());
+						kdata_set.insert(*iter);
+					}
+				}
+			}
+			for (std::multiset<int>::iterator it = kdata_set.begin(); it != kdata_set.end(); ++it)
+				ret.push_back(*it);
+			return ret;
+		}
+		//连续子数组的最大和,时间复杂度O(N)，空间复杂度O（1）
+		int FindGreatestSumOfSubArray(vector<int> array)
+		{
+			if (array.size() == 0)
+				return 0;
+			int max_value = array[0];
+			int cur_value = array[0];
+			for (int i = 1; i < array.size();i++)
+			{
+				if (cur_value < 0)
+					cur_value = array[i];
+				else
+					cur_value += array[i];
+				max_value = max(max_value, cur_value);
+			}
+			return max_value;
+		}
+		//连续子数组的最大和,动态规划，时间复杂度O(N)，空间复杂度O(N)
+		int FindGreatestSumOfSubArray_v2(vector<int> array)
+		{
+			if (array.size() == 0)
+				return 0;
+			vector<int> dp(array.size(), array[0]);
+			for (int i = 1; i < array.size();i++)
+			{
+				if (dp[i - 1] > 0)
+					dp[i] = dp[i - 1] + array[i];
+				else
+					dp[i] = array[i];
+			}
+			return *max_element(dp.begin(), dp.end());
+		}
 	};
 }
 
@@ -673,17 +879,21 @@ int main(){
 	};
 
 	vector<vector<int>> nums2 = { { 1 }, { 2 }, { 3 }, { 4 }, { 5 } };
-	vector<int> pre = { 8,7,6,5,4,3,2,1 };
+	vector<int> pre = {1,-2,3,10,-4,7,2,-5};
 	vector<int> in = { 4, 7, 2, 1, 5, 3, 8, 6 };
-	char str[] = "hello world";
 
-	ListNode node1(1);
-	ListNode node2(2);
-	ListNode node3(3);
-	ListNode node4(4);
+
+	RandomListNode node1(1);
+	RandomListNode node2(2);
+	RandomListNode node3(3);
+	RandomListNode node4(4);
 	node1.next = &node2;
+	node1.random = &node3;
 	node2.next = &node3;
+	node2.random = &node4;
 	node3.next = &node4;
+	node3.random = &node1;
+	node4.random = &node2;
 
 	ListNode node6(6);
 	ListNode node7(7);
@@ -694,10 +904,10 @@ int main(){
 	node8.next = &node9;
 
 
-	vector<int> sequence = { 1,2,3,4,5};
-	auto ret = sol.VerifySquenceOfBST(sequence);
+	std::string str = "abc";
+	auto ret = sol.FindGreatestSumOfSubArray_v2(pre);
 
-	std::cout << ret;
+	
 
 	system("pause");
 }
