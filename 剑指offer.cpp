@@ -865,6 +865,247 @@ namespace nowcoder{
 			}
 			return *max_element(dp.begin(), dp.end());
 		}
+		//把数组排成最小的数
+		string PrintMinNumber(vector<int> numbers)
+		{
+			string ret;
+			if (numbers.size() == 0)
+				return ret;
+			//排序准则
+			auto cmp = [](int i, int j)
+			{
+				string a = to_string(i) + to_string(j);
+				string b = to_string(j) + to_string(i);
+				return (a < b);
+			};
+			sort(numbers.begin(), numbers.end(), cmp);
+			for each (auto var in numbers)
+			{
+				ret += to_string(var);
+			}
+			return ret;
+		}
+		//丑数
+		int GetUglyNumber_Solution(int index)
+		{
+			if (index == 0)
+				return 0;
+			vector<int> ugly_numbers;
+			ugly_numbers.push_back(1);
+			int idx2 = 0, idx3 = 0, idx5 = 0;
+			int count = 1;
+			while (count < index)
+			{
+				vector<int> dat;
+				dat.push_back(ugly_numbers[idx2] * 2);
+				dat.push_back(ugly_numbers[idx3] * 3);
+				dat.push_back(ugly_numbers[idx5] * 5);
+				auto pos = min_element(dat.begin(), dat.end());
+				ugly_numbers.push_back(*pos);
+				//更新位置
+				while (ugly_numbers[idx2] * 2 <= ugly_numbers[count])
+					idx2++;
+				while (ugly_numbers[idx3] * 3 <= ugly_numbers[count])
+					idx3++;
+				while (ugly_numbers[idx5] * 5 <= ugly_numbers[count])
+					idx5++;
+
+				count++;
+			}
+			return ugly_numbers[index-1];
+		}
+		//第一个只出现一次的字符位置
+		int FirstNotRepeatingChar(string str)
+		{
+			if(str == "")
+				return -1;
+			unordered_map<char, int> count;
+			for (char c : str)
+			{
+				count[c]++;
+			}
+			for (size_t idx = 0; idx < str.size();idx++)
+			{
+				if (count[str[idx]] == 1)
+					return idx;
+			}
+			return -1;
+		}
+		//数组中的逆序对
+		int InversePairs(vector<int> data)
+		{
+
+		}
+		//两个链表的第一个公共结点
+		ListNode* FindFirstCommonNode(ListNode *pHead1, ListNode *pHead2)
+		{
+			if (pHead2 == nullptr || pHead1 == nullptr)
+				return nullptr;
+			int len1 = 0, len2 = 0;
+			ListNode *head1 = pHead1;
+			ListNode *head2 = pHead2;
+			while (head1)
+			{
+				head1 = head1->next;
+				len1++;
+			}
+			while (head2)
+			{
+				head2 = head2->next;
+				len2++;
+			}
+			ListNode *head = nullptr;
+			int dis = abs(len1 - len2);
+			if (len1 > len2)
+			{
+				int step = 0;
+				while (step < dis)
+				{
+					pHead1 = pHead1->next;
+					step++;
+				}
+			}
+			else
+			{
+				int step = 0;
+				while (step < dis)
+				{
+					pHead2 = head2->next;
+					step++;
+				}
+			}
+			while (pHead1 && pHead2 && pHead1->val != pHead2->val)
+			{
+				pHead1 = pHead1->next;
+				pHead2 = pHead2->next;
+			}
+			return pHead1;
+		}
+		//分别查找第一次出现k和最后一次出现k的位置，时间复杂度为对数O(logN)
+		int GetNumberOfK(vector<int> data, int k) 
+		{
+			if (data.empty())
+				return 0;
+			int number = 0;
+			int first = GetFirstIndex(data, k, 0, data.size() - 1);
+			int last = GetLastIndex(data, k, 0, data.size() - 1);
+			if (first > -1 && last > -1)
+				number = last - first + 1;
+			return number;
+
+		}
+		//查找第一次出现k的位置
+		int GetFirstIndex(vector<int> &data, int k, int start, int end)
+		{
+			if (start > end)
+				return -1;
+			int mid = (start + end) / 2;
+			if (data[mid] == k)
+			{
+				if ((mid > 0 && data[mid - 1] != k) || mid == 0)
+					return mid;
+				else
+					end = mid - 1;
+			}
+			else
+			{
+				if (mid > k)
+					end = mid - 1;
+				else
+					start = mid + 1;
+			}
+			return GetFirstIndex(data, k, start, end);
+		}
+		//查找最后一次出现k的位置
+		int GetLastIndex(vector<int> &data, int k, int start, int end)
+		{
+			if (start > end)
+				return -1;
+			int mid = (start + end) / 2;
+			if (data[mid] == k)
+			{
+				if ((mid < data.size()-1 && data[mid + 1] != k) || mid == data.size()-1)
+					return mid;
+				else
+					start = mid + 1;
+			}
+			else
+			{
+				if (mid > k)
+					end = mid - 1;
+				else
+					start = mid + 1;
+			}
+			return GetLastIndex(data, k, start, end);
+		}
+		//二叉树的深度
+		int TreeDepth(TreeNode* pRoot)
+		{
+			if (pRoot == nullptr)
+				return 0;
+			else
+				return 1 + max(TreeDepth(pRoot->left), TreeDepth(pRoot->right));
+		}
+		//判断是否是平衡二叉树
+		bool IsBalanced_Solution(TreeNode* pRoot)
+		{
+			auto ret = IsBalanced_helper(pRoot);
+			return ret.first;
+		}
+		//pair<boo,int> first代表是否是平衡二叉树，second代表该树的高度
+		pair<bool, int> IsBalanced_helper(TreeNode* root)
+		{
+			if (root == nullptr)
+				return{ true, 0 };
+			auto ret_left = IsBalanced_helper(root->left);
+			if (ret_left.first == false)
+				return{ false, 0 };
+			auto ret_right = IsBalanced_helper(root->right);
+			if (ret_right.first == false)
+				return{ false, 0 };
+			if (abs(ret_left.second - ret_right.second) > 1)
+				return{ false, 0 };
+			else
+				return{ true, 1 + max(ret_left.second, ret_right.second) };
+		}
+		//数组中只出现一次的数字
+		void FindNumsAppearOnce(vector<int> data, int* num1, int *num2)
+		{
+			//匿名函数，求data二进制中最右的1
+			auto find_first_bit_1 = [](int num)
+			{
+				unsigned idx = 0;
+				while ((num & 1) == 0 && (idx < 8*sizeof(int)))
+				{
+					num = num >> 1;
+					++idx;
+				}
+				return idx;
+			};
+			//匿名函数，判断num的第idx为是否为1
+			auto is_bit_1 = [](int num, unsigned int index)
+			{
+				num = num >> index;
+				return (num & 1);
+			};
+			if (data.size() < 2)
+				return;
+			int or_result = 0;
+			for (int i = 0; i < data.size();i++)
+			{
+				or_result ^= data[i];
+			}
+			unsigned index = find_first_bit_1(or_result);
+
+			*num1 = *num2 = 0;
+			for (int i = 0; i < data.size();++i)
+			{
+				if (is_bit_1(data[i], index))
+					*num1 ^= data[i];
+				else
+					*num2 ^= data[i];
+			}
+		}
 	};
 }
 
@@ -904,9 +1145,11 @@ int main(){
 	node8.next = &node9;
 
 
-	std::string str = "abc";
-	auto ret = sol.FindGreatestSumOfSubArray_v2(pre);
-
+	vector<int> dat = { 2, 4, 3, 6, 3, 2, 5, 5 };
+	int num1 = 0;
+	int num2 = 0;
+	sol.FindNumsAppearOnce(dat,&num1,&num2);
+	//cout << ret;
 	
 
 	system("pause");
