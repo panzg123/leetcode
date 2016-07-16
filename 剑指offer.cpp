@@ -1106,6 +1106,402 @@ namespace nowcoder{
 					*num2 ^= data[i];
 			}
 		}
+		//和为S的连续正数序列，双指针
+		vector<vector<int> > FindContinuousSequence(int sum)
+		{
+
+			auto add_ret = [](int small, int big, vector<vector<int>> &ret)
+			{
+				vector<int> vec;
+				vec.resize(big - small + 1);
+				iota(vec.begin(), vec.end(), small);
+				ret.push_back(vec);
+			};
+			vector<vector<int>> ret;
+			if (sum < 3)
+				return ret;
+			int small = 1;
+			int big = 2;
+			int middle = (1 + sum) / 2;
+			int curSum = small + big;
+			while (small < middle)
+			{
+				if (curSum == sum)
+					add_ret(small, big, ret);
+				while (curSum > sum && small < middle)
+				{
+					curSum -= small;
+					small++;
+					if (curSum == sum)
+						add_ret(small, big, ret);
+				}
+				big++;
+				curSum += big;
+			}
+			return ret;
+		}
+		//和为S的两个数字,双指针
+		vector<int> FindNumbersWithSum(vector<int> array, int sum)
+		{
+			vector<int> ret;
+			if (array.size() <= 1)
+				return ret;
+			int low = 0;
+			int high = array.size() - 1;
+			while (low < high)
+			{
+				long long curSum = array[low] + array[high];
+				if (curSum == sum)
+				{
+					ret.push_back(array[low]);
+					ret.push_back(array[high]);
+					return ret;
+				}
+				else if (curSum > sum)
+					high++;
+				else
+					low++;
+			}
+			return ret;
+		}
+		//左旋转字符串
+		string LeftRotateString(string str, int n)
+		{
+			auto reverse_str = [](string& str, int low, int high)
+			{
+				while (low < high)
+					swap(str[low++], str[high--]);
+			};
+			if (str.size() == 0)
+				return str;
+			n = n%str.size();
+			reverse_str(str, 0, n-1);
+			reverse_str(str, n, str.size() - 1);
+			reverse_str(str, 0, str.size() - 1);
+			return str;
+		}
+		//翻转单词顺序列
+		string ReverseSentence(string str)
+		{
+			auto reverse_str = [](string& str, int low, int high)
+			{
+				while (low < high)
+					swap(str[low++], str[high--]);
+			};
+			if (str.size() == 0)
+				return str;
+			int low = 0;
+			int high = 0;
+			while (high < str.size())
+			{
+				while ( high < str.size() && str[high] != ' ')
+					high++;
+				reverse_str(str, low, high-1);
+				high++;
+				low = high;
+			}
+			reverse_str(str, 0, str.size() - 1);
+			return str;
+		}
+		//孩子们的游戏(圆圈中最后剩下的数),约瑟夫环问题
+		int LastRemaining_Solution(unsigned int n, unsigned int m)
+		{
+			if (n < 1 || m < 1) 
+				return -1;
+			vector<int> array(n,1);
+			int i = -1, step = 0, count = n;
+			while (count > 0)
+			{   
+				i++;
+				if (i >= n) 
+					i = 0;
+				if (array[i] == -1)
+					continue;
+				step++;
+				if (step == m) 
+				{    
+					array[i] = -1;
+					step = 0;
+					count--;
+				}
+			}
+			return i;
+		}
+		//求1+2+3+...+n
+		class Sum_solution{
+		public:
+			//利用&&的短路特点
+			int sum1(int number)
+			{
+				int sum = number;
+				number && (sum += sum1(--number));
+				return sum;
+			}
+			//方法2，利用构造函数，执行number遍构造函数，需要单独运行
+#if 0
+			class Temp
+			{
+			public:
+				Temp()
+				{
+					Num++;
+					Sum += Num;
+				}
+				static int Num;
+				static int Sum;
+			};
+
+			int Temp::Num = 0;
+			int Temp::Sum = 0;
+
+			//方法2需要单独运行
+			int sum2(int number)
+			{
+				Temp *a = new Temp[number];
+				delete []a;
+				a = nullptr;
+				return Temp::Sum;
+			}
+#endif
+		};
+		//不用加减乘除做加法
+		int Add(int num1, int num2)
+		{
+			int sum=0, carry = 0;
+			do 
+			{
+				sum = num1 ^ num2;
+				carry = (num1 & num2) << 1;
+
+				num1 = sum;
+				num2 = carry;
+			} while (num2 !=0);
+			return num1;
+		}
+		//把字符串转换成整数
+		int StrToInt(string str)
+		{
+			int sum = 0;
+			int flag = 0;
+			if (str.size() == 0)
+				return sum;
+			for (int i = 0; i < str.size();i++)
+			{
+				if (i == 0 && (str[i] == '+' || str[i] == '-'))
+					flag = 1;
+				else if (isdigit(str[i]))
+					sum = sum * 10 + str[i] - '0';
+				else
+					return 0;
+			}
+			if (flag && str[0] == '-')
+				return -1 * sum;
+			return sum;
+		}
+		//数组中重复的数字,该种方法不需要额外的空间或者hashmap来保存
+		//时间复杂度O(N)，空间复杂度O(1)
+		bool duplicate(int numbers[], int length, int* duplication)
+		{
+			for (int i = 0; i < length; i++) 
+			{
+				int index = numbers[i];
+				if (index >= length) 
+				{
+					index -= length;
+					*duplication = numbers[index] - length;
+					return true;
+				}
+				numbers[index] = numbers[index] + length;
+			}
+			return false;
+		}
+		//构建乘积数组
+		vector<int> multiply(const vector<int>& A) 
+		{
+			int n = A.size();
+			vector<int> b(n);
+			int ret = 1;
+			for (int i = 0; i < n; ret *= A[i++]){
+				b[i] = ret;
+			}
+			ret = 1;
+			for (int i = n - 1; i >= 0; ret *= A[i--]){
+				b[i] *= ret;
+			}
+			return b;
+		}
+		//正则表达式匹配，leetcode，递归
+		bool match(char* str, char* pattern)
+		{
+			if (*pattern == '\0')
+				return *str == '\0';
+			if (*(pattern + 1) == '*')
+			{
+				while (*pattern == *str || (*pattern == '.' && *str != '\0'))
+				{
+					if (match(str, pattern + 2))
+						return true;
+					str++;
+				}
+				return match(str, pattern + 2);
+			}
+			else
+			{
+				if (*pattern == *str || (*pattern == '.' && *str != '\0'))
+					return match(str + 1, pattern + 1);
+				else
+					return false;
+			}
+		}
+		//表示数值的字符串,字符串的判断
+		bool isNumeric(char* string)
+		{
+			int len = strlen(string);
+			int i = 0, dot = 0, nume = 0;
+			if (len == 0)
+				return true;
+			if (string[0] == '+' || string[0] == '-')
+				i++;
+			while (i < len)
+			{
+				if (string[i] >= '0'&&string[i] <= '9')
+					i++;
+				else if (string[i] == '.')
+				{
+					if (nume > 0)
+						return false;
+					dot++;
+					i++;
+				}
+				else if (string[i] == 'e' || string[i] == 'E')
+				{
+					nume++;
+					i++;
+					if (string[i] == '\0')
+						return false;
+					if (string[i] == '-' || string[i] == '+')
+						i++;
+				}
+				else
+					return false;
+
+			}
+			if (dot > 1 || nume > 1)
+				return false;
+			return true;
+		}
+		//表示数值的字符串,正则表达式匹配
+		bool isNumeric_v2(char* string)
+		{
+			std::string s(string);
+			std::regex e("[\\+-]?[0-9]*(\\.[0-9]*)?([eE][\\+-]?[0-9]+)?");
+
+			if (std::regex_match(s, e))
+				return true;
+			else
+				return false;
+		}
+		//链表中环的入口结点，方法1，快慢指针，数学证明
+		ListNode* EntryNodeOfLoop(ListNode* pHead)
+		{
+			if (pHead == nullptr)
+				return nullptr;
+			ListNode *speed = pHead;
+			ListNode *slow = pHead;
+			while (speed != nullptr && speed->next != nullptr)
+			{
+				speed = speed->next->next;
+				slow = slow->next;
+				if (speed == slow)
+				{
+					speed = pHead;
+					while (slow != speed)
+					{
+						slow = slow->next;
+						speed = speed->next;
+					}
+					return speed;
+				}
+			}
+			return nullptr;
+		}
+		ListNode* meetingNode(ListNode* head)
+		{
+			if (head == nullptr)
+				return nullptr;
+
+			ListNode *slow = head->next;
+			if (slow == nullptr)
+				return nullptr;
+
+			ListNode *fast = slow->next;
+			while (slow != nullptr && fast != nullptr)
+			{
+				if (slow == fast)
+				{
+					return fast;
+				}
+				slow = slow->next;
+				fast = fast->next;
+
+				if (fast != slow){
+					fast = fast->next;
+				}
+			}
+			return nullptr;
+		}
+		//链表中环的入口结点，方法2，先快慢指针得到环内节点，计算环内节点数目，然后求入口
+		ListNode* EntryNodeOfLoop_v2(ListNode* pHead)
+		{
+			ListNode* merge_Node = meetingNode(pHead);
+			if (merge_Node == nullptr)
+				return nullptr;
+			//得到环中的节点个数
+			int nodesInLoop = 1;
+			ListNode *p1 = merge_Node;
+			while (p1->next != merge_Node){
+				p1 = p1->next;
+				++nodesInLoop;
+			}
+			//先移动p1环的节点个数步
+			p1 = pHead;
+			for (int i = 0; i < nodesInLoop; i++){
+				p1 = p1->next;
+			}
+			//移动p1，p2
+			ListNode *p2 = pHead;
+			while (p1 != p2){
+				p1 = p1->next;
+				p2 = p2->next;
+			}
+			return p1;
+		}
+		//二叉树的下一个结点,即求二叉树的后继节点
+		TreeLinkNode* GetNext(TreeLinkNode* pNode)
+		{
+			if (pNode == nullptr)
+			{
+				return nullptr;
+			}
+			//存在右子树，则返回右子树中最左节点
+			if (pNode->right != nullptr)
+			{
+				pNode = pNode->right;
+				while (pNode->left != nullptr)
+				{
+					pNode = pNode->left;
+				}
+				return pNode;
+			}
+			while (pNode->next != nullptr)
+			{
+				//如果是父节点的右子树，则需要不断上升
+				if (pNode->next->left == pNode)
+					return pNode->next;
+				pNode = pNode->next;
+			}
+			return nullptr;
+		}
 	};
 }
 
@@ -1145,12 +1541,8 @@ int main(){
 	node8.next = &node9;
 
 
-	vector<int> dat = { 2, 4, 3, 6, 3, 2, 5, 5 };
-	int num1 = 0;
-	int num2 = 0;
-	sol.FindNumsAppearOnce(dat,&num1,&num2);
-	//cout << ret;
-	
+	auto ret = sol.EntryNodeOfLoop_v2(nullptr);
+	cout << ret;
 
 	system("pause");
 }
