@@ -180,6 +180,227 @@ public:
         }
         return f3;
     }
+
+    /*
+     * title:二进制中1的个数
+     */
+    int  NumberOf1(int n) {
+        int iCnt = 0;
+        while(n){
+            ++iCnt;
+            n = n & (n-1);
+        }
+        return iCnt;
+    }
+
+    /*
+     * title:翻转链表
+     */
+    ListNode* ReverseList(ListNode* pHead) {
+        if(pHead == NULL || pHead->next == NULL)
+            return pHead;
+        ListNode* pPre = NULL;
+        ListNode* pCur = pHead;
+        ListNode* pNext = pHead->next;
+        while(pCur){
+            pNext = pCur->next;
+            pCur->next = pPre;
+            pPre = pCur;
+            pCur = pNext;
+        }
+        return pPre;
+    }
+
+    /*
+     * title：合并两个排序的链表
+     */
+    ListNode* Merge(ListNode* pHead1, ListNode* pHead2){
+        if(pHead1 == NULL)
+            return pHead2;
+        if(pHead2 == NULL)
+            return pHead1;
+        ListNode* pPre = new ListNode(0);
+        ListNode* pHead = pPre;
+        while(pHead1 != NULL && pHead2 != NULL){
+            if(pHead1->val <= pHead2->val){
+                pPre->next = pHead1;
+                pPre = pPre->next;
+                pHead1 = pHead1->next;
+            }else{
+                pPre->next = pHead2;
+                pPre = pPre->next;
+                pHead2 = pHead2->next;
+            }
+        }
+        if(pHead1){
+            while(pHead1){
+                pPre->next = pHead1;
+                pPre = pPre->next;
+                pHead1 = pHead1->next;
+            }
+        }
+        if(pHead2){
+            while(pHead2){
+                pPre->next = pHead2;
+                pPre = pPre->next;
+                pHead2 = pHead2->next;
+            }
+        }
+        return pHead->next;
+    }
+
+    /*
+     *title:树的子结构
+     */
+    bool HasSubtree(TreeNode* pRoot1, TreeNode* pRoot2){
+        bool bFind = false;
+        if(pRoot1 != NULL && pRoot2 != NULL){
+            if(pRoot1->val == pRoot2->val)
+                bFind = DoesTreeContain(pRoot1, pRoot2);
+            if(!bFind)
+                bFind = HasSubtree(pRoot1->left, pRoot2);
+            if(!bFind)
+                bFind = HasSubtree(pRoot1->right, pRoot2);
+        }
+        return bFind;
+    }
+    bool DoesTreeContain(TreeNode* pRoot1, TreeNode* pRoot2){
+        if(pRoot2 == NULL) return true;
+        if(pRoot1 == NULL) return false;
+        if(pRoot1->val != pRoot2->val)
+            return false;
+        return DoesTreeContain(pRoot1->left, pRoot2->left) &&
+                DoesTreeContain(pRoot1->right, pRoot2->right);
+    }
+
+    /*
+     * title: 树的镜像
+     */
+    void TreeMirror(TreeNode *pRoot) {
+
+        /*
+        if(pRoot == NULL) return;
+        TreeNode* pTmp = pRoot->right;
+        pRoot->right = pRoot->left;
+        pRoot->left = pTmp;
+        TreeMirror(pRoot->left);
+        TreeMirror(pRoot->right);
+         */
+
+        //非递归的写法
+        if(pRoot == NULL) return;
+        queue<TreeNode*> qNode;
+        qNode.push(pRoot);
+        while(!qNode.empty()){
+            TreeNode* pRootTmp = qNode.front();
+            TreeNode* pTmp = pRootTmp->right;
+            pRootTmp->right = pRootTmp->left;
+            pRootTmp->left = pTmp;
+            //判断子节点
+            if(pRootTmp->left) qNode.push(pRootTmp->left);
+            if(pRootTmp->right) qNode.push(pRootTmp->right);
+            qNode.pop();
+        }
+    }
+
+    /*
+     * title: 栈的压入和弹出序列
+     */
+    bool IsPopOrder(vector<int> pushV,vector<int> popV) {
+        if(pushV.empty() || popV.empty() || pushV.size() != popV.size())
+            return false;
+        stack<int> stackTmp;
+        stackTmp.push(pushV.front());
+        auto popIt = popV.begin();
+        auto pushIt = pushV.begin() + 1;
+        while(popIt != popV.end()) {
+            //如果顶部元素不是对应pop的元素，则一直压入
+            while (stackTmp.top() != *popIt && pushIt != pushV.end()) {
+                stackTmp.push(*pushIt++);
+            }
+            if(stackTmp.top() != *popIt) return false;
+            stackTmp.pop();
+            ++popIt;
+        }
+        return stackTmp.empty();
+    }
+
+    /*
+     * title：从上往下打印二叉树
+     */
+    vector<int> PrintFromTopToBottom(TreeNode* root) {
+        queue<TreeNode*> qNode;
+        vector<int> vNode;
+        if(root == NULL) return vNode;
+        qNode.push(root);
+        while(!qNode.empty()){
+            TreeNode* pRoot = qNode.front();
+            vNode.push_back(pRoot->val);
+            if(pRoot->left != NULL) qNode.push(pRoot->left);
+            if(pRoot->right != NULL) qNode.push(pRoot->right);
+            qNode.pop();
+        }
+        return vNode;
+    }
+
+
+    /*
+     * title：判断是否二叉搜索树的后续遍历序列
+     */
+    bool VerifySquenceOfBST(vector<int> sequence) {
+        if(sequence.empty()) return false;
+        if(sequence.size() == 1 ) return true;
+        int iRootVal = sequence.back();
+        //找到第一个比iRootVal大的元素
+        bool bFind = false;
+        int index = 0;
+        for (int i = 0; i < sequence.size()-1; ++i) {
+            if(sequence[i] > iRootVal){
+                bFind = true;
+                index = i;
+                break;
+            }
+        }
+        if(!bFind) return true;
+        for (int j = index+1; j < sequence.size() - 1; ++j) {
+            if(sequence[j] < iRootVal)
+                return false;
+        }
+        bool bLeft = true, bRight = true;
+        if(index != 0)
+            bLeft = VerifySquenceOfBST(vector<int>(sequence.begin(), sequence.begin() + index));
+        if(index != sequence.size() - 2)
+            bRight = VerifySquenceOfBST(vector<int>(sequence.begin() + index, sequence.begin() + sequence.size() - 1));
+        //再判断子序列
+        return  bLeft && bRight;
+    }
+
+    /*
+     * title: 二叉树中和为某一值得路径
+     */
+    vector<vector<int> > FindPath(TreeNode* root,int expectNumber) {
+        vector<int> vCurPath;
+        vector<vector<int> > vPath;
+        int iCurVal = 0;
+        if(root==nullptr) return vPath;
+        FindPathHelper(root, expectNumber, iCurVal, vPath, vCurPath);
+        return vPath;
+    }
+    void FindPathHelper(TreeNode* root,int expectNumber, int iCurVal, vector<vector<int>>& vPath, vector<int>  curPath){
+        curPath.push_back(root->val);
+        iCurVal += root->val;
+        if(root->left == nullptr && root->right == nullptr){
+            if(iCurVal == expectNumber)
+                vPath.push_back(curPath);
+            return;
+        }
+        if(root->left != nullptr)
+            FindPathHelper(root->left, expectNumber, iCurVal, vPath, curPath);
+        if(root->right != nullptr)
+            FindPathHelper(root->right, expectNumber, iCurVal, vPath, curPath);
+   }
+
+
 };
 
 
@@ -213,8 +434,9 @@ private:
 
 int main()
 {
-    auto pre = {41,1,1,0,1};
+    auto push = {5,4,3,2,1};
+    auto pop = {4,3,5,1,2};
     Solution sol;
-    std::cout << sol.rectCover(5) << std::endl;
+    std::cout << sol.VerifySquenceOfBST(push) << std::endl;
     return 0;
 }

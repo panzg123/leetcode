@@ -3,4 +3,4 @@ project(leetcode)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(leetcode offershow.cpp zg_tool.hpp)
+add_executable(leetcode zg_tool.hpp leetcode_tencent.cpp)
