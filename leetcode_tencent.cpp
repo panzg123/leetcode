@@ -135,10 +135,101 @@ public:
         }
         return s.substr(iLow, iHigh-iLow + 1);
     }
+
+    //字符串转换整型
+    int myAtoi(string str) {
+        if(str.empty()) return 0;
+        //先找到第一个非空字符
+        int idx = 0;
+        while( idx < str.size() && str[idx] == ' ' ){
+            ++idx;
+        }
+        if(idx >= str.size()) return 0; //无效
+        //第一个字符非法
+        if( !( (str[idx] <= '9' && str[idx] >= '0') || str[idx] == '+' || str[idx] == '-' )){
+            return 0;
+        }
+
+        bool bNeg = false;
+        if(str[idx] == '-') {
+            bNeg = true;
+            ++idx;
+        }else if(str[idx] == '+'){
+            ++idx;
+        }
+        long lRet = 0;
+        long lMaxInt = INT_MAX;
+        while(idx < str.size()){
+            if(str[idx] >= '0' && str[idx] <= '9'){
+                lRet = lRet*10 + str[idx] - '0';
+                ++idx;
+                if(lRet >= (lMaxInt+1)) break;
+            }else{
+                break;
+            }
+        }
+        if(!bNeg && lRet > INT_MAX) return INT_MAX;
+        if(bNeg && lRet > (lMaxInt + 1)) return INT_MIN;
+        return -1*lRet;
+    }
+
+    //最长公共前缀
+    string longestCommonPrefix(vector<string>& strs) {
+        if(strs.empty()) return "";
+        int iMax = 0;
+        bool bTerminate = false;
+        do{
+            char c;
+            if(strs.front().size() > iMax)
+                c = strs.front()[iMax];
+            else
+                break;
+            for (int i = 1; i < strs.size(); ++i) {
+                if(strs[i].size() <= iMax || strs[i][iMax] != c)
+                {
+                    bTerminate = true;
+                    break;
+                }
+            }
+            if(bTerminate) break;
+            ++iMax;
+        }while(true);
+        if(iMax == 0) return "";
+        return strs.front().substr(0,iMax);
+    }
+
+    //三数之和--左右夹逼
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> vRet;
+        std::sort(nums.begin(), nums.end());
+        if(nums.size() < 3) return vRet;
+        for (int i = 0; i < nums.size() - 2;++i) {
+            //这里要跳过重复的数
+            if( i && nums[i] == nums[i-1]) continue;
+            int j = i+1;
+            int k = nums.size() - 1;
+            while(j < k){
+                int iTotal = nums[i] + nums[j] + nums[k];
+                if(iTotal > 0)
+                    --k;
+                else if(iTotal < 0)
+                    ++j;
+                else
+                {
+                    vector<int> vItem = {nums[i], nums[j], nums[k]};
+                    vRet.push_back(vItem);
+                    --k;
+                    ++j;
+                    while( j < k && nums[j] == nums[j+1]) ++j; //跳过重复的解
+                }
+            }
+        }
+        return vRet;
+    }
 };
 
 int main()
 {
     Solution sol;
-    cout << sol.longestPalindrome("babad") << endl;
+    cout << sol.myAtoi("   -42") << endl;
 }
