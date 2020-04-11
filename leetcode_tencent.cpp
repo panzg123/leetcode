@@ -226,10 +226,61 @@ public:
         }
         return vRet;
     }
+
+    //最接近的三数之和
+    int threeSumClosest(vector<int>& nums, int target) {
+        int iMinSumDis = INT_MAX;
+        int iRetTraget = 0;
+        if(nums.size() < 3) return 0;
+        std::sort(nums.begin(), nums.end());
+        for (int i = 0; i < nums.size() - 2; ++i) {
+            int j = i + 1;
+            int k = nums.size() - 1;
+            while( j < k){
+                int sum = nums[i] + nums[j] + nums[k];
+                if(abs(sum - target) < iMinSumDis)
+                {
+                    iMinSumDis = abs(sum - target);
+                    iRetTraget = sum;
+                }
+                if(sum > target) --k;
+                else if(sum < target) ++j;
+                else
+                    return target;
+            }
+        }
+        return  iRetTraget;
+    }
+
+    //删除排序数组中的重复项
+    int removeDuplicates(vector<int>& nums) {
+        if(nums.empty()) return 0;
+        int iNewIdx = 0;
+        int iOldIdx = 1;
+        while(iOldIdx < nums.size()){
+            if(nums[iOldIdx] == nums[iNewIdx])
+                ++iOldIdx;
+            else
+                nums[++iNewIdx] = nums[iOldIdx++];
+        }
+        return iNewIdx + 1;
+    }
+
+
+    //反转字符串
+    void reverseString(vector<char>& s) {
+        int i = 0;
+        while( i  < (s.size() / 2) ){
+            swap(s[i], s[s.size() - 1 - i]);
+            ++i;
+        }
+    }
 };
 
 int main()
 {
     Solution sol;
-    cout << sol.myAtoi("   -42") << endl;
+    vector<char> nums = {'h','e','l','l','o'};
+    sol.reverseString(nums);
+    cout << ZgTool::tostr(nums);
 }
