@@ -275,12 +275,129 @@ public:
             ++i;
         }
     }
+
+    //反转字符串中的单词 III
+    string reverseWords(string s) {
+        int iBegin = 0;
+        int iEnd = 0;
+        //find the whitespace
+        while (iEnd < s.size())
+        {
+            while (s[iEnd] != ' ' && iEnd < s.size())
+            {
+                ++iEnd;
+            }
+            //cout << "iBegin=" << iBegin << ",iEnd=" << iEnd << endl;
+            //交换s[iBegin, iEnd-1]
+            for (size_t i = iBegin; i < iBegin + (iEnd - iBegin) / 2; i++)
+            {
+                swap(s[i], s[iEnd -1 -i+iBegin]);
+            }
+            iBegin = iEnd + 1;
+            ++iEnd; //跳过空格
+        }
+        return s;
+    }
+
+    //存在重复元素
+    bool containsDuplicate(vector<int>& nums) {
+        unordered_map<int,int> mCnt;
+        for(auto item : nums)
+        {
+            if(mCnt.count(item))
+                return true;
+            else
+                mCnt[item] = 1;
+        }
+        return false;
+    }
+
+    //合并两个有序数组
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        int idx1 = m-1;
+        int idx2 = n-1;
+        int newIdx = m + n -1;
+        while (idx1 >= 0 && idx2 >= 0)
+        {
+            if(nums1[idx1] > nums2[idx2])
+            {
+                nums1[newIdx--] = nums1[idx1--];
+            }
+            else
+            {
+                nums1[newIdx--] = nums2[idx2--];
+            }
+        }
+        while (idx1 >= 0)
+        {
+            nums1[newIdx--] = nums1[idx1--];
+        }
+
+        while (idx2 >= 0)
+        {
+            nums1[newIdx--] = nums2[idx2--];
+        }
+    }
+
+    //有效的括号
+    bool isValid(string s) {
+        if(s.empty()) return true;
+        stack<char> stData;
+        for(auto item : s)
+        {
+            if(item == '(' || item == '{' || item == '[')
+            {
+                stData.push(item);
+            }
+            else if(item == ')')
+            {
+                if (!stData.empty() && stData.top() == '(')
+                    stData.pop();
+                else
+                    return false;
+            }
+            else if(!stData.empty() && item == '}')
+            {
+                if (stData.top() == '{')
+                    stData.pop();
+                else
+                    return false;
+            }
+            else if(!stData.empty() && item == ']')
+            {
+                if (stData.top() == '[')
+                    stData.pop();
+                else
+                    return false;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        return stData.empty();
+    }
+
+    //盛最多水的容器
+    int maxArea(vector<int>& height) {
+        int iLow = 0;
+        int iHigh = height.size() - 1;
+        int iMaxArea = INT_MIN;
+        while(iLow < iHigh)
+        {
+            iMaxArea = max(iMaxArea, (iHigh - iLow)*(min(height[iLow], height[iHigh])));
+            height[iLow] < height[iHigh] ? ++iLow : --iHigh;
+        }
+        return iMaxArea;
+    }
 };
 
 int main()
 {
     Solution sol;
-    vector<char> nums = {'h','e','l','l','o'};
-    sol.reverseString(nums);
-    cout << ZgTool::tostr(nums);
+    vector<int> nums1 = {1,2,3,0,0,0};
+    vector<int> nums2 = {2,5,6};
+    
+    sol.merge(nums1,3, nums2,3);
+    cout << ZgTool::tostr(nums1) << endl;
 }
