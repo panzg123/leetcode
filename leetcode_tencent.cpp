@@ -390,14 +390,123 @@ public:
         }
         return iMaxArea;
     }
+
+    //字符串相乘
+    string StrAddHelper(const string& str1, const string& str2)
+    {
+        string sRetStr;
+        int iJinwei = 0;
+        int idxStr1 = str1.size() - 1;
+        int idxStr2 = str2.size() - 1;
+        while (idxStr1 >= 0 && idxStr2 >= 0)
+        {
+            int iAddVal = str1[idxStr1] - '0' + str2[idxStr2] - '0' + iJinwei;
+            iJinwei = iAddVal/10;
+            sRetStr.push_back(iAddVal%10 + '0');
+            --idxStr1;
+            --idxStr2;
+        }
+        //补齐剩余的数
+        while(idxStr1 >= 0)
+        {
+            int iAddVal = str1[idxStr1] - '0' + iJinwei;
+            iJinwei = iAddVal/10;
+            sRetStr.push_back(iAddVal%10 + '0');
+            --idxStr1;
+        }
+
+        while (idxStr2 >= 0)
+        {
+            int iAddVal = str2[idxStr2] - '0' + iJinwei;
+            iJinwei = iAddVal/10;
+            sRetStr.push_back(iAddVal%10 + '0');
+            --idxStr2;
+        }
+
+        if(iJinwei) sRetStr.push_back(iJinwei + '0');
+        
+        //反转字符串
+        std::reverse(sRetStr.begin(), sRetStr.end());
+        return sRetStr;
+    }
+    void TrimZero(string& str)
+    {
+        int idx = 0;
+        while(idx < str.size() && str[idx] == '0')
+        {
+            ++idx;
+        }
+        if(idx == str.size())
+            str = "0";
+        else
+        {
+            str = str.substr(idx);
+        }
+    }
+
+    //朴素方法，测试case都能通过，但是超时
+    string multiply(string num1, string num2) {       
+        string sRetStr = "0"; 
+        //先处理下0字符
+        TrimZero(num1);
+        TrimZero(num2);
+        if(num1 == "0" | num2 == "0") return sRetStr;
+
+        int iJinwei = 0;
+        for(int i = num2.size()-1; i >=0; --i)
+        {
+            iJinwei = 0;
+            for(int j = num1.size()-1; j >=0; --j)
+            {
+                int iMulRet = (num1[j] - '0') * (num2[i] - '0') + iJinwei;
+                iJinwei = iMulRet/10;
+                string sVal = std::to_string(iMulRet%10);
+                //插入N个0
+                if(j != (num1.size() -1) || i != (num2.size() -1))
+                    sVal.append(string(num1.size() + num2.size() -2 -i -j,'0'));
+                //cout << "i=" << i << ",j=" << j << "sVal=" << sVal << ",imulRet=" << iMulRet << ",iJinwei=" << iJinwei << ",sRet=" << sRetStr << endl;
+                sRetStr = StrAddHelper(sVal, sRetStr);
+                //cout << sRetStr << endl;
+            }
+
+            if(iJinwei)
+            {
+                string strTmp;
+                strTmp.push_back(iJinwei + '0');
+                strTmp.append(string( num1.size() +  (num2.size() - i -1), '0'));
+                sRetStr = StrAddHelper(sRetStr, strTmp);
+            }
+        }
+        return sRetStr;
+    }
+
+    //优化版 pass
+    string multiplyV2(string num1, string num2) 
+    {
+        string sRetStr(num1.size() + num2.size(), '0');
+        for(int i = num2.size()-1; i >=0; --i)
+        {
+            for(int j = num1.size()-1; j >=0; --j)
+            {
+                int iMulRet = (num1[j] - '0') * (num2[i] - '0') + (sRetStr[i+j+1]- '0');
+                sRetStr[i+j+1] = iMulRet%10 + '0';
+                sRetStr[i+j] += iMulRet/10;
+            }
+        }
+
+        //去除首部的0
+        for (size_t i = 0; i < sRetStr.size(); i++)
+        {
+            if(sRetStr[i] != '0')
+                return sRetStr.substr(i);
+        }
+        return "0";
+    }
 };
 
 int main()
 {
     Solution sol;
-    vector<int> nums1 = {1,2,3,0,0,0};
-    vector<int> nums2 = {2,5,6};
-    
-    sol.merge(nums1,3, nums2,3);
-    cout << ZgTool::tostr(nums1) << endl;
+    cout << sol.multiplyV2("99", "99");
+    //cout << ZgTool::tostr(nums1) << endl;
 }
