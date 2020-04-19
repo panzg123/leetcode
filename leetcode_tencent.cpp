@@ -10,6 +10,7 @@
 #include <set>
 #include <unordered_set>
 #include <stack>
+#include <climits>
 #include <queue>
 #include "zg_tool.hpp"
 using namespace std;
@@ -502,11 +503,338 @@ public:
         }
         return "0";
     }
+
+    //除自身以外数组的乘积-左右乘积
+    // O(N)空间复杂度
+    vector<int> productExceptSelf(vector<int>& nums) {
+        vector<int> vRetData(nums.size(), 1);
+        if(nums.empty() || nums.size() == 1)
+            return vRetData;
+        vector<int> vLeft(nums.size(),1); //第i个数左边的乘积
+        vector<int> vRight(nums.size(),1);//第i个数右边的乘积
+        for(size_t i = 1; i < nums.size(); ++i)
+        {
+            vLeft[i] = vLeft[i-1] * nums[i-1];
+        }
+        for(int i = nums.size() - 2;  i >= 0;--i)
+        {
+            vRight[i] = vRight[i+1] * nums[i+1];
+        }
+        //左右相乘
+        for(int i = 0; i < nums.size(); ++i)
+        {
+            vRetData[i] = vLeft[i] * vRight[i];
+        }
+        return vRetData;
+    }
+    //常数空间复杂度--实际上就是利用vRetData的空间，不再额外分配
+    vector<int> productExceptSelfV2(vector<int>& nums) {
+        vector<int> vRetData(nums.size(), 1);
+        if(nums.empty() || nums.size() == 1)
+            return vRetData;
+        for(size_t i = 1; i < nums.size(); ++i){
+            vRetData[i] = vRetData[i-1] * nums[i-1];
+        }
+
+        int iRightVal = 1; //用来记录从右往左的乘积
+        //从右往左遍历
+        for (int j = nums.size()-1; j >= 0; --j) {
+            vRetData[j] = vRetData[j]*iRightVal;
+            iRightVal *= nums[j];
+        }
+        return vRetData;
+    }
+
+    //逆转链表--递归
+    ListNode* reverseList(ListNode* head) {
+        if(head == nullptr)
+            return head;
+        if(head->next == nullptr)
+            return head;
+        //先逆转后部分
+        reverseListHelper(head);
+        return head;
+    }
+    ListNode* reverseListHelper(ListNode* &head)
+    {
+        if(head->next == nullptr)
+            return head;
+        ListNode* headNode = head->next;
+        ListNode* tailNode = reverseListHelper(headNode);
+        tailNode->next = head;
+        head->next = nullptr;
+        head = headNode;
+        return tailNode->next;
+    }
+
+    //逆转链表--迭代
+    ListNode* reverseListV2(ListNode* head) {
+        if(head == nullptr || head->next == nullptr)
+            return head;
+        ListNode* preNode = head;
+        head = head->next;
+        preNode->next = nullptr;
+        while (head != nullptr){
+            ListNode* nextNode  = head->next;
+            head->next = preNode;
+            preNode = head;
+            head = nextNode;
+        }
+        return preNode;
+    }
+
+    //链表两数相加
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        int iJinWei = 0;
+        ListNode *headNode = new ListNode(-1);
+        ListNode *preNode = headNode;
+        while(l1 != nullptr && l2 != nullptr){
+            int iVal = (l1->val + l2->val + iJinWei) % 10;
+            iJinWei = (l1->val + l2->val + iJinWei) / 10;
+            ListNode* curNode = new ListNode(iVal);
+            preNode->next = curNode;
+            preNode = curNode;
+
+            l1 = l1->next;
+            l2 = l2->next;
+        }
+
+        while (l1 != nullptr){
+            int iVal = (l1->val  + iJinWei) % 10;
+            iJinWei = (l1->val + iJinWei) / 10;
+            ListNode* curNode = new ListNode(iVal);
+            preNode->next = curNode;
+            preNode = curNode;
+            l1 = l1->next;
+        }
+
+        while (l2 != nullptr){
+            int iVal = (l2->val  + iJinWei) % 10;
+            iJinWei = (l2->val + iJinWei) / 10;
+            ListNode* curNode = new ListNode(iVal);
+            preNode->next = curNode;
+            preNode = curNode;
+            l2 = l2->next;
+        }
+
+        //如果还有进位，则新建
+        if(iJinWei != 0){
+            ListNode* curNode = new ListNode(iJinWei);
+            preNode->next = curNode;
+            preNode = curNode;
+        }
+        return headNode->next;
+    }
+
+    //合并两个有序链表
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode* TmpHead = new ListNode(-1);
+        ListNode* preNode = TmpHead;
+        while (l1 != nullptr && l2 != nullptr){
+            if(l1->val < l2->val){
+                preNode->next = l1;
+                preNode = preNode->next;
+                l1 = l1->next;
+            }else{
+                preNode->next = l2;
+                preNode = preNode->next;
+                l2 = l2->next;
+            }
+        }
+        while (l1 != nullptr){
+            preNode->next = l1;
+            preNode = preNode->next;
+            l1 = l1->next;
+        }
+        while (l2 != nullptr){
+            preNode->next = l2;
+            preNode = preNode->next;
+            l2 = l2->next;
+        }
+        return TmpHead->next;
+    }
+
+    ListNode* findMinNode(vector<ListNode*>& lists){
+        int iMinVal = INT_MAX;
+        int iNodeIdx = -1;
+        for(auto it = lists.begin(); it != lists.end(); ++it){
+            if(it.operator*() != nullptr && it.operator*()->val < iMinVal){
+                iNodeIdx = distance(lists.begin(), it);
+                iMinVal = it.operator*()->val;
+            }
+        }
+        //如果存在最小数
+        if(iNodeIdx != -1){
+            ListNode* retNode = lists[iNodeIdx];
+            lists[iNodeIdx] = retNode->next;
+            return retNode;
+        }
+        return nullptr;
+    }
+    //合并K个排序链表
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        ListNode* tmpNode = new ListNode(-1);
+        ListNode* preNode = tmpNode;
+        ListNode* minNode = findMinNode(lists);
+        while (minNode != nullptr){
+            preNode->next = minNode;
+            preNode = preNode->next;
+            minNode = findMinNode(lists);
+        }
+        return tmpNode->next;
+    }
+
+    void PrintList(ListNode* node){
+        while(node != nullptr)
+        {
+            cout << node->val << endl;
+            node = node->next;
+        }
+    }
+
+    //旋转链表
+    ListNode* rotateRight(ListNode* head, int k) {
+        if(head == nullptr || k == 0) return head;
+        //先计算size
+        int iNodeCnt = 0;
+        ListNode* node = head;
+        ListNode* preNode = new ListNode(-1);
+        preNode->next = node;
+        while (node != nullptr){
+            ++iNodeCnt;
+            preNode = node;
+            node = node->next;
+        }
+        k = k%iNodeCnt;
+        //先把链表连起来
+        preNode->next = head;
+        //PrintList(head);
+        //找到要断开的位置，即第iNodeCnt-k处
+        node = head;
+        int iTmpCnt = iNodeCnt - k; //第iNodeCnt-k处置空
+        while(iTmpCnt-- > 1){
+            node = node->next;
+        }
+        ListNode* retNode = node->next;
+        node->next = nullptr;
+        return retNode;
+    }
+
+    //判断链表中是否有环
+    bool hasCycle(ListNode *head) {
+        if(head == nullptr || head->next == nullptr) return false;
+        ListNode* slowNode = head;
+        ListNode* fastNode = head;
+        while(slowNode != nullptr && fastNode != nullptr){
+            slowNode = slowNode->next;
+            fastNode = fastNode->next == nullptr ? nullptr :fastNode->next->next;
+            if(slowNode == fastNode) return true;
+        }
+        return false;
+    }
+
+    //环形链表 II -- 找出环形节点入口
+    ListNode *detectCycle(ListNode *head) {
+        if(head == nullptr || head->next == nullptr) return nullptr;
+        ListNode* slowNode = head;
+        ListNode* slowNode2 = head;
+        ListNode* fastNode = head;
+        while(slowNode != nullptr && fastNode != nullptr){
+            slowNode = slowNode->next;
+            fastNode = fastNode->next == nullptr ? nullptr :fastNode->next->next;
+            if(slowNode == fastNode)
+            {
+                while (slowNode2 != slowNode){
+                    slowNode = slowNode->next;
+                    slowNode2 = slowNode2->next;
+                }
+                return slowNode;
+            }
+        }
+        return nullptr;
+    }
+
+
+    //相交链表--找到两个单链表相交的起始节点
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        if(headA == nullptr || headB == nullptr)
+            return nullptr;
+        int iListLenA = 0;
+        int iListLenB = 0;
+        ListNode* nodeA = headA;
+        ListNode* nodeB = headB;
+        while (nodeA != nullptr){
+            ++iListLenA;
+            nodeA = nodeA->next;
+        }
+        while (nodeB != nullptr){
+            ++iListLenB;
+            nodeB = nodeB->next;
+        }
+
+        //长链表先走N步
+        int iStepCnt = abs(iListLenB - iListLenA);
+        nodeB  = headB;
+        nodeA  = headA;
+        if(iListLenA < iListLenB){
+            while (iStepCnt--){
+                nodeB = nodeB->next;
+            }
+        }else{
+            while (iStepCnt--){
+                nodeA = nodeA->next;
+            }
+        }
+
+        //下面循环比较
+        while(nodeA != nullptr && nodeB != nullptr){
+            if(nodeA == nodeB)
+                return nodeA;
+            nodeA = nodeA->next;
+            nodeB = nodeB->next;
+        }
+        return nullptr;
+    }
+
+    //删除链表中的节点--删除指定节点node
+    void deleteNode(ListNode* node) {
+        node->val = node->next->val;
+        ListNode* tmpNode = node->next;
+        node->next = node->next->next;
+        delete tmpNode;
+    }
+
 };
 
 int main()
 {
     Solution sol;
-    cout << sol.multiplyV2("99", "99");
+    ListNode node1(4);
+    ListNode node2(1);
+    ListNode node3(8);
+    ListNode node4(4);
+    ListNode node5(5);
+    node1.next = &node2;
+    node2.next = &node3;
+    node3.next = &node4;
+    node4.next = &node5;
+
+    ListNode node6(5);
+    ListNode node7(0);
+    node6.next = &node7;
+    node7.next = &node2;
+
+//    ListNode node6(4);
+//    node4.next =&node5;
+//    node5.next =&node6;
+//
+//    ListNode node7(1);
+//    ListNode node8(2);
+//    node7.next = &node8;
+
+
+    auto node = sol.getIntersectionNode(&node1, &node6);
+    sol.PrintList(node);
+
     //cout << ZgTool::tostr(nums1) << endl;
 }
