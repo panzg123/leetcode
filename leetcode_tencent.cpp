@@ -503,16 +503,94 @@ public:
         return "0";
     }
 
-    //螺旋矩阵
+    //螺旋矩阵--上下左右依次打印
     vector<int> spiralOrder(vector<vector<int>>& matrix) {
-        
+        vector<int> vRet;
+        if(matrix.empty() || matrix[0].empty()) return vRet;
+        int iRowNum = matrix.size() - 1;
+        int iColNum = matrix[0].size() - 1;
+
+        int iRowIdx = 0, iColIdx = 0;
+        while (iRowIdx <= iRowNum && iColIdx <= iColNum)
+        {
+            //cout << iRowIdx << "\t" << iRowNum << "\t" << iColIdx << "\t" << iColNum << endl;
+            //打印上面一行
+            if(iColIdx <= iColNum)
+            {
+                for (size_t i = iColIdx; i <= iColNum; i++)
+                {
+                    vRet.push_back(matrix[iRowIdx][i]);
+                }
+            }
+            //右边一列
+            if(iRowIdx < iRowNum)
+            {
+                for(size_t i = iRowIdx+1; i < iRowNum; i++)
+                    vRet.push_back(matrix[i][iColNum]);
+            }
+            //下边一行
+            if(iRowIdx < iRowNum)
+            {
+                for (int i = iColNum; i >= iColIdx; i--)
+                {
+                    vRet.push_back(matrix[iRowNum][i]);
+                }
+                
+            }
+            //左边一列
+            if(iColIdx < iColNum)
+            {
+                for(int i = iRowNum - 1; i > iRowIdx; i--)
+                    vRet.push_back(matrix[i][iColIdx]);
+            }
+
+            ++iColIdx;
+            ++iRowIdx;
+            --iColNum;
+            --iRowNum;
+            //cout << "vRet=" << ZgTool::tostr(vRet) << endl;
+        }   
+        return vRet;
     }
-    
+
+    //螺旋矩阵 II
+    vector<vector<int>> generateMatrix(int n) {
+       vector<vector<int>> matrix(n, vector<int>(n,0)); //开辟空间
+       int iRowIdx = 0 ;
+       int iRowNum = n - 1;
+
+        int iValue = 1;
+        while(iRowIdx < iRowNum)
+        {
+            
+            for(size_t i = iRowIdx; i <= iRowNum; ++i)
+                matrix[iRowIdx][i] = iValue++;
+            for(size_t i = iRowIdx + 1; i < iRowNum; ++i)
+                matrix[i][iRowNum] = iValue++;
+            for(int i = iRowNum; i >= iRowIdx; --i)
+                matrix[iRowNum][i] = iValue++;
+            for(int i = iRowNum - 1; i > iRowIdx; --i)
+                matrix[i][iRowIdx] = iValue++;
+            ++iRowIdx;
+            --iRowNum;
+        }
+
+        //奇数最后必然iRowIdx==iRowCol
+        if(iRowIdx == iRowNum)
+            matrix[iRowIdx][iRowIdx] = iValue;
+        return matrix;
+    }
+
 };
 
 int main()
 {
     Solution sol;
-    cout << sol.multiplyV2("99", "99");
+    vector<vector<int>> matrix;
+
+    auto ret = sol.generateMatrix(3);
+    cout << ZgTool::tostr(ret[0]) << endl;
+    cout << ZgTool::tostr(ret[1]) << endl;
+    cout << ZgTool::tostr(ret[2]) << endl;
     //cout << ZgTool::tostr(nums1) << endl;
 }
