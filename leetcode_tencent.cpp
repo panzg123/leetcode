@@ -11,6 +11,7 @@
 #include <unordered_set>
 #include <stack>
 #include <queue>
+#include <climits>
 #include "zg_tool.hpp"
 using namespace std;
 
@@ -882,25 +883,127 @@ public:
         delete tmpNode;
     }
 
+
+    //整数反转
+    int reverse(int x) {
+        if(x == INT_MIN) return 0;
+        bool bNeg = false;
+        if(x < 0)
+        {
+            bNeg = true;
+            x = abs(x);
+        }
+        long lRet = 0;
+        long lIntMax = INT_MAX;
+        while (x)
+        {
+            lRet = lRet * 10 + x % 10;
+            x /= 10;
+            if(lRet > (bNeg ? lIntMax + 1 : lIntMax) ) return 0;
+        }
+        return bNeg ? 0 - lRet : lRet;
+    }
+
+    //是否回文整数
+    bool isPalindrome(int x) {
+        if(x < 0 ) return false;
+        int iNum = reverse(x);
+        return iNum == x;
+    }
+
+    //给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素
+    int singleNumber(vector<int>& nums) {
+        if(nums.empty()) return 0;
+        int iTmpData = nums.front();
+        for(auto it = nums.begin() + 1; it != nums.end(); ++it){
+            iTmpData ^= *it;
+        }
+        return iTmpData;
+    }
+
+    //多数元素--数组中占大部分的元素
+    int majorityElement(vector<int>& nums) {
+        if(nums.empty()) return 0;
+        int iMarjorNum = nums.front();
+        int iCnt = 1;
+        for(auto it = nums.begin() + 1; it != nums.end(); ++it)
+        {
+            if(*it == iMarjorNum) //如果相同，计数加1
+                ++iCnt;
+            else if(iCnt == 1) //计数归为1，则当前元素可能是最多出现次数的
+                iMarjorNum = *it;
+            else  //计数减1
+                --iCnt;
+        }
+        return iMarjorNum;
+    }
+
+    //2的幂
+    bool isPowerOfTwo(int n) {
+        while (n%2 != 0){
+            n /= 2;
+        }
+        return n == 1;
+    }
+
+    bool isPowerOfTwoV2(int n){
+        if(n <= 0) return false;
+        int iCnt = 0;
+        while(n){  //此处统计1的个数
+            ++iCnt;
+            n = n&(n-1);
+        }
+        return iCnt == 1;
+    }
+
+    //链表排序---冒泡排序-超时
+    ListNode* sortList(ListNode* head) {
+        ListNode tmpPreHead(-1);
+        tmpPreHead.next = head;
+        ListNode* pre = &tmpPreHead;
+        ListNode* curNode = pre->next;
+        ListNode* endNode = nullptr;
+        while(curNode != endNode) {
+            pre = &tmpPreHead;
+            while (curNode != endNode) {
+                //cout << "curNode.val=" << curNode->val << endl;
+                if (curNode->next != nullptr && curNode->val > curNode->next->val){
+                    ListNode* tmp = curNode->next->next;
+                    pre->next = curNode->next;
+                    curNode->next->next = curNode;
+                    curNode->next = tmp;
+
+                    pre = pre->next;  //更新pre，curnode不变
+                } else{
+                    pre = curNode;
+                    curNode = curNode->next;
+                }
+            }
+            endNode = pre;
+            curNode = tmpPreHead.next;
+        }
+        return tmpPreHead.next;
+    }
+
 };
 
 int main()
 {
     Solution sol;
     ListNode node1(4);
-    ListNode node2(1);
-    ListNode node3(8);
-    ListNode node4(4);
-    ListNode node5(5);
+    ListNode node2(2);
+    ListNode node3(1);
+    ListNode node4(3);
+//    ListNode node5(5);
     node1.next = &node2;
     node2.next = &node3;
     node3.next = &node4;
-    node4.next = &node5;
+//    node4.next = &node5;
 
-    ListNode node6(5);
-    ListNode node7(0);
-    node6.next = &node7;
-    node7.next = &node2;
+//    ListNode node6(5);
+//    ListNode node7(0);
+//    node6.next = &node7;
+//    node7.next = &node2;
 
 //    ListNode node6(4);
 //    node4.next =&node5;
@@ -911,8 +1014,9 @@ int main()
 //    node7.next = &node8;
 
 
-    auto node = sol.getIntersectionNode(&node1, &node6);
-    sol.PrintList(node);
+    sol.PrintList(&node1);
+    auto head = sol.sortList(&node1);
+    sol.PrintList(head);
 
     //cout << ZgTool::tostr(nums1) << endl;
 }
