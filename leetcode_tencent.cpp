@@ -883,6 +883,73 @@ public:
         delete tmpNode;
     }
 
+    // 数组中的第K个最大元素---堆排序
+    int findKthLargest(vector<int>& nums, int k) {
+        if(nums.size() < k) return 0;
+        //first make_heap min k length
+        vector<int> vheap(nums.begin(), nums.begin() + k);
+        make_heap(vheap.begin(), vheap.end(), greater<int>());
+        for (size_t i = k; i < nums.size(); i++)
+        {
+            int iMin = vheap.front();
+            //cout << nums[i] << "\t" << iMin << endl;
+            if(nums[i] > iMin){ //需要插入该元素
+                pop_heap(vheap.begin(), vheap.end(), greater<int>());
+                vheap[k-1] = nums[i];
+                push_heap(vheap.begin(), vheap.end(), greater<int>());
+            }
+        }
+        return vheap.front();
+    }
+
+    int findKthLargestByPriorityQueue(vector<int>& nums, int k) {
+        priority_queue<int, vector<int>, greater<int>> queueNums; //构造小顶堆，优先队列
+        for (size_t i = 0; i < k; i++)
+        {
+            queueNums.push(nums[i]);
+        }
+        for (size_t i = k; i < nums.size(); i++)
+        {
+            if(queueNums.top() < nums[i])
+            {
+                queueNums.pop();
+                queueNums.push(nums[i]);
+            }
+        }
+        return queueNums.top();   
+    }
+
+    //通过partion算法来排序，求第nums.size() - k大的数
+    int getRandNum(){
+        unsigned int uNowTime = time(NULL);
+        srand(uNowTime);
+        return rand();
+    }
+    int PartitionSort(vector<int>& nums, int left, int right, int k){
+        //先随机选择一个pivot
+        while(left < right){
+            int  PivotIdx = getRandNum()%(right - left) + left;
+            //交换right节点
+            swap(nums[PivotIdx], nums[right]);
+            int iStoreIdx = left;
+            for (size_t i = left; i < right; i++){
+                if(nums[i] < nums[right]){  //小于则交换节点
+                    swap(nums[i], nums[iStoreIdx]);
+                    ++iStoreIdx;
+                }
+            }
+            //交换回pivot节点
+            swap(nums[iStoreIdx], nums[right]);
+            if(iStoreIdx == nums.size() - k) return nums[iStoreIdx];
+            else if(iStoreIdx < nums.size() - k) left = iStoreIdx + 1;
+            else right = iStoreIdx - 1;         
+        }
+        return nums[left];
+    }
+    //12ms,时间最快
+    int findKthLargestByPartition(vector<int>& nums, int k) {
+        return PartitionSort(nums,0, nums.size()-1, k);
+    }
 
     //整数反转
     int reverse(int x) {
@@ -1082,8 +1149,11 @@ int main()
 //    node7.next = &node8;
 
 
-    vector<int> nums = {1};
-    cout << sol.search(nums,0) << endl;
+    //auto node = sol.getIntersectionNode(&node1, &node6);
+    //sol.PrintList(node);
+
+    vector<int> nums = {33,2,1,5,6,4};
+    cout << sol.findKthLargestByPartition(nums,2) << endl;
 
     //cout << ZgTool::tostr(nums1) << endl;
 }
