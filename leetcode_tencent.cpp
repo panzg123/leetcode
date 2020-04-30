@@ -957,7 +957,7 @@ public:
     }
 
     //链表排序---冒泡排序-超时
-    ListNode* sortList(ListNode* head) {
+    ListNode* sortListBubble(ListNode* head) {
         ListNode tmpPreHead(-1);
         tmpPreHead.next = head;
         ListNode* pre = &tmpPreHead;
@@ -983,6 +983,74 @@ public:
             curNode = tmpPreHead.next;
         }
         return tmpPreHead.next;
+    }
+
+    //链表排序--使用归并排序
+    ListNode* sortList(ListNode* head){
+        if(head == nullptr || head->next == nullptr){
+            return head;
+        }
+        //通过快慢指针来实现链表从中拆分
+        ListNode* fast = head, *slow = head;
+        while (fast->next != nullptr && fast->next->next != nullptr){
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        ListNode* tailNode = slow;
+        slow = slow->next;
+        tailNode->next = nullptr;
+
+        head = sortList(head);
+        slow = sortList(slow);
+        return mergeList(head, slow);
+    }
+
+    ListNode* mergeList(ListNode* l1, ListNode* l2){
+        ListNode preHead(-1); //临时节点
+        ListNode *preNode = &preHead;
+        while (l1 != nullptr && l2 != nullptr){
+            if(l1->val < l2->val){
+                preNode->next = l1;
+                l1 = l1->next;
+            }else{
+                preNode->next = l2;
+                l2 = l2->next;
+            }
+            preNode = preNode->next;
+        }
+        preNode->next = (l1 == nullptr) ? l2 : l1;
+        return preHead.next;
+    }
+
+    //搜索旋转排序数组--数组中不存在重复元素
+    int search(vector<int>& nums, int target) {
+        if(nums.empty()) return -1;
+        int low = 0, high = nums.size() - 1;
+        while (low <= high){
+            const int mid = low + (high - low) / 2;
+            if (nums[mid] == target)
+                return mid;
+            if (nums[low] == nums[mid]) //这种情况很特殊，比如{1,0,1,1,1} 和 {1,1,1,0,1}
+            {
+                ++low;
+                continue;
+            }
+            if (nums[low] <= nums[mid]) //左边升序
+            {
+                if (nums[low] <= target && target < nums[mid])
+                    high = mid - 1;
+                else
+                    low = mid + 1;
+            }
+            else //右边升序
+            {
+                if (nums[mid] < target && target <= nums[high])
+                    low = mid + 1;
+                else
+                    high = mid - 1;
+            }
+        }
+        return -1;
     }
 
 };
@@ -1014,9 +1082,8 @@ int main()
 //    node7.next = &node8;
 
 
-    sol.PrintList(&node1);
-    auto head = sol.sortList(&node1);
-    sol.PrintList(head);
+    vector<int> nums = {1};
+    cout << sol.search(nums,0) << endl;
 
     //cout << ZgTool::tostr(nums1) << endl;
 }
