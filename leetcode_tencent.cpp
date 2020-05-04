@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <set>
 #include <unordered_set>
+#include <list>
 #include <stack>
 #include <queue>
 #include <climits>
@@ -1051,7 +1052,347 @@ public:
         }
         return tmpPreHead.next;
     }
+    //二叉树中第K小的节点
+    //思路和partiontion一致，如果左子树的节点个数等于k-1，则改Kth=root；如果做左子树节点个数小于k-1则在右子树；如果左子树节点个数大于k-1，则在左子树
+    int KthSmallestHelper(TreeNode* root){ //用于统计二叉树节点的个数
+        if(root == nullptr) return 0;
+        if(root->left == nullptr && root->right == nullptr) return 1;
+        return KthSmallestHelper(root->left) + KthSmallestHelper(root->right) + 1;
+    }
+    int kthSmallest(TreeNode* root, int k) {
+        int leftNum = KthSmallestHelper(root->left);
+        if(leftNum == k - 1) return root->val;
+        else if(leftNum > k - 1) return kthSmallest(root->left, k);
+        else return kthSmallest(root->right, k - leftNum - 1);
+    }
 
+    //二叉树的最大深度--递归解决
+    int maxDepth(TreeNode* root) {
+        if(root == nullptr) return 0;
+        if(root->left == nullptr && root->right == nullptr) return 1;
+        return max(maxDepth(root->left) , maxDepth(root->right)) + 1;
+    }
+
+    //二叉树的最大路径和-递归解决
+    //思路：dfs遍历，一个临时变量保存已遍历的每种路径的最大值
+    int maxPathSum(TreeNode* root) {
+        maxPathSumDfs(root);
+        return maxPathSumVal;
+    }
+    int maxPathSumVal = INT_MIN;
+    int maxPathSumDfs(TreeNode* root){
+        if(root == nullptr) return 0;
+        int sum = root->val;
+        int sumLeft = maxPathSumDfs(root->left);
+        int sumRight = maxPathSumDfs(root->right);
+        if(sumLeft > 0) sum += sumLeft;
+        if(sumRight > 0) sum += sumRight;
+        //是否产生一个新的最大值
+        maxPathSumVal = max(maxPathSumVal, sum);
+        int maxLeftRight = max(sumLeft, sumRight);
+        return maxLeftRight > 0 ? root->val + maxLeftRight : root->val;
+    }
+
+    //二叉的最近公共祖先--如果二叉树为搜索树，则可以进行剪枝
+    //思路：在左右子树分别查找，三种情况，公共祖先为root, left 或者 right
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(root == nullptr || root == p || root == q)
+            return root;
+        TreeNode* left = lowestCommonAncestor(root->left, p ,q);
+        TreeNode* right = lowestCommonAncestor(root->right, p, q);
+        if(left != nullptr && right != nullptr) //分别位于左右两个子树
+            return root;
+        else if(left != nullptr && right == nullptr)
+            return left;
+        else return right;
+    }
+
+    //括号生成，每个位置有两种情况，左右括号--dfs遍历
+    vector<string> generateParenthesis(int n) {
+        vector<string> vRet;
+        string str;
+        generateParenthesisHelper(vRet, str, n, n);
+        return vRet;
+    }
+    void generateParenthesisHelper(vector<string>& vRet, string str, int leftNum, int rightNum){
+        if(leftNum == 0 && rightNum == 0){
+            cout << str << endl;
+            vRet.push_back(str);
+            return;
+        }
+        if(leftNum > 0) {
+            string strLeft = str;
+            strLeft.push_back('(');
+            generateParenthesisHelper(vRet, strLeft, leftNum - 1, rightNum);
+        }
+        if(rightNum > 0 && rightNum > leftNum){
+            str.push_back(')');
+            generateParenthesisHelper(vRet, str, leftNum, rightNum - 1);
+        }
+    }
+
+    //子集--每个数都有两种情况
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> vRet;
+        vector<int> path;
+        subsetsHelper(nums, 0 , vRet, path);
+        return vRet;
+    }
+
+    void subsetsHelper(vector<int>& nums, size_t idx, vector<vector<int>>& vRet, vector<int> path){
+        if(idx == nums.size()){
+            //cout << ZgTool::tostr(path) << "\tidx=" << idx << endl;
+            vRet.push_back(path);
+            return;
+        }
+        //不选择
+        {
+            subsetsHelper(nums, idx + 1, vRet, path);
+        }
+
+        //选择
+        {
+            path.push_back(nums[idx]);
+            subsetsHelper(nums, idx + 1, vRet, path);
+        }
+        return;
+    }
+
+    //全排列--直接使用STL函数next_permutation
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> result;
+		sort(nums.begin(), nums.end());
+		do
+		{
+			result.push_back(nums);
+		} while (std::next_permutation(nums.begin(), nums.end()));
+		return result;
+    }
+
+    //全排列，dfs遍历
+    vector<vector<int>> permuteV2(vector<int>& nums) {
+        permuteV2Helper(0, nums.size() - 1, nums);
+        return result;
+    }
+
+    vector<vector<int>> result;
+    void permuteV2Helper(int begin, int end, vector<int>& nums) {
+        if (begin == end) {
+            result.emplace_back(nums);
+        }
+        for (int i = begin; i <= end; i++) {
+            swap(nums[i], nums[begin]);
+            permuteV2Helper(begin + 1, end, nums);
+            swap(nums[i], nums[begin]);
+        }
+    }
+
+    //格雷编码---解法一，数学公式可以解答
+    vector<int> grayCode(int n) {
+        int num_size = 1 << n;
+        vector<int> vRet;
+        for (int i = 0; i < num_size; i++)
+        {
+            vRet.push_back( i ^ (i >> 1));
+        }
+        return vRet;
+    }
+
+    //格雷编码--解法2，动态规划--先拆解为子问题
+    //参考：https://leetcode-cn.com/problems/gray-code/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by--12/
+    vector<int> grayCodeDp(int n){
+        vector<int> vRet = {0};
+        for (size_t i = 0; i < n; i++){
+            int add = 1 << i;
+            //cout << "add=" << add << "\tsize=" << vRet.size() << endl;
+            for(int j = vRet.size() - 1; j >= 0; --j){  //需要倒序加上add值，可保证前后两个数只一位不相同
+                vRet.push_back(add + vRet[j]);
+            }
+        }
+        return vRet;
+    }
+
+    //爬梯子--DP
+    int climbStairs(int n) {
+        if(n == 1) return 1;
+        if(n == 2) return 2;
+        int pre = 1, cur = 2;
+        for (size_t i = 3; i <= n; i++)
+        {
+            int now = pre + cur;
+            pre = cur;
+            cur = now;
+        }
+        return cur;
+    }
+
+    //最大子序列---纯数组遍历解法，时间复杂度O(N)
+    int maxSubArray(vector<int>& nums) {
+        if(nums.empty()) return 0;
+        int curSum = nums.front();
+        int maxSum = nums.front();
+        for (size_t i = 1; i < nums.size(); i++)
+        {
+            //关键点判断是否为一个新的起点
+            if(curSum < 0 ){
+                curSum = 0;
+            }
+            curSum += nums[i];
+            maxSum = max(maxSum, curSum);
+        }
+        return maxSum;
+    }
+    //动态规划的解法，关键点也是判断新的起点
+    int maxSubArrayV2(vector<int>& nums){
+        if(nums.empty()) return 0;
+        int preSum = nums.front();
+        int maxSum = nums.front();
+        for(int i = 1; i < nums.size(); ++i){
+            preSum = max(preSum + nums[i], nums[i]); //是否为新的起点，都加入nums[i]
+            maxSum = max(maxSum, preSum); //是否产生的新的最大值
+        }
+        return maxSum;
+    }
+
+    //买股票的最佳时机--先找出右边界吧
+    int maxProfit(vector<int>& prices) {
+        if(prices.empty()) return 0;
+        vector<int> right(prices);
+        int maxRight;
+        //找出右边界
+        for (int i = prices.size() - 1; i >= 0; --i){
+            maxRight = max(maxRight, prices[i]);
+            right[i] = maxRight;
+        }
+        //计算出最大值
+        int maxProfit = 0;
+        for(int i = 0; i < prices.size(); ++i){
+            maxProfit = max(maxProfit, right[i] - prices[i]);
+        }
+        return maxProfit;
+    }
+    
+    //买卖股票，可以多次买卖--股票系列问题，可限制交易、交易冻结期、交易手续费
+    int maxProfitV2(vector<int>& prices){
+        if(prices.empty()) return 0;
+        int preIdx = 0;
+        int sum = 0;
+        for (size_t i = 1; i < prices.size(); i++)
+        {
+            //如果当前价格小于前一个价格，则需要前一天卖出
+            if(prices[i] < prices[i-1]){
+                sum += (prices[i-1] - prices[preIdx]);
+                preIdx = i;
+            }else if(i == prices.size() - 1){
+                sum += (prices[i] - prices[preIdx]);
+            }
+        }
+        return sum;
+    }
+
+    //不同路径--动态规划
+    int uniquePaths(int m, int n) {
+        vector<vector<int>> matrix(m, vector<int>(n,1));
+        for (int i = 1; i < m; ++i)
+        {
+            for (int j = 1; j < n; ++j)
+            {
+                matrix[i][j] = matrix[i-1][j] + matrix[i][j-1];
+            }
+        }
+        return matrix[m-1][n-1];
+    }
+
+    //Nim 游戏
+    //思路：一个简单的博弈问题，4/8/12都是必败的(必败点)，其余数字都可以转移到必胜点
+    bool canWinNim(int n) {
+        return n % 4 == 0 ? false : true;
+    }
+};
+
+//LRU缓存---一个链表+map
+class LRUCache {
+public:
+    LRUCache(int capacity) {
+        m_capacity = capacity;
+    }
+    
+    int get(int key) 
+    {
+        auto it = m_map.find(key);
+        if (it == m_map.end())
+            return -1;
+        else
+        {
+            //让it指向的元素移动到lru链表的首部
+            m_list.splice(m_list.begin(), m_list, it->second);  //迭代器it不失效
+            return (*(it->second))->m_value;
+        }
+    }
+    
+    void put(int key, int value) {
+        if(m_map.count(key)){ //如果存在，则更新到链表头部
+            auto node_it = m_map[key];
+            (*node_it)->m_value = value;
+            m_list.splice(m_list.begin(), m_list, node_it);
+        }
+        else{ //不存在这个节点，则需要新插入
+            if(m_used >= m_capacity){
+                Node* tail_node_it = m_list.back();
+                m_list.pop_back();
+                m_map.erase(tail_node_it->m_key);
+                delete tail_node_it;
+                --m_used;
+            }
+            ++m_used;
+            Node *new_node = new Node(key, value);
+            m_list.push_front(new_node);
+            m_map[key] = m_list.begin();
+        }
+    }
+private:
+    struct Node{
+        int m_key;
+        int m_value;
+        Node(int key, int value){
+            m_key = key;
+            m_value = value;
+        }
+    };
+    int m_capacity = 0;
+    int m_used = 0;
+    list<Node*> m_list;
+    unordered_map<int,list<Node*>::iterator> m_map;
+};
+
+class MinStack {
+public:
+    stack<pair<int, int>> st; //pair记录val和当前栈最小值
+    void push(int x) 
+    {
+        int min_value;
+        if (st.empty())
+            min_value = x;
+        else
+            min_value = st.top().second < x ? st.top().second : x;
+        pair<int, int> p(x, min_value);
+        st.push(p);
+    }
+
+    void pop()
+    {
+        st.pop();
+    }
+
+    int top() 
+    {
+        return st.top().first;
+    }
+
+    int getMin()
+    {
+        return st.top().second;
+    }
 };
 
 int main()
@@ -1083,9 +1424,20 @@ int main()
 
     //auto node = sol.getIntersectionNode(&node1, &node6);
     //sol.PrintList(node);
+    TreeNode treeNode1(1);
+    TreeNode treeNode2(2);
+    TreeNode treeNode3(3);
+    treeNode1.left = &treeNode2;
+    treeNode1.right = &treeNode3;
 
-    vector<int> nums = {33,2,1,5,6,4};
-    cout << sol.findKthLargestByPartition(nums,2) << endl;
-
-    //cout << ZgTool::tostr(nums1) << endl;
+    vector<int> nums = {7,1,5,3,6,4};
+    
+    auto data = (7,3);
+     LRUCache* obj = new LRUCache(5);
+    int param_1 = obj->get(1);
+    cout << param_1 << endl;
+    obj->put(1,2);
+    obj->put(2,3);
+    cout << obj->get(1) << endl;
+    //cout << ZgTool::tostr(data) << endl;
 }
