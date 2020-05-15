@@ -28,6 +28,13 @@ struct TreeNode {
 };
 
 
+bool vector_sort_cmp(vector<int>& left_vec, vector<int>& right_vec){
+    if(left_vec.size() != 2 || right_vec.size() != 2) return true;
+    if(left_vec.front() < right_vec.front()) return true;
+    else if(left_vec.front() > right_vec.front()) return false;
+    else return left_vec.back() > right_vec.back();
+}
+
 class Solution{
 
 public:
@@ -416,15 +423,273 @@ public:
         }
         return result;
     }
+
+    //左右分别扫描两次
+    int trap(vector<int>& height) {
+           vector<int> left(height.size(),0);
+           vector<int> right(height.size(),0);
+           for(int i = 1; i < height.size(); ++i){
+               left[i] = max(left[i-1],height[i-1]);
+           }
+           for(int i = height.size() - 2; i >= 0; --i){
+               right[i] = max(right[i+1], height[i+1]);
+           }
+           
+           //计算面积
+           int sum = 0;
+           for (size_t i = 0; i < height.size(); i++)
+           {
+               if(left[i] > height[i] && right[i] > height[i])
+               {
+                   sum += (min(right[i], left[i]) - height[i]);
+               }
+           }
+           return sum;  
+    }
+
+    //层序锯齿状遍历
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        bool fromleft = true;
+        vector<vector<int>> ret;
+        if( root == nullptr) return ret;
+        stack<TreeNode*> stackNode;
+        stack<TreeNode*> lineTmp;
+        stackNode.push(root);
+        vector<int> vecLine;
+        while(!stackNode.empty()){
+            TreeNode* topNode = stackNode.top();
+            vecLine.push_back(topNode->val);
+            if(fromleft){
+                if(topNode->left != nullptr)
+                    lineTmp.push(topNode->left);
+                if(topNode->right != nullptr)
+                    lineTmp.push(topNode->right);
+            }else{
+                if(topNode->right != nullptr)
+                    lineTmp.push(topNode->right);
+                if(topNode->left != nullptr)
+                    lineTmp.push(topNode->left);
+            }
+            stackNode.pop();
+            if(stackNode.empty()){
+                ret.push_back(vecLine);
+                lineTmp.swap(stackNode);
+                fromleft = !fromleft;
+                cout << "fromleft=" << fromleft << ",vecline=" << ZgTool::tostr(vecLine) << endl;
+                vecLine.clear();
+            }
+        }
+        return ret;
+    }
+
+    //最大正方形面积
+    int maximalSquare(vector<vector<int>>& matrix) {
+        if(matrix.empty()) return 0;
+        int row = matrix.size();
+        int col = matrix.front().size();
+        int max_val = 0; //最大矩形直径
+        vector<int> height(col, 0);
+        for(int i = 0; i < row; ++i){
+            for(int j =0; j< col;++j){
+                if(matrix[i][j] == 1){
+                    height[j] += 1;
+                }else{
+                    height[j] = 0;
+                }
+            }
+
+            //求最大矩形
+            vector<int> vectmp = height;
+            vectmp.push_back(0);
+            stack<int> stacktmp;
+            for(int j =0; j < vectmp.size();){
+                if(stacktmp.empty() || vectmp[j] >= vectmp[stacktmp.top()]){
+                    stacktmp.push(j++);
+                }else{
+                    int top = vectmp[stacktmp.top()];
+                    stacktmp.pop();
+                    int len = stacktmp.empty() ? j :  j- stacktmp.top() - 1; //长度
+                    max_val = max(max_val, min(top, len));  //取端的边，则为正方形
+                }
+            }
+        }
+        return max_val*max_val; //返回的是矩形面积
+    }
+
+    //最大正方形面积---动态规划方法
+    int maximalSquareV2(vector<vector<int>>& matrix) {
+        if (matrix.size() == 0 || matrix[0].size() == 0) {
+            return 0;
+        }
+        int maxSide = 0;
+        int rows = matrix.size(), columns = matrix[0].size();
+        vector<vector<int>> dp(rows, vector<int>(columns));
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (matrix[i][j] == 1) {
+                    if (i == 0 || j == 0) {
+                        dp[i][j] = 1;
+                    } else {
+                        dp[i][j] = min(min(dp[i - 1][j], dp[i][j - 1]), dp[i - 1][j - 1]) + 1;
+                    }
+                    maxSide = max(maxSide, dp[i][j]);
+                }
+            }
+        }
+        int maxSquare = maxSide * maxSide;
+        return maxSquare;
+    }
+
+    //柱状图中的最大矩形--常规解法，先求每个点的左右边界，复杂度O(N*N）
+    int largestRectangleArea(vector<int>& heights) {
+        vector<int> left(heights.size(), 0 );  //左边界，该节点左边的点都小于height[i]
+        vector<int> right(heights.size(), 0 ); //右边界，该节点右边的点都大于height[i]
+        for(int i = 0; i< heights.size(); ++i){
+            left[i] = i;
+            int j  = i-1;
+            while(heights[j] >= heights[i] && j >= 0){
+                left[i] = left[j];
+                j  = left[j] - 1;
+            }
+        }
+        for(int i = heights.size() - 1; i >= 0; --i){
+            right[i] = i;
+            int j = i + 1;
+            while(heights[j] >= heights[i] && j < heights.size()){
+                right[i] = right[j];
+                j = right[j] + 1;
+            }
+        }
+
+        //计算面积咯
+        int sum = 0;
+        for(int i = 0; i < heights.size(); ++i){
+            sum = max ( sum, (right[i] - left[i] + 1)*heights[i]);
+        }
+        return sum;
+    }
+
+    //柱状图中的最大矩形--递增栈，复杂度O(N)
+    //参考：https://leetcode-cn.com/problems/largest-rectangle-in-hEistogram/solution/84-by-ikaruga/
+    //如果当前元素大于栈顶元素，则持续压入，否则弹出栈顶元素，计算以栈顶元素为高的左右矩形面积，左边界为当前栈顶元素，右边界为当前元素
+    int largestRectangleAreaV2(vector<int>& heights) {
+        if(heights.empty()) return 0;
+        heights.push_back(0);
+        stack<int> stackdata;
+        int area = 0;
+        for (int i = 0; i < heights.size();)
+        {
+            if(stackdata.empty() || heights[i] >= heights[stackdata.top()]){ //保持栈内的数据递增
+                stackdata.push(i++);
+            }else{
+                int top = heights[stackdata.top()];
+                stackdata.pop();
+                area = max( area, stackdata.empty() ? top * i : (i - stackdata.top() - 1) * top);
+            }
+        }
+        return area;
+    }
+
+    //三角形最小路径和
+    //TODO 可以优化，path改为一维数组，第二个for循环从大到小，循环利用数组
+    int minimumTotal(vector<vector<int>>& triangle) {
+        vector<vector<int>> path;
+        if(triangle.empty()) return 0;
+        path.push_back(triangle.front());
+        for (int i = 1; i < triangle.size(); i++){
+            auto row = triangle[i];
+            if(row.empty()) return 0;
+            vector<int> path_row(row.size(),0);
+            path.push_back(path_row);
+            path[i][0] = path[i-1][0] + row[0]; //每行第一个节点的都只有一条路径
+            for(int j = 1; j < row.size() - 1; ++j){
+                path[i][j] = min(path[i-1][j-1], path[i-1][j]) + row[j];
+            }
+            path[i][row.size()-1] = path[i-1][row.size()-2] + row[row.size()-1];
+        }
+        //找到最后一个行的数据
+        return *min_element(path.back().begin(), path.back().end());
+    }
+
+    //俄罗斯套娃信封问题
+    //贪心的思路，先排序，尽量取小的-这个贪心算法是错误的
+    int maxEnvelopes(vector<vector<int>>& envelopes) {
+        sort(envelopes.begin(), envelopes.end(), vector_sort_cmp);
+        //贪心
+        int cnt = 0;
+        int first = 0, last = 0;
+        for(auto item : envelopes){
+            if(item.front() > first && item.back() > last){
+                ++cnt;
+                first = item.front();
+                last = item.back();
+            }
+        }
+        return cnt;
+    }
+
+    //将套娃问题转换为LIS问题
+    //思路：构造数组，长度优先；相同长度，按照宽度从大到小排序
+    //问题升级：三维套娃
+    int maxEmaxEnvelopesV2(vector<vector<int>>& envelopes) {
+        sort(envelopes.begin(), envelopes.end(), vector_sort_cmp);
+        vector<int> datas;
+        for(auto item : envelopes){
+            datas.push_back(item.back());
+        }
+        return lengthOfLIS(datas);
+    }
+
+    //最小递增子序列，复杂度N*LogN
+    //贪心算法，新建一个len+1数组d[i]表示长度i结尾的最小元素
+    //二维数组DP算法，复杂度O(N*N)
+    int lengthOfLIS(vector<int>& nums) {
+        if(nums.empty()) return 0;
+        vector<int> d(nums.size() + 1);
+        int max_len = 1;
+        d[max_len] = nums.front();
+        for(int i = 1; i < nums.size(); ++i){
+            if(nums[i] > d[max_len])
+                d[++max_len] = nums[i];
+            else{ //找到第一个比nums[i]大的元素，然后替换
+                int pos = 1, left = 1, right = max_len;
+                while(left <= right){
+                    int mid = left + (right - left)/2;
+                    if(d[mid] >= nums[i]){
+                        pos = mid;
+                        right = mid - 1;
+                    }else{
+                        left = mid + 1;
+                    }
+                }
+                d[pos] = nums[i];
+            }
+        }
+        //cout << ZgTool::tostr(d) << endl;
+        return max_len;
+    }
 };
 
 
 
 int main(){
+
+    TreeNode node1(3);
+    TreeNode node2(9);
+    TreeNode node3(20);
+    TreeNode node4(15);
+    TreeNode node5(7);
+    node1.left = &node2;
+    node1.right = &node3;
+    node3.left = &node4;
+    node3.right = &node5;
     Solution sol;
-    vector<vector<int>> data = {{2,6},{8,10},{15,18},{1,3}};
-    vector<int> nums = {100, 4, 200, 1, 3, 2};
-    auto ret = sol.merge(data);
-    //cout << ret << endl;
+    vector<vector<int>> data = {{5,6},
+                                {4,6},
+                                {6,7},
+                                {2,3}};
+    vector<int> nums = {0,8,4,12,2};
+    auto ret = sol.maxEmaxEnvelopesV2(data);
+    cout << ret << endl;
     return 0;
 }
