@@ -668,6 +668,95 @@ public:
         //cout << ZgTool::tostr(d) << endl;
         return max_len;
     }
+
+    // x 的平方根
+    int mySqrt(int x) {
+         
+    }
+};
+
+//整理思路：十字链表，见：https://leetcode-cn.com/problems/all-oone-data-structure/solution/c-ha-xi-kvshuang-xiang-lian-biao-by-lwpyr/
+class AllOne {
+public:
+
+    struct Node{
+        int val; //出现次数
+        unordered_set<string> keys; //对应的key集合
+        Node(int v):val(v){}
+    };
+
+    list<Node> node_list;  //链表
+    map<string, list<Node>::iterator> mapKeyIt;  //key-->node的映射信息
+    /** Initialize your data structure here. */
+    AllOne() {
+
+    }
+    
+    /** Inserts a new key <Key> with value 1. Or increments an existing key by 1. */
+    void inc(string key) {
+        if(mapKeyIt.count(key)){
+            auto oldnodeit = mapKeyIt[key];
+            auto newnodeit = next(oldnodeit,1);
+            if(newnodeit == node_list.end() || newnodeit->val > oldnodeit->val+1){  //需要新插入node
+                newnodeit = node_list.insert(newnodeit, Node(oldnodeit->val + 1));
+            }
+            newnodeit->keys.insert(key);
+            oldnodeit->keys.erase(key);
+            if(oldnodeit->keys.empty())
+                node_list.erase(oldnodeit);
+            mapKeyIt[key] = newnodeit;
+        }else{
+            //看下链表第一个节点是否大于1
+            auto first_node = node_list.begin();
+            if(node_list.empty() || (first_node)->val > 1){ //需要新分配node
+                Node newnode(1);
+                first_node = node_list.insert(node_list.begin(), newnode);
+            }
+            first_node->keys.insert(key);
+            auto newit = 
+            mapKeyIt[key] = first_node;
+        }
+    }
+    
+    /** Decrements an existing key by 1. If Key's value is 1, remove it from the data structure. */
+    void dec(string key) {
+        if(mapKeyIt.count(key)){
+            auto oldNode = mapKeyIt[key];
+            if(oldNode->val==1) {
+                mapKeyIt.erase(key);
+            } else {
+                auto newNode = next(oldNode, -1);
+                if(oldNode==node_list.begin() || newNode->val<oldNode->val-1){
+                    newNode = node_list.insert(oldNode, Node(oldNode->val-1));
+                }
+                newNode->keys.insert(key);
+                mapKeyIt[key] = newNode;
+            }
+
+            oldNode->keys.erase(key);
+            if(oldNode->keys.empty()){
+                node_list.erase(oldNode);
+            }
+        }
+    }
+    
+    /** Returns one of the keys with maximal value. */
+    string getMaxKey() {
+        auto lastnode = node_list.rbegin();
+        if(lastnode == node_list.rend() || lastnode->keys.empty()){
+            return "";
+        }
+        return *lastnode->keys.begin();
+    }
+    
+    /** Returns one of the keys with Minimal value. */
+    string getMinKey() {
+        auto firstnode = node_list.begin();
+        if(firstnode == node_list.end() || firstnode->keys.empty()){
+            return "";
+        }
+        return *firstnode->keys.begin();
+    }
 };
 
 
