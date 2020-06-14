@@ -1375,6 +1375,37 @@ public:
     bool canWinNim(int n) {
         return n % 4 == 0 ? false : true;
     }
+
+    //逆波兰表达式
+    int evalRPN(vector<string>& tokens) {
+        if(tokens.empty()) return 0;
+        set<string> setOp = {"+", "-", "*", "/"};
+        stack<long> stackVal;
+        long lRetVal = 0;
+        for(auto item : tokens){
+            if(setOp.count(item)){
+                if(stackVal.size() < 2)
+                    return lRetVal;
+                else{
+                    long top = stackVal.top();
+                    stackVal.pop();
+                    long second = stackVal.top();
+                    stackVal.pop();
+                    long tmp;
+                    if(item == "+" ) tmp = top + second;
+                    else if(item == "-") tmp = second - top;
+                    else if( item == "*") tmp = second * top;
+                    else tmp = second / top;
+                    stackVal.push(tmp);
+                }
+            }else{
+                stackVal.push(std::stoll(item));
+            }
+        }
+        //判断末尾是否为空
+        if(stackVal.size() == 1) return stackVal.top();
+        return 0;
+    }
 };
 
 //LRU缓存---一个链表+map
@@ -1499,12 +1530,7 @@ int main()
 
     vector<int> nums = {7,1,5,3,6,4};
     
-    auto data = (7,3);
-     LRUCache* obj = new LRUCache(5);
-    int param_1 = obj->get(1);
-    cout << param_1 << endl;
-    obj->put(1,2);
-    obj->put(2,3);
-    cout << obj->get(1) << endl;
+    vector<string> vTokens = { "10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
+    cout << sol.evalRPN(vTokens) << endl;
     //cout << ZgTool::tostr(data) << endl;
 }

@@ -669,9 +669,12 @@ public:
         return max_len;
     }
 
-    // x 的平方根
+    // x 的平方根--牛顿迭代法或者二分法，牛顿法效率更高
     int mySqrt(int x) {
-         
+        long long r = x;
+		while (r*r > x)
+			r = (r + x / r) / 2;
+		return r; 
     }
 };
 
