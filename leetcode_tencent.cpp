@@ -1121,7 +1121,9 @@ public:
     }
 
     //查找二叉搜索树中的kth节点
+    int kthSmallest(TreeNode* root, int k) {
 
+    }
 };
 
 int main()
