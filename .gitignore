@@ -104,3 +104,4 @@ cmake-build-debug/CMakeFiles/leetcode.dir/cmake_clean.cmake
 cmake-build-debug/CMakeFiles/leetcode.dir/CXX.includecache
 cmake-build-debug/CMakeFiles/leetcode.dir/depend.i
 .idea/.gitignore
+/leetcode
