@@ -177,6 +177,66 @@ public:
         }
         return max_num;
     }
+
+    // 645. 错误的集合
+    vector<int> findErrorNums(vector<int>& nums) {
+        vector<int> data;
+        if(nums.empty()) return  data;
+        data.resize(nums.size());
+        fill(data.begin(), data.end(), 0);
+
+        vector<int> ret;
+        for(auto item : nums){
+            ++data[item-1];
+            // 找到重复的号码
+            if (data[item-1] == 2) {
+                ret.push_back(item);
+            }
+        }
+
+        // 找出不存在的号码
+        for(size_t i = 0; i < data.size(); ++i) {
+            if(data[i] == 0) {
+                ret.push_back(i+1);
+            }
+        }
+        return ret;
+    }
+
+    // 451. 根据字符出现频率排序
+    struct CharTimes{
+        char c;
+        int cnt;
+    };
+    bool CharTimesCmp(CharTimes left, CharTimes right) {
+        return left.cnt > right.cnt;
+    }
+    string frequencySort(string s) {
+        map<char,int> cnt;
+        for (size_t i = 0; i < s.size(); i++)
+        {
+            ++cnt[s[i]];
+        }
+        //排序
+        vector<CharTimes> data;
+        for (auto item : cnt)
+        {
+            CharTimes ct;
+            ct.c = item.first;
+            ct.cnt = item.second;
+            data.push_back(ct);
+        }
+        sort(data.begin(), data.end(), CharTimesCmp);
+        // 拼接
+        ostringstream oss;
+        for(auto item : data) {
+            for (size_t i = 0; i < item.cnt; i++)
+            {
+                oss << item.c;
+            }
+        }
+        return oss.str();
+    }
 };
 
 
