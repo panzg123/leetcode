@@ -237,6 +237,37 @@ public:
         }
         return oss.str();
     }
+
+    // 274. H 指数
+    int hIndex(vector<int>& citations) {
+        vector<int> cnt(citations.size(), 0);
+        for(size_t i = 1; i <= citations.size(); ++i) {
+            for(auto item : citations) {
+                if (item >= i) {
+                    ++cnt[i-1];
+                }
+            }
+        }
+        int max_value = 1;
+        for(size_t i = 0; i < cnt.size(); ++i){
+            if(cnt[i] >= i + 1) {
+                max_value = max(max_value, cnt[i]);
+            }
+        }
+        return max_value;
+    }
+
+    // 274. H 指数 先排序，在计算
+    int hIndexV2(vector<int>& citations) {
+        if(citations.empy()) return 0;
+        sort(citations.begin, citations.end());
+        int len = citations.size();
+        int i = 0;
+        while( i < len && citations[i] < len - i) {
+            ++i;
+        }
+        return len - i;
+    }
 };
 
 
