@@ -1,6 +1,7 @@
 我自己的leetcode刷题记录
 =========================
-###[20150920]
+
+### [20150920]  
     Valid Palindrome
     Implement strStr()
     String to Integer (atoi)
@@ -62,79 +63,79 @@
 	
 	Updating....
     
-###[2015-10-22]
+### [2015-10-22]
 	Spiral Matrix,模拟题，细节实现
 	Spiral Matrix 2 模拟题
 	Divide Two Integers,模拟题，用减法实现除法，注意溢出
 	LeetCode, Text Justification,时间复杂度 O(n)，空间复杂度 O(1)
 	Max Points on a Line，暴力枚举法，以边为中心，时间复杂度 O(n^3)，空间复杂度 O(1)
-###[2015-10-28]
+### [2015-10-28]
 	Median of Two Sorted Arrays,求两个已排序数组中的中位数，hard.
 	Swap Nodes in Pairs,链表，节点交换
 	Reverse Nodes in k-Group,链表节点交换，用栈。
     
-###[2015-11-1]
+### [2015-11-1]
 	First Missing Positive,找出第一个未出现的正整数，常数空间复杂度
 	
-###[2015-11-2]
+### [2015-11-2]
 	Longest Consecutive Sequence, 数组，unordered_map
 	Maximum Depth of Binary Tree,递归
 	Symmetric Tree,递归
 	Reverse Words in a String,字符串翻转
 	reorder list,链表操作
 	
-###[2015-11-7]
+### [2015-11-7]
 	LRU Cache, 实现LRU算法，unorderd_map + list,
 	
-###[2015-11-8]
+### [2015-11-8]
 	Maximum Product Subarray,最大连续乘积，动态规划
 	Find Minimum in Rotated Sorted Array,找最小，二分法
 	Find Minimum in Rotated Sorted Array 2,可重复数组，找最小数，二分法
 	
-###[2015-11-10]
+### [2015-11-10]
 	Min Stack,实现栈，能够常数时间输出最小值
 	Intersection of Two Linked Lists,两个链表找交点
 	Find Peak Element,找点
 	Compare Version Numbers,比较两个字符串
 	
-###[2015-11-11]
+### [2015-11-11]
 	Maximum gap,桶排序，基数排序
 	
-###[2015-11-14]
+### [2015-11-14]
 	Excel Sheet Column Title,26进制处理
 	Majority Element,求半数的元素，Moore voting algorithm。
 	Majority_Element2,求1/3的元素，Moore voting algorithm.
 	
-###[2015-11-16]
+### [2015-11-16]
 	Excel Sheet Column Number,字符串
 	Factorial Trailing Zeroes ,求n得阶乘后缀为0的个数
 	Rotate Array,字符串翻转
 	
-###[2015-11-19]
+### [2015-11-19]
 	Binary Search Tree Iterator,BST,栈
 	largestNumber,自定义排序，字典
 	Repeated DNA Sequences,字符串，位运算，unordered_map
 	
-###[2015-11-20]
+### [2015-11-20]
 	Reverse Bits,位运算，bitset
 	Number of 1 Bits,位运算
 	
-###[2015-11-21]
+### [2015-11-21]
 	House Robber,动态规划
 	House Robber 2,动态规划
 	Binary Tree Right Side View,树的层次遍历
 	Number of Islands,并查集，DFS
 	
-###[2015-11-22]
+### [2015-11-22]
 	Bitwise AND of Numbers Range,位运算
 	Happy Number
 	Remove Linked List Elements,链表删除节点
 	Delete Node in a Linked List,链表删除节点
 	
-###[2015-11-29]
+### [2015-11-29]
 	Count Primes,计算素数的个数
 	Isomorphic Strings，单词替换，hash映射
-###[20151214]
+### [20151214]
     Reverse Linked List,逆转链表，栈，或者递归或者遍历
     Course Schedule, dfs,bfs,拓扑排序
     Minimum Size Subarray Sum,数组
@@ -142,7 +143,7 @@
     Word Search II, dfs+字典树
     Course Schedule II, 拓扑排序
     Different Ways to Add Parentheses,递归
-###[20160109]
+### [20160109]
 	Contains Duplicate, hash or sort 
 	Shortest Palindrome,kmp匹配
 	Ugly Number,递归
@@ -150,14 +151,14 @@
 	Dungeon Game, 动态规划
 	Best Time to Buy and Sell Stock IV，动态规划，需要使用局部最优和全局最优两种状态
 	Kth Largest Element in an Array，分治、堆排序
-###[20160123]
+### [20160123]
 	Contains Duplicate II, unordered_map
 	Contains Duplicate III,sort or multimap
 	Rectangle Area,求两个矩形的全部覆盖面积
 	Implement Stack using Queues,用两个队列来实现栈
 	Invert Binary Tree,反转二叉树
 	Maximal Square,求最大方形面积，动态规划问题
-###[20160223]
+### [20160223]
     Basic Calculator,表达式计算，栈
     Basic Calculator II,表达式计算，用栈
     Wiggle Sort II,部分排序，荷兰国旗问题
@@ -166,14 +167,14 @@
 	Power of Three，判断是否是2的幂，数学问题
     Count Complete Tree Nodes，计算完全树的节点个数，递归
     Expression Add Operators,表达式计算，DFS
-###[20160301]
+### [20160301]
     Kth Smallest Element in a BST,递归，即中序遍历的思想；或者用栈
     Implement Queue using Stacks,用两个栈实现队列
     Number of Digit One,计算1的个数，数学题，找规律
     Palindrome Linked List，回文链表，用栈，或者将链表前半段逆转，然后前后依次比较
     Lowest Common Ancestor of a Binary Search Tree,查找两树节点的公共祖先，递归方法
 	Add Digital,数学题，digital root问题
-###[20160310]
+### [20160310]
     Lowest Common Ancestor of a Binary Tree,二叉树中的LCA问题，递归解决
     Product of Array Except Self,数组问题，求乘积
     Sliding Window Maximum,求滑动窗口的最大值，deque
@@ -191,12 +192,12 @@
     Word Pattern,哈希表
     Nim Game,组合博弈问题，取子游戏
     Find Median from Data Stream,优先队列，最大堆
-###[20160318]
+### [20160318]
     Serialize and Deserialize Binary Tree,二叉树的序列化与反序列化
     Bulls and Cows,哈希表
     Range Sum Query - Immutable,数组问题，求和
     Remove Duplicate Letters,字符串处理
-###[20160406]
+### [20160406]
     Additive Number,递归
     Longest Increasing Subsequence ,简单动态规划
     Intersection of Two Arrays,求集合A和B的交集
@@ -211,7 +212,7 @@
     Reconstruct Itinerary,DFS
 	Verify Preorder Serialization of a Binary Tree,二叉树性质
 
-###[20160621]
+### [20160621]
     Tree Node Num,统计完全二叉树的节点数目，递归
     Tree Max Distance,二叉树中节点的最大距离，递归
 	Patching Array,数组，贪心算法
@@ -272,4 +273,6 @@
 	
 - 2017百度实习生编程题.cpp
 
-###to be continued....
+### `leetcode_go`
+
+### to be continued....
