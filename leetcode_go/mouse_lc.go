@@ -673,6 +673,186 @@ func generateTheString(n int) string {
 	return strings.Repeat("a", n-1) + "b"
 }
 
+// 739. Daily Temperatures
+// 输入: temperatures = [73,74,75,71,69,72,76,73]
+// 输出: [1,1,4,2,1,1,0,0]
+func dailyTemperatures(temperatures []int) []int {
+	res := make([]int, len(temperatures))
+	var stack []int
+	for i, v := range temperatures {
+		for len(stack) > 0 && temperatures[stack[len(stack)-1]] < v {
+			idx := stack[len(stack)-1]
+			res[idx] = i - idx
+			stack = stack[:len(stack)-1]
+		}
+		stack = append(stack, i)
+	}
+	return res
+}
+
+// 39. 组合总和
+// 输入：candidates = [2,3,6,7], target = 7
+// 输出：[[2,2,3],[7]]
+func combinationSum(candidates []int, target int) [][]int {
+	sort.Ints(candidates)
+	return combinationSumHelper(candidates, target)
+}
+
+func combinationSumHelper(candidates []int, target int) [][]int {
+	var ret [][]int
+	for i, v := range candidates {
+		if target > v {
+			right := combinationSumHelper(candidates[i:], target-v)
+			for _, r := range right {
+				ret = append(ret, append([]int{v}, r...))
+			}
+		} else if target == v {
+			ret = append(ret, []int{v})
+		}
+	}
+	return ret
+}
+
+// 40. Combination Sum II
+// Input: candidates = [10,1,2,7,6,1,5], target = 8,
+// A solution set is:
+// [
+//  [1, 7],
+//  [1, 2, 5],
+//  [2, 6],
+//  [1, 1, 6]
+// ]
+func combinationSum2(candidates []int, target int) [][]int {
+	sort.Ints(candidates)
+	return combinationSum2Helper(candidates, target)
+}
+
+func combinationSum2Helper(candidates []int, target int) [][]int {
+	var ret [][]int
+	for i, v := range candidates {
+		// 此条件为去重的关键步骤，本次不取重复数字，下次循环可能会取重复数字
+		if i > 0 && candidates[i-1] == candidates[i] {
+			continue
+		}
+		if target > v {
+			right := combinationSum2Helper(candidates[i+1:], target-v)
+			for _, r := range right {
+				ret = append(ret, append([]int{v}, r...))
+			}
+		} else if target == v {
+			ret = append(ret, []int{v})
+		}
+	}
+	return ret
+}
+
+// 216. Combination Sum III
+func combinationSum3(k int, n int) [][]int {
+	candidates := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	return combinationSum3Helper(candidates, k, n)
+}
+
+func combinationSum3Helper(candidates []int, k int, n int) [][]int {
+	var ret [][]int
+	if k <= 0 || n <= 0 {
+		return ret
+	}
+	for i, v := range candidates {
+		// 跳出循环
+		if v > n {
+			return ret
+		}
+		if v == n && k == 1 {
+			ret = append(ret, []int{v})
+			return ret
+		}
+		// 选中
+		right := combinationSum3Helper(candidates[i+1:], k-1, n-v)
+		for _, r := range right {
+			ret = append(ret, append([]int{v}, r...))
+		}
+	}
+	return ret
+}
+
+// 377. Combination Sum IV
+// Input: nums = [1,2,3], target = 4
+// Output: 7
+// Explanation:
+// The possible combination ways are:
+// (1, 1, 1, 1)
+// (1, 1, 2)
+// (1, 2, 1)
+// (1, 3)
+// (2, 1, 1)
+// (2, 2)
+// (3, 1)
+// Note that different sequences are counted as different combinations.
+func combinationSum4(nums []int, target int) int {
+	dp := make([]int, target+1)
+	dp[0] = 1
+	for i := 1; i <= target; i++ {
+		for j := 0; j < len(nums); j++ {
+			if i >= nums[j] {
+				dp[i] += dp[i-nums[j]]
+			}
+		}
+	}
+	return dp[target]
+}
+
+// 36. 有效的数独
+func isValidSudoku(board [][]byte) bool {
+	used := make([]bool, 9)
+	// 检查行和列
+	for i := 0; i < 9; i++ {
+		// 重新初始化数据
+		for k := range used {
+			used[k] = false
+		}
+		for j := 0; j < 9; j++ {
+			if !checkSudoku(used, board[i][j]) {
+				return false
+			}
+		}
+		for k := range used {
+			used[k] = false
+		}
+		for j := 0; j < 9; j++ {
+			if !checkSudoku(used, board[j][i]) {
+				return false
+			}
+		}
+	}
+	// 检查四边形区域
+	for i := 0; i < 3; i++ {
+		for j := 0; j < 3; j++ {
+			for k := range used {
+				used[k] = false
+			}
+			for m := 3 * i; m < 3*i+3; m++ {
+				for n := 3 * j; n < 3*j+3; n++ {
+					if !checkSudoku(used, board[m][n]) {
+						return false
+					}
+				}
+			}
+		}
+	}
+	return true
+}
+
+func checkSudoku(used []bool, c byte) bool {
+	if c == '.' {
+		return true
+	}
+	if used[c-'1'] == true {
+		return false
+	}
+	used[c-'1'] = true
+	return true
+}
+
 func main() {
 	//l := Constructor(2)
 	//l.Put(1, 1)
@@ -684,5 +864,5 @@ func main() {
 	//fmt.Println(l.Get(3))
 	//generate(5)
 	// arrayRankTransform([]int{37, 12, 28, 9, 100, 56, 80, 5, 12})
-	fmt.Println(decodeString("2[abc]3[cd]ef"))
+	fmt.Println(combinationSum2([]int{1, 2, 2, 2, 3, 3}, 6))
 }
