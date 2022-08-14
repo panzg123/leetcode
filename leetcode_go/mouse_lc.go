@@ -853,6 +853,78 @@ func checkSudoku(used []bool, c byte) bool {
 	return true
 }
 
+// 416. 分割等和子集
+// 输入：nums = [1,5,11,5]
+// 输出：true
+// 解释：数组可以分割成 [1, 5, 5] 和 [11] 。
+func canPartition(nums []int) bool {
+	var sum int
+	for _, v := range nums {
+		sum += v
+	}
+	if sum%2 != 0 {
+		return false
+	}
+	w := sum / 2
+	dp := make([]bool, w+1)
+	dp[0] = true
+	for _, v := range nums {
+		for i := w; i >= v; i-- {
+			dp[i] = dp[i] || dp[i-v]
+		}
+	}
+	return dp[w]
+}
+
+// 494. 目标和
+// 输入：nums = [1,1,1,1,1], target = 3
+// 输出：5
+// 解释：一共有 5 种方法让最终目标和为 3 。
+// -1 + 1 + 1 + 1 + 1 = 3
+// +1 - 1 + 1 + 1 + 1 = 3
+// +1 + 1 - 1 + 1 + 1 = 3
+// +1 + 1 + 1 - 1 + 1 = 3
+// +1 + 1 + 1 + 1 - 1 = 3
+func findTargetSumWays(nums []int, target int) int {
+	var sum int
+	for _, v := range nums {
+		sum += v
+	}
+	if sum < target || ((sum+target)%2 == 1) {
+		return 0
+	}
+	w := (sum + target) / 2
+	dp := make([]int, w+1)
+	dp[0] = 1
+	for _, v := range nums {
+		for i := w; i >= v; i-- {
+			dp[i] = dp[i] + dp[i-v]
+		}
+	}
+	return dp[w]
+}
+
+func hammingDistance(x int, y int) int {
+	var cnt int
+	for x != 0 || y != 0 {
+		if x%2 != y%2 {
+			cnt++
+		}
+		x >>= 1
+		y >>= 1
+	}
+	return cnt
+
+	// 方法2，异或，然后才用s &= s-1
+	// var cnt int
+	// for s := x ^ y; s > 0; s &= s - 1 {
+	// 	cnt++
+	// }
+
+	// 方法3
+	// return bits.OnesCount(uint(x ^ y))
+}
+
 func main() {
 	//l := Constructor(2)
 	//l.Put(1, 1)
