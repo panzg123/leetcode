@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"math"
 	"sort"
 	"strconv"
 	"strings"
@@ -925,6 +925,440 @@ func hammingDistance(x int, y int) int {
 	// return bits.OnesCount(uint(x ^ y))
 }
 
+func searchRange(nums []int, target int) []int {
+	return []int{searchFirstEqualElement(nums, target), searchLastEqualElement(nums, target)}
+}
+
+// 二分查找第一个与 target 相等的元素，时间复杂度 O(logn)
+func searchFirstEqualElement(nums []int, target int) int {
+	var (
+		left  = 0
+		right = len(nums) - 1
+	)
+	for left <= right {
+		mid := left + (right-left)>>1
+		if nums[mid] < target {
+			left = mid + 1
+		} else if nums[mid] > target {
+			right = mid - 1
+		} else {
+			if mid == 0 || nums[mid-1] < target {
+				return mid
+			}
+			right = mid - 1
+		}
+	}
+	return -1
+}
+
+// 二分查找最后一个与 target 相等的元素，时间复杂度 O(logn)
+func searchLastEqualElement(nums []int, target int) int {
+	var (
+		left  = 0
+		right = len(nums) - 1
+	)
+	for left <= right {
+		mid := left + (right-left)>>1
+		if nums[mid] < target {
+			left = mid + 1
+		} else if nums[mid] > target {
+			right = mid - 1
+		} else {
+			if mid == len(nums)-1 || nums[mid+1] > target {
+				return mid
+			}
+			left = mid + 1
+		}
+	}
+	return -1
+}
+
+// rotate 48. 旋转图像
+// 给定一个 n × n 的二维矩阵 matrix 表示一个图像。请你将图像顺时针旋转 90 度。
+// 思路：先左下右上对称转换，再上下转换
+func rotate(matrix [][]int) {
+	if len(matrix) == 0 {
+		return
+	}
+	// 斜向转换
+	size := len(matrix[0])
+	for i := range matrix {
+		for j := 0; j < size-i-1; j++ {
+			tmp := matrix[i][j]
+			matrix[i][j] = matrix[size-j-1][size-i-1]
+			matrix[size-j-1][size-i-1] = tmp
+		}
+	}
+	// 上下转换
+	for i := 0; i < (len(matrix) / 2); i++ {
+		for j := 0; j < size; j++ {
+			tmp := matrix[i][j]
+			matrix[i][j] = matrix[size-i-1][j]
+			matrix[size-i-1][j] = tmp
+		}
+	}
+}
+
+// 49. 字母异位词分组
+// 模拟：排序+hash
+func groupAnagrams(strs []string) [][]string {
+	var ret [][]string
+	mapStr := make(map[string][]string)
+	for _, v := range strs {
+		// 当然这里也可以不用排序，直接用hash或者string转换key，时间复杂度进一步优化
+		sortV := []byte(v)
+		sort.Slice(sortV, func(i, j int) bool {
+			return sortV[i] < sortV[j]
+		})
+		sortVStr := string(sortV)
+		mapStr[sortVStr] = append(mapStr[sortVStr], v)
+	}
+	for _, v := range mapStr {
+		ret = append(ret, v)
+	}
+	return ret
+}
+
+// 64. 最小路径和
+// 输入：grid = [[1,3,1],[1,5,1],[4,2,1]]
+// 输出：7
+// 解释：因为路径 1→3→1→1→1 的总和最小。
+func minPathSum(grid [][]int) int {
+	if len(grid) == 0 || len(grid[0]) == 0 {
+		return 0
+	}
+	// 声明i*j大小的数组
+	var dp = make([][]int, len(grid))
+	for i := range grid {
+		dp[i] = make([]int, len(grid[0]))
+	}
+	dp[0][0] = grid[0][0]
+	// 首行元素
+	for j := 1; j < len(grid[0]); j++ {
+		dp[0][j] = dp[0][j-1] + grid[0][j]
+	}
+	// 首列元素
+	for i := 1; i < len(grid); i++ {
+		dp[i][0] = dp[i-1][0] + grid[i][0]
+	}
+	for i := 1; i < len(grid); i++ {
+		for j := 1; j < len(grid[0]); j++ {
+			dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + grid[i][j]
+		}
+	}
+	return dp[len(grid)-1][len(grid[0])-1]
+}
+
+// minPathSumV2 如上题，内存优化，二维数组压缩到一维
+func minPathSumV2(grid [][]int) int {
+	var dp = make([]int, len(grid[0]))
+	dp[0] = grid[0][0]
+	// 首行元素
+	for j := 1; j < len(grid[0]); j++ {
+		dp[j] = dp[j-1] + grid[0][j]
+	}
+	// 正常元素
+	for i := 1; i < len(grid); i++ {
+		for j := 0; j < len(grid[0]); j++ {
+			if j == 0 {
+				dp[0] = dp[0] + grid[i][j]
+				continue
+			}
+			dp[j] = min(dp[j-1], dp[j]) + grid[i][j]
+		}
+	}
+	return dp[len(grid[0])-1]
+}
+
+// 55. 跳跃游戏
+// 输入：nums = [2,3,1,1,4]
+// 输出：true
+// 解释：可以先跳 1 步，从下标 0 到达下标 1, 然后再从下标 1 跳 3 步到达最后一个下标。
+func canJump(nums []int) bool {
+	var mostidx int
+	for i, v := range nums {
+		if mostidx >= i {
+			mostidx = max(i+v, mostidx)
+			if mostidx >= len(nums)-1 {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// 53. 最大子数组和
+// 输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
+// 输出：6
+// 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
+func maxSubArray(nums []int) int {
+	var maxSum, tmpSum = math.MinInt, 0
+	for _, v := range nums {
+		if tmpSum > 0 {
+			tmpSum += v
+		} else {
+			tmpSum = v
+		}
+		maxSum = max(tmpSum, maxSum)
+	}
+	return maxSum
+}
+
+// merge 56. 合并区间
+func merge(intervals [][]int) [][]int {
+	// 排序
+	sort.Slice(intervals, func(i, j int) bool {
+		if intervals[i][0] == intervals[j][0] {
+			return intervals[i][1] < intervals[j][1]
+		}
+		return intervals[i][0] < intervals[j][0]
+	})
+	var ret [][]int
+	last := intervals[0]
+	for i := 1; i < len(intervals); i++ {
+		// 两者有交集，则直接合并
+		if last[1] >= intervals[i][0] {
+			last[1] = max(last[1], intervals[i][1])
+		} else {
+			ret = append(ret, last)
+			last = intervals[i]
+		}
+	}
+	ret = append(ret, last)
+	return ret
+}
+
+// minDistance 72. 编辑距离
+func minDistance(word1 string, word2 string) int {
+	if word1 == "" {
+		return len(word2)
+	}
+	if word2 == "" {
+		return len(word1)
+	}
+	var dp = make([][]int, len(word2)+1)
+	for i := 0; i < len(word2)+1; i++ {
+		dp[i] = make([]int, len(word1)+1)
+	}
+	// 首行首列要处理
+	for i := 0; i < len(word1)+1; i++ {
+		dp[0][i] = i
+	}
+	for i := 0; i < len(word2)+1; i++ {
+		dp[i][0] = i
+	}
+	// 计算
+	for i := 1; i <= len(word2); i++ {
+		for j := 1; j <= len(word1); j++ {
+			if word1[j-1] == word2[i-1] {
+				dp[i][j] = dp[i-1][j-1]
+			} else {
+				dp[i][j] = min(min(dp[i][j-1], dp[i-1][j]), dp[i-1][j-1]) + 1
+			}
+		}
+	}
+	return dp[len(word2)][len(word1)]
+}
+
+// 75. 颜色分类
+func sortColors(nums []int) {
+	p0, p2 := 0, len(nums)-1
+	for i := 0; i <= p2; i++ {
+		for ; i <= p2 && nums[i] == 2; p2-- {
+			nums[i], nums[p2] = nums[p2], nums[i]
+		}
+		if nums[i] == 0 {
+			nums[i], nums[p0] = nums[p0], nums[i]
+			p0++
+		}
+	}
+}
+
+// TreeNode 二叉树节点
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+// 105 前序和中序构建二叉树
+func buildTree(preorder []int, inorder []int) *TreeNode {
+	if len(preorder) == 0 || len(inorder) == 0 {
+		return nil
+	}
+	root := &TreeNode{
+		Val: preorder[0],
+	}
+	for i, v := range inorder {
+		if v == preorder[0] {
+			root.Left = buildTree(preorder[1:i+1], inorder[:i])
+			root.Right = buildTree(preorder[i+1:], inorder[i+1:])
+		}
+	}
+	return root
+}
+
+// 148. 排序链表
+func sortList(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+	// 找到中间节点，并断开节点
+	middle := middleNode(head)
+	next := middle.Next
+	middle.Next = nil
+	middle = next
+	left := sortList(head)
+	right := sortList(middle)
+	// 归并排序左和右
+	return mergeTwoLists(left, right)
+}
+
+// 76. 最小覆盖子串  滑动窗口
+func minWindow(s string, t string) string {
+	minLen := math.MaxInt
+	var minLeft, minRight = -1, -1
+	maps := make(map[byte]int)
+	mapt := make(map[byte]int)
+	for i := range t {
+		mapt[t[i]]++
+	}
+	check := func() bool {
+		for k, v := range mapt {
+			if maps[k] < v {
+				return false
+			}
+		}
+		return true
+	}
+	for left, right := 0, 0; right < len(s); right++ {
+		// 先统计右指针的字符
+		if _, ok := mapt[s[right]]; ok {
+			maps[s[right]]++
+		}
+		// 如果满足条件，则left右移，否则right右移
+		for check() && left <= right {
+			if right-left+1 < minLen {
+				minLen = right - left + 1
+				minLeft, minRight = left, right
+			}
+			if _, ok := mapt[s[left]]; ok {
+				maps[s[left]]--
+			}
+			left++
+		}
+	}
+	if minLeft == -1 {
+		return ""
+	}
+	return s[minLeft : minRight+1]
+}
+
+// 876. 链表的中间结点
+func middleNode(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+	p1 := head
+	p2 := head
+	for p2.Next != nil && p2.Next.Next != nil {
+		p1 = p1.Next
+		p2 = p2.Next.Next
+	}
+	return p1
+}
+
+// 21. 合并两个有序链表
+func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+	dumty := &ListNode{Val: 1}
+	pre := dumty
+	for l1 != nil && l2 != nil {
+		if l1.Val < l2.Val {
+			pre.Next = l1
+			l1 = l1.Next
+		} else {
+			pre.Next = l2
+			l2 = l2.Next
+		}
+		pre = pre.Next
+	}
+	if l1 != nil {
+		pre.Next = l1
+	}
+	if l2 != nil {
+		pre.Next = l2
+	}
+	return dumty.Next
+}
+
+// 78. 子集
+// 输入：nums = [1,2,3]
+// 输出：[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+func subsets(nums []int) [][]int {
+	if len(nums) == 0 {
+		return nil
+	}
+	if len(nums) == 1 {
+		return [][]int{{}, {nums[0]}}
+	}
+	var ret [][]int
+	right := subsets(nums[1:])
+	for _, v := range right {
+		// 选择
+		ret = append(ret, append([]int{nums[0]}, v...))
+		// 不选择
+		ret = append(ret, v)
+	}
+	return ret
+}
+
+// 79. 单词搜索
+func exist(board [][]byte, word string) bool {
+	if len(board) == 0 || len(board[0]) == 0 {
+		return false
+	}
+	visited := make([][]bool, len(board))
+	for i, v := range board {
+		visited[i] = make([]bool, len(v))
+	}
+	for i := 0; i < len(board); i++ {
+		for j := 0; j < len(board[0]); j++ {
+			if existDfs(board, word, i, j, 0, visited) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func existDfs(board [][]byte, word string, x, y, index int, visited [][]bool) bool {
+	// 边界条件
+	if x < 0 || y < 0 || x >= len(board) || y >= len(board[0]) {
+		return false
+	}
+	// 是否已经访问过
+	if visited[x][y] {
+		return false
+	}
+	// 不相等，剪枝
+	if board[x][y] != word[index] {
+		return false
+	}
+	// 判断是否最后一个
+	if index == len(word)-1 {
+		return true
+	}
+
+	// 继续递归
+	visited[x][y] = true
+	ret := existDfs(board, word, x-1, y, index+1, visited) ||
+		existDfs(board, word, x+1, y, index+1, visited) ||
+		existDfs(board, word, x, y-1, index+1, visited) ||
+		existDfs(board, word, x, y+1, index+1, visited)
+	visited[x][y] = false
+	return ret
+}
+
 func main() {
 	//l := Constructor(2)
 	//l.Put(1, 1)
@@ -936,5 +1370,6 @@ func main() {
 	//fmt.Println(l.Get(3))
 	//generate(5)
 	// arrayRankTransform([]int{37, 12, 28, 9, 100, 56, 80, 5, 12})
-	fmt.Println(combinationSum2([]int{1, 2, 2, 2, 3, 3}, 6))
+	//fmt.Println(searchRange([]int{1}, 1))
+	rotate([][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}})
 }

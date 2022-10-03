@@ -264,3 +264,213 @@ func Test_hammingDistance(t *testing.T) {
 		})
 	}
 }
+
+func Test_groupAnagrams(t *testing.T) {
+	type args struct {
+		strs []string
+	}
+	tests := []struct {
+		name string
+		args args
+		want [][]string
+	}{
+		{
+			name: "1",
+			args: args{strs: []string{"eat", "tea", "tan", "ate", "nat", "bat"}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := groupAnagrams(tt.args.strs); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("groupAnagrams() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_minPathSum(t *testing.T) {
+	type args struct {
+		grid [][]int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			args: args{grid: [][]int{{1, 3, 1}, {1, 5, 1}, {4, 2, 1}}},
+			want: 7,
+		},
+		{
+			args: args{grid: [][]int{{1, 2, 3}, {4, 5, 6}}},
+			want: 12,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := minPathSumV2(tt.args.grid); got != tt.want {
+				t.Errorf("minPathSum() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_canJump(t *testing.T) {
+	type args struct {
+		nums []int
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			args: args{nums: []int{2, 3, 1, 1, 4}},
+			want: true,
+		},
+		{
+			args: args{nums: []int{3, 2, 1, 0, 4}},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := canJump(tt.args.nums); got != tt.want {
+				t.Errorf("canJump() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_maxSubArray(t *testing.T) {
+	type args struct {
+		nums []int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			args: args{nums: []int{-2, 1, -3, 4, -1, 2, 1, -5, 4}},
+			want: 6,
+		},
+		{
+			args: args{nums: []int{5, 4, -1, 7, 8}},
+			want: 23,
+		},
+		{
+			args: args{nums: []int{-1}},
+			want: -1,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := maxSubArray(tt.args.nums); got != tt.want {
+				t.Errorf("maxSubArray() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_merge(t *testing.T) {
+	type args struct {
+		intervals [][]int
+	}
+	tests := []struct {
+		name string
+		args args
+		want [][]int
+	}{
+		{
+			args: args{intervals: [][]int{{1, 3}, {2, 6}, {8, 10}, {15, 18}}},
+			want: [][]int{{1, 6}, {8, 10}, {15, 18}},
+		},
+		{
+			args: args{intervals: [][]int{{1, 4}, {4, 5}}},
+			want: [][]int{{1, 5}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := merge(tt.args.intervals); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("merge() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_minDistance(t *testing.T) {
+	type args struct {
+		word1 string
+		word2 string
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			args: args{word1: "horse", word2: "ros"},
+			want: 3,
+		},
+		{
+			args: args{word1: "intention", word2: "execution"},
+			want: 5,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := minDistance(tt.args.word1, tt.args.word2); got != tt.want {
+				t.Errorf("minDistance() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_sortColors(t *testing.T) {
+	type args struct {
+		nums []int
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			args: args{nums: []int{2, 0, 2, 1, 1, 0}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			sortColors(tt.args.nums)
+		})
+	}
+}
+
+func Test_minWindow(t *testing.T) {
+	type args struct {
+		s string
+		t string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			args: args{s: "ADOBECODEBANC", t: "ABC"},
+			want: "BANC",
+		},
+		{
+			args: args{s: "a", t: "a"},
+			want: "a",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := minWindow(tt.args.s, tt.args.t); got != tt.want {
+				t.Errorf("minWindow() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
