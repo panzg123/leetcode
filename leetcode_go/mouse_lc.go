@@ -1359,6 +1359,222 @@ func existDfs(board [][]byte, word string, x, y, index int, visited [][]bool) bo
 	return ret
 }
 
+// DicNode 字典树前缀
+type DicNode struct {
+	end  bool
+	next []*DicNode
+}
+
+func (d *DicNode) Init() {
+	d.next = make([]*DicNode, 26)
+}
+
+// 212. 单词搜索 II
+func findWords(board [][]byte, words []string) []string {
+	// 构造前缀树
+	root := &DicNode{}
+	root.Init()
+	for _, v := range words {
+		cur := root
+		for _, w := range v {
+			if cur.next[w-'a'] == nil {
+				cur.next[w-'a'] = &DicNode{}
+				cur.next[w-'a'].Init()
+			}
+			cur = cur.next[w-'a']
+		}
+		cur.end = true
+	}
+	// dfs遍历
+	if len(board) == 0 || len(board[0]) == 0 {
+		return nil
+	}
+	visited := make([][]bool, len(board))
+	for i, v := range board {
+		visited[i] = make([]bool, len(v))
+	}
+	// map保存结果
+	result := make(map[string]bool)
+	for i := 0; i < len(board); i++ {
+		for j := 0; j < len(board[0]); j++ {
+			// 剪枝
+			if root.next[board[i][j]-'a'] != nil {
+				findWordsDfs(board, root.next[board[i][j]-'a'], visited, i, j, "", result)
+			}
+		}
+	}
+	// 结果排序
+	var ret []string
+	for k := range result {
+		ret = append(ret, k)
+	}
+	sort.Slice(ret, func(i, j int) bool {
+		return ret[i] < ret[j]
+	})
+	return ret
+}
+
+func findWordsDfs(board [][]byte, root *DicNode, visited [][]bool, x, y int, curWord string, result map[string]bool) {
+	curWord += string(board[x][y])
+	if root.end {
+		if _, ok := result[curWord]; !ok {
+			result[curWord] = true
+		}
+	}
+	visited[x][y] = true
+	// 上
+	if x > 0 && !visited[x-1][y] && root.next[board[x-1][y]-'a'] != nil {
+		findWordsDfs(board, root.next[board[x-1][y]-'a'], visited, x-1, y, curWord, result)
+	}
+	// 下
+	if x < len(board)-1 && !visited[x+1][y] && root.next[board[x+1][y]-'a'] != nil {
+		findWordsDfs(board, root.next[board[x+1][y]-'a'], visited, x+1, y, curWord, result)
+	}
+	// 左
+	if y > 0 && !visited[x][y-1] && root.next[board[x][y-1]-'a'] != nil {
+		findWordsDfs(board, root.next[board[x][y-1]-'a'], visited, x, y-1, curWord, result)
+	}
+	// 右
+	if y < len(board[0])-1 && !visited[x][y+1] && root.next[board[x][y+1]-'a'] != nil {
+		findWordsDfs(board, root.next[board[x][y+1]-'a'], visited, x, y+1, curWord, result)
+	}
+	visited[x][y] = false
+}
+
+// 84. 柱状图中最大的矩形
+// 单调栈+哨兵
+func largestRectangleArea(heights []int) int {
+	if len(heights) == 0 {
+		return 0
+	}
+	// 前后添加哨兵0
+	heights = append([]int{0}, heights...)
+	heights = append(heights, 0)
+	var stack []int
+	var maxArea int
+	for i := 0; i < len(heights); {
+		// 压入单调栈
+		if len(stack) == 0 || heights[i] >= heights[stack[len(stack)-1]] {
+			stack = append(stack, i)
+			i++
+		} else {
+			// 弹出时计算新栈构成的矩阵面积
+			high := heights[stack[len(stack)-1]]
+			stack = stack[0 : len(stack)-1]
+			// 左边界是栈中新栈顶元素，即数组中第一个比height[i]小的元素位置
+			width := i - stack[len(stack)-1] - 1
+			maxArea = max(maxArea, high*width)
+		}
+	}
+	return maxArea
+}
+
+// 85. 最大矩形
+// 利用84题的解法
+func maximalRectangle(matrix [][]byte) int {
+	if len(matrix) == 0 || len(matrix[0]) == 0 {
+		return 0
+	}
+	height := make([]int, len(matrix[0]))
+	var maxArea int
+	for i := 0; i < len(matrix); i++ {
+		for j := 0; j < len(matrix[0]); j++ {
+			if matrix[i][j] == 1 {
+				height[j] += 1
+			} else {
+				height[j] = 0
+			}
+		}
+		maxArea = max(maxArea, largestRectangleArea(height))
+	}
+	return maxArea
+}
+
+// 221. 最大正方形
+// 动态规划: dp[i][j] = min(dp[i-1][j-1], dp[i-1][j], dp[i][j-1]) + 1 含义为i,j位置的最大矩形
+func maximalSquare(matrix [][]byte) int {
+	// 边界条件
+	if len(matrix) == 0 || len(matrix[0]) == 0 {
+		return 0
+	}
+	dp := make([][]int, len(matrix))
+	for i, v := range matrix {
+		dp[i] = make([]int, len(v))
+	}
+	var maxLen int
+	for i := 0; i < len(matrix); i++ {
+		for j := 0; j < len(matrix[0]); j++ {
+			if matrix[i][j] == '1' {
+				if i == 0 || j == 0 {
+					dp[i][j] = 1
+				} else {
+					dp[i][j] = min(min(dp[i-1][j-1], dp[i-1][j]), dp[i][j-1]) + 1
+				}
+				maxLen = max(maxLen, dp[i][j])
+			}
+		}
+	}
+	return maxLen * maxLen
+}
+
+// 764. 最大加号标志
+// 动态规划： 上下左右四个方向都要统计
+func orderOfLargestPlusSign(n int, mines [][]int) int {
+	dp := make([][]int, n)
+	for i := 0; i < n; i++ {
+		dp[i] = make([]int, n)
+	}
+	// 处理mine中的0，这里dp默认值为0，所以这里赋值为-1
+	for _, v := range mines {
+		dp[v[0]][v[1]] = -1
+	}
+	var maxK int
+	// 上和下
+	for i := 0; i < n; i++ {
+		var cnt int
+		for j := 0; j < n; j++ {
+			if dp[i][j] == -1 {
+				cnt = 0
+			} else {
+				cnt++
+				dp[i][j] = cnt
+			}
+		}
+		cnt = 0
+		for j := n - 1; j >= 0; j-- {
+			if dp[i][j] == -1 {
+				cnt = 0
+			} else {
+				cnt++
+				dp[i][j] = min(dp[i][j], cnt)
+			}
+		}
+	}
+	// 左和右
+	for j := 0; j < n; j++ {
+		var cnt int
+		for i := 0; i < n; i++ {
+			if dp[i][j] == -1 {
+				cnt = 0
+			} else {
+				cnt++
+				dp[i][j] = min(dp[i][j], cnt)
+			}
+		}
+		cnt = 0
+		for i := n - 1; i >= 0; i-- {
+			if dp[i][j] == -1 {
+				cnt = 0
+			} else {
+				cnt++
+				dp[i][j] = min(dp[i][j], cnt)
+			}
+			maxK = max(maxK, dp[i][j])
+		}
+	}
+	return maxK
+}
+
 func main() {
 	//l := Constructor(2)
 	//l.Put(1, 1)
