@@ -1575,17 +1575,597 @@ func orderOfLargestPlusSign(n int, mines [][]int) int {
 	return maxK
 }
 
+// 94. 二叉树的中序遍历--栈
+func inorderTraversal(root *TreeNode) []int {
+	var ret []int
+	var stack []*TreeNode
+	for len(stack) > 0 || root != nil {
+		// 左子树一直入栈
+		for root != nil {
+			stack = append(stack, root)
+			root = root.Left
+		}
+		// 弹出并打印
+		root = stack[len(stack)-1]
+		ret = append(ret, stack[len(stack)-1].Val)
+		stack = stack[:len(stack)-1]
+		root = root.Right
+	}
+	return ret
+}
+
+// 96. 不同的二叉搜索树
+// 动态规划，状态转移方程：F(i,n) = dp[i-1] * dp[n-i]，以i为根节点，i-1为左子树，n-i为右子树
+// dp[i] = dp[0]*dp[i-1] + dp[1]*dp[i-2] + dp[2]*dp[i-3] + ... + dp[j]*dp[i-j-1]
+func numTrees(n int) int {
+	dp := make([]int, n+1)
+	dp[0] = 1 // 空节点
+	dp[1] = 1 // 单节点
+	for i := 2; i <= n; i++ {
+		for j := 1; j <= i; j++ {
+			dp[i] += dp[j-1] * dp[i-j]
+		}
+	}
+	return dp[n]
+}
+
+// 101. 对称二叉树
+// 递归解决方案
+func isSymmetric(root *TreeNode) bool {
+	if root == nil {
+		return true
+	}
+	return isSymmetricHelper(root.Left, root.Right)
+}
+
+func isSymmetricHelper(left *TreeNode, right *TreeNode) bool {
+	if left == nil && right == nil {
+		return true
+	}
+	if left == nil || right == nil {
+		return false
+	}
+	return left.Val == right.Val && isSymmetricHelper(left.Right, right.Left) &&
+		isSymmetricHelper(left.Left, right.Right)
+}
+
+// 101. 对称二叉树
+// 非递归，栈
+func isSymmetricWithStack(root *TreeNode) bool {
+	if root == nil {
+		return true
+	}
+	var queue []*TreeNode
+	queue = append(queue, root)
+	queue = append(queue, root)
+	for len(queue) > 0 {
+		left := queue[0]
+		right := queue[1]
+		queue = queue[2:]
+		if left == nil && right == nil {
+			continue
+		}
+		if left == nil || right == nil {
+			return false
+		}
+		if left.Val != right.Val {
+			return false
+		}
+		// 左子树的左节点 + 右子树的有节点
+		queue = append(queue, left.Left)
+		queue = append(queue, right.Right)
+		// 左子树的右节点 + 右子树的左节点
+		queue = append(queue, left.Right)
+		queue = append(queue, right.Left)
+	}
+	return true
+}
+
+// 102. 二叉树的层序遍历
+// 双层队列
+func levelOrder(root *TreeNode) [][]int {
+	if root == nil {
+		return nil
+	}
+	var cur []*TreeNode
+	var ret [][]int
+	cur = append(cur, root)
+	for len(cur) > 0 {
+		var line []int
+		var next []*TreeNode
+		for len(cur) > 0 {
+			line = append(line, cur[0].Val)
+			if cur[0].Left != nil {
+				next = append(next, cur[0].Left)
+			}
+			if cur[0].Right != nil {
+				next = append(next, cur[0].Right)
+			}
+			cur = cur[1:]
+		}
+		ret = append(ret, line)
+		cur = next
+	}
+	return ret
+}
+
+// 104. 二叉树的最大深度
+func maxDepth(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	return max(maxDepth(root.Left), maxDepth(root.Right)) + 1
+}
+
+// 114. 二叉树展开为链表
+// 递归解法
+func flatten(root *TreeNode) {
+	if root == nil {
+		return
+	}
+	// 保存临时节点
+	right := root.Right
+	// 左子树递归
+	flatten(root.Left)
+	root.Right = root.Left
+	root.Left = nil
+	// 遍历到最右末端节点
+	cur := root
+	for cur.Right != nil {
+		cur = cur.Right
+	}
+	// 右子树递归
+	flatten(right)
+	cur.Right = right
+	return
+}
+
+// 124. 二叉树中的最大路径和
+func maxPathSum(root *TreeNode) int {
+	maxPath := math.MinInt
+	maxPathSumHelper(root, &maxPath)
+	return maxPath
+}
+
+// maxPathSumHelper 参数maxPath 全局最大路径和，返回值是以根节点为其实的最大路径和
+func maxPathSumHelper(root *TreeNode, maxPath *int) int {
+	if root == nil {
+		return 0
+	}
+	rootVal := root.Val
+	leftRootVal := maxPathSumHelper(root.Left, maxPath)
+	rightRootVal := maxPathSumHelper(root.Right, maxPath)
+	if leftRootVal > 0 {
+		rootVal += leftRootVal
+	}
+	if rightRootVal > 0 {
+		rootVal += rightRootVal
+	}
+	// 更新全局最大值
+	if rootVal > *maxPath {
+		*maxPath = rootVal
+	}
+	// 更新包含根节点的最大路径和
+	maxRootVal := max(leftRootVal, rightRootVal)
+	if maxRootVal > 0 {
+		return root.Val + maxRootVal
+	}
+	return root.Val
+}
+
+// 112. 路径总和
+func hasPathSum(root *TreeNode, targetSum int) bool {
+	if root == nil {
+		return false
+	}
+	if root.Left == nil && root.Right == nil {
+		return root.Val == targetSum
+	}
+	return hasPathSum(root.Right, targetSum-root.Val) || hasPathSum(root.Left, targetSum-root.Val)
+}
+
+// 113. 路径总和 II
+func pathSum(root *TreeNode, targetSum int) [][]int {
+	var ret [][]int
+	var path []int
+	var dfs func(*TreeNode, int)
+	dfs = func(node *TreeNode, left int) {
+		if node == nil {
+			return
+		}
+		// 当前节点
+		left -= node.Val
+		path = append(path, node.Val)
+		// 移除选择的节点，path为闭包变量
+		defer func() {
+			path = path[:len(path)-1]
+		}()
+		// 满足条件
+		if node.Left == nil && node.Right == nil && left == 0 {
+			ret = append(ret, append([]int{}, path...))
+			return
+		}
+		dfs(node.Left, left)
+		dfs(node.Right, left)
+	}
+	dfs(root, targetSum)
+	return ret
+}
+
+// 437. 路径总和 III
+// dfs+遍历所有节点
+func pathSum437(root *TreeNode, targetSum int) int {
+	var ret int
+	var dfs func(*TreeNode, int)
+	dfs = func(node *TreeNode, left int) {
+		if node == nil {
+			return
+		}
+		// 当前节点
+		left -= node.Val
+		if left == 0 {
+			ret += 1
+		}
+		dfs(node.Left, left)
+		dfs(node.Right, left)
+	}
+	if root == nil {
+		return 0
+	}
+	dfs(root, targetSum)
+	return ret + pathSum437(root.Left, targetSum) + pathSum437(root.Right, targetSum)
+}
+
+// 129. 求根节点到叶节点数字之和
+// dfs
+func sumNumbers(root *TreeNode) int {
+	var ret int
+	var dfs func(*TreeNode, int)
+	dfs = func(node *TreeNode, sum int) {
+		if node == nil {
+			return
+		}
+		sum = sum*10 + node.Val
+		if node.Left == nil && node.Right == nil {
+			ret += sum
+		}
+		dfs(node.Left, sum)
+		dfs(node.Right, sum)
+	}
+	dfs(root, 0)
+	return ret
+}
+
+// 687. 最长同值路径
+func longestUnivaluePath(root *TreeNode) int {
+	var ret int
+	// 以root为根节点为相同值的最大路径
+	var dfs func(node *TreeNode) int
+	dfs = func(node *TreeNode) int {
+		if node == nil {
+			return 0
+		}
+		left := dfs(node.Left)
+		right := dfs(node.Right)
+		var left1, right1 int
+		if node.Left != nil && node.Left.Val == node.Val {
+			left1 = left + 1
+		}
+		if node.Right != nil && node.Right.Val == node.Val {
+			right1 = right + 1
+		}
+		if left1+right1 > ret {
+			ret = left1 + right1
+		}
+		return max(left1, right1)
+	}
+	dfs(root)
+	return ret
+}
+
+// 121. 买卖股票的最佳时机
+func maxProfit(prices []int) int {
+	var maxProfit int
+	minPrice := math.MaxInt
+	for _, v := range prices {
+		minPrice = min(minPrice, v)
+		maxProfit = max(maxProfit, v-minPrice)
+	}
+	return maxProfit
+}
+
+// 128. 最长连续序列
+func longestConsecutive(nums []int) int {
+	visit := make(map[int]bool)
+	data := make(map[int]bool)
+	for _, v := range nums {
+		data[v] = true
+	}
+	var maxLen int
+	for _, v := range nums {
+		if _, ok := visit[v]; ok {
+			continue
+		}
+		var tmpLen int
+		// 向左拓展
+		for j := v; true; j-- {
+			if _, ok := data[j]; !ok {
+				break
+			}
+			tmpLen++
+			visit[j] = true
+		}
+		// 向右拓展
+		for j := v + 1; true; j++ {
+			if _, ok := data[j]; !ok {
+				break
+			}
+			tmpLen++
+			visit[j] = true
+		}
+		maxLen = max(maxLen, tmpLen)
+	}
+	return maxLen
+}
+
+// 136. 只出现一次的数字
+func singleNumber(nums []int) int {
+	var ret int
+	for _, v := range nums {
+		ret ^= v
+	}
+	return ret
+}
+
+// 139. 单词拆分
+func wordBreak(s string, wordDict []string) bool {
+	dp := make([]bool, len(s)+1)
+	dp[0] = true
+	findWord := func(word string) bool {
+		for _, v := range wordDict {
+			if v == word {
+				return true
+			}
+		}
+		return false
+	}
+	// dp[i]是否由单词构成，可以枚举s[0,i)位置的所有可能性
+	for i := 1; i <= len(s); i++ {
+		for j := 1; j <= i; j++ {
+			if dp[j-1] && findWord(s[j-1:i]) {
+				dp[i] = true
+				break
+			}
+		}
+	}
+	return dp[len(s)]
+}
+
+// 141. 环形链表
+func hasCycle(head *ListNode) bool {
+	if head == nil || head.Next == nil {
+		return false
+	}
+	fast := head
+	slow := head
+	for slow != nil && slow.Next != nil {
+		fast = fast.Next
+		slow = slow.Next.Next
+		if fast == slow {
+			return true
+		}
+	}
+	return false
+}
+
+// 142. 环形链表 II
+func detectCycle(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return nil
+	}
+	fast := head
+	slow := head
+	slow1 := head
+	for slow != nil && slow.Next != nil {
+		fast = fast.Next
+		slow = slow.Next.Next
+		if fast == slow {
+			// 两个慢节点重新相遇处即为环的入口
+			for slow1 != slow {
+				slow = slow.Next
+				slow1 = slow1.Next
+			}
+			return slow
+		}
+	}
+	return nil
+}
+
+// 152. 乘积最大子数组
+// 思路：由于负数的存在，需要同时保存最大与最小的数，然后每次迭代记录最大和最小数
+func maxProduct(nums []int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+	if len(nums) == 1 {
+		return nums[0]
+	}
+	ret, maxVal, minVal := nums[0], nums[0], nums[0]
+	for i := 1; i < len(nums); i++ {
+		// 更新当前值
+		tmpMax, tmpMin := maxVal*nums[i], minVal*nums[i]
+		// 更新最大最小值，由于正负数的存在都有三个可能
+		maxVal = max(max(tmpMax, tmpMin), nums[i])
+		minVal = min(min(tmpMax, tmpMin), nums[i])
+		ret = max(ret, maxVal)
+	}
+	return ret
+}
+
+// 160. 相交链表
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+	if headA == nil || headB == nil {
+		return nil
+	}
+	tmpA, tmpB := headA, headB
+	var lenA, lenB int
+	for tmpA != nil {
+		lenA++
+		tmpA = tmpA.Next
+	}
+	for tmpB != nil {
+		lenB++
+		tmpB = tmpB.Next
+	}
+	if lenA > lenB {
+		for cnt := lenA - lenB; cnt > 0; cnt-- {
+			headA = headA.Next
+		}
+	} else if lenB > lenA {
+		for cnt := lenB - lenA; cnt > 0; cnt-- {
+			headB = headB.Next
+		}
+	}
+	for headA != nil && headB != nil {
+		if headA == headB {
+			return headA
+		}
+		headA = headA.Next
+		headB = headB.Next
+	}
+	return nil
+}
+
+type MinStack struct {
+	stack    []int
+	minStack []int
+}
+
+func MinStackConstructor() MinStack {
+	return MinStack{
+		stack:    []int{},
+		minStack: []int{math.MaxInt64},
+	}
+}
+
+func (this *MinStack) Push(x int) {
+	this.stack = append(this.stack, x)
+	top := this.minStack[len(this.minStack)-1]
+	this.minStack = append(this.minStack, min(x, top))
+}
+
+func (this *MinStack) Pop() {
+	this.stack = this.stack[:len(this.stack)-1]
+	this.minStack = this.minStack[:len(this.minStack)-1]
+}
+
+func (this *MinStack) Top() int {
+	return this.stack[len(this.stack)-1]
+}
+
+func (this *MinStack) GetMin() int {
+	return this.minStack[len(this.minStack)-1]
+}
+
+// 169. 多数元素
+// 时间复杂度为 O(n)、空间复杂度为 O(1)
+func majorityElement(nums []int) int {
+	majorNum := nums[0]
+	cnt := 1
+	for i := 1; i < len(nums); i++ {
+		if majorNum == nums[i] {
+			cnt++
+		} else if cnt == 1 { // 更新为最新元素，最可能为返回值
+			majorNum = nums[i]
+		} else {
+			cnt--
+		}
+	}
+	return majorNum
+}
+
+// 198. 打家劫舍
+// 动态规划，dp[i]为包含当前i节点值的最大和，类似于楼梯跳跃，可包含i-2, i-3两种节点
+func rob(nums []int) int {
+	if len(nums) == 1 {
+		return nums[0]
+	}
+	if len(nums) == 2 {
+		return max(nums[0], nums[1])
+	}
+	dp := make([]int, len(nums))
+	dp[0], dp[1] = nums[0], nums[1]
+	ret := max(dp[0], dp[1])
+	for i := 2; i < len(nums); i++ {
+		if i > 2 {
+			dp[i] = max(dp[i-2]+nums[i], dp[i-3]+nums[i])
+		} else {
+			dp[i] = dp[i-2] + nums[i]
+		}
+		ret = max(ret, dp[i])
+	}
+	return ret
+}
+
+// 200. 岛屿数量
+// dfs
+func numIslands(grid [][]byte) int {
+	if len(grid) == 0 || len(grid[0]) == 0 {
+		return 0
+	}
+	visit := make([][]bool, len(grid))
+	for i := 0; i < len(grid); i++ {
+		visit[i] = make([]bool, len(grid[0]))
+	}
+	// 遍历矩阵
+	var dfs func(i, j int)
+	dfs = func(i, j int) {
+		visit[i][j] = true
+		// 上下左右
+		if i > 0 && grid[i-1][j] == '1' && !visit[i-1][j] {
+			dfs(i-1, j)
+		}
+		if i < len(grid)-1 && grid[i+1][j] == '1' && !visit[i+1][j] {
+			dfs(i+1, j)
+		}
+		if j > 0 && grid[i][j-1] == '1' && !visit[i][j-1] {
+			dfs(i, j-1)
+		}
+		if j < len(grid[0])-1 && grid[i][j+1] == '1' && !visit[i][j+1] {
+			dfs(i, j+1)
+		}
+	}
+	var cnt int
+	for i := 0; i < len(grid); i++ {
+		for j := 0; j < len(grid[0]); j++ {
+			if grid[i][j] == '1' && !visit[i][j] {
+				cnt++
+				dfs(i, j)
+			}
+		}
+	}
+	return cnt
+}
+
+// 226. 翻转二叉树
+func invertTree(root *TreeNode) *TreeNode {
+	if root == nil {
+		return nil
+	}
+	invertTree(root.Left)
+	invertTree(root.Right)
+	tmp := root.Left
+	root.Left = root.Right
+	root.Right = tmp
+	return root
+}
+
+// 215. 数组中的第K个最大元素
+func findKthLargest(nums []int, k int) int {
+	var ret int
+	return ret
+}
+
 func main() {
-	//l := Constructor(2)
-	//l.Put(1, 1)
-	//l.Put(2, 2)
-	//fmt.Println(l.Get(1))
-	//fmt.Println(l.Get(2))
-	//l.Put(3, 3)
-	//fmt.Println(l.Get(1))
-	//fmt.Println(l.Get(3))
-	//generate(5)
-	// arrayRankTransform([]int{37, 12, 28, 9, 100, 56, 80, 5, 12})
-	//fmt.Println(searchRange([]int{1}, 1))
 	rotate([][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}})
 }
