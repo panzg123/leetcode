@@ -2,9 +2,11 @@ package main
 
 import (
 	"math"
+	"math/rand"
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // lengthOfLongestSubstring 无重复字符的最长子串
@@ -293,20 +295,6 @@ func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
 	return float64(left+right) / 2
 }
 
-func max(num1, num2 int) int {
-	if num1 > num2 {
-		return num1
-	}
-	return num2
-}
-
-func min(num1, num2 int) int {
-	if num1 < num2 {
-		return num1
-	}
-	return num2
-}
-
 // 1331. 数组序号转换
 // easy
 func arrayRankTransform(arr []int) []int {
@@ -338,59 +326,42 @@ func arrayRankTransform(arr []int) []int {
 // Input: s = "babad"
 // Output: "bab"
 func longestPalindrome(s string) string {
-	// data[i][j]标识是否回文
-	// 边界case，j=i+1和i=j
-	sLen := len(s)
-	if sLen == 0 {
-		return ""
+	var res = s[0:1]
+	var maxLen = 1
+	dp := make([][]bool, len(s))
+	for i := 0; i < len(s); i++ {
+		dp[i] = make([]bool, len(s))
+		dp[i][i] = true
 	}
-	data := make([][]bool, sLen)
-	for i := 0; i < sLen; i++ {
-		data[i] = make([]bool, sLen)
-	}
-	// dp
-	ret := string(s[0])
-	for i := sLen - 1; i >= 0; i-- {
-		for j := i; j < sLen; j++ {
-			if i == j {
-				data[i][j] = true
-			} else if j == i+1 && s[i] == s[j] {
-				data[i][j] = true
-				if len(ret) < 2 {
-					ret = s[i : j+1]
-				}
-			} else if s[i] == s[j] && data[i+1][j-1] {
-				data[i][j] = true
-				if len(ret) < (j - i + 1) {
-					ret = s[i : j+1]
+	for i := len(s) - 1; i >= 0; i-- {
+		for j := i + 1; j < len(s); j++ {
+			if s[i] == s[j] && (j == i+1 || dp[i+1][j-1]) {
+				dp[i][j] = true
+				if j-i+1 > maxLen {
+					maxLen = j - i + 1
+					res = s[i : j+1]
 				}
 			}
 		}
 	}
-	return ret
+	return res
 }
 
 // 11. Container With Most Water
 // Input: [1,8,6,2,5,4,8,3,7]
 // Output: 49
 func maxArea(height []int) int {
-	area, left, right := 0, 0, len(height)-1
-	for left < right {
-		var high int
-		width := right - left
-		if height[left] < height[right] {
-			high = height[left]
-			left++
+	i, j := 0, len(height)-1
+	var maxRet = math.MinInt
+	for i < j {
+		maxRet = max(maxRet, min(height[i], height[j])*(j-i))
+		if height[i] < height[j] {
+			i++
 		} else {
-			high = height[right]
-			right--
-		}
-		tmp := width * high
-		if tmp > area {
-			area = tmp
+			j--
 		}
 	}
-	return area
+	return maxRet
 }
 
 // 593. 有效的正方形
@@ -405,31 +376,35 @@ func validSquare(p1 []int, p2 []int, p3 []int, p4 []int) bool {
 //
 // A solution set is:
 // [
-//  [-1, 0, 1],
-//  [-1, -1, 2]
+//
+//	[-1, 0, 1],
+//	[-1, -1, 2]
+//
 // ]
 func threeSum(nums []int) [][]int {
-	var ret [][]int
 	sort.Ints(nums)
-	for i := 0; i < len(nums); i++ {
-		// 重复的解直接跳过
+	var ret [][]int
+	for i := 0; i < len(nums)-2; i++ {
 		if i > 0 && nums[i] == nums[i-1] {
 			continue
 		}
-		j, k := i+1, len(nums)-1
-		for j < k {
-			val := nums[i] + nums[j] + nums[k]
-			if val == 0 {
-				ret = append(ret, []int{nums[i], nums[j], nums[k]})
-				j++
-				k--
-				// 跳过相同元素
-				for ; j < k && nums[j] == nums[j-1]; j++ {
+		left, right := i+1, len(nums)-1
+		for left < right {
+			sum := nums[i] + nums[left] + nums[right]
+			if sum == 0 {
+				ret = append(ret, []int{nums[i], nums[left], nums[right]})
+				for left < right && nums[left+1] == nums[left] {
+					left++
 				}
-			} else if val > 0 {
-				k--
+				for left < right && nums[right] == nums[right-1] {
+					right--
+				}
+				left++
+				right--
+			} else if sum > 0 {
+				right--
 			} else {
-				j++
+				left++
 			}
 		}
 	}
@@ -717,10 +692,12 @@ func combinationSumHelper(candidates []int, target int) [][]int {
 // Input: candidates = [10,1,2,7,6,1,5], target = 8,
 // A solution set is:
 // [
-//  [1, 7],
-//  [1, 2, 5],
-//  [2, 6],
-//  [1, 1, 6]
+//
+//	[1, 7],
+//	[1, 2, 5],
+//	[2, 6],
+//	[1, 1, 6]
+//
 // ]
 func combinationSum2(candidates []int, target int) [][]int {
 	sort.Ints(candidates)
@@ -1075,11 +1052,11 @@ func minPathSumV2(grid [][]int) int {
 // 输出：true
 // 解释：可以先跳 1 步，从下标 0 到达下标 1, 然后再从下标 1 跳 3 步到达最后一个下标。
 func canJump(nums []int) bool {
-	var mostidx int
+	var mostStep int
 	for i, v := range nums {
-		if mostidx >= i {
-			mostidx = max(i+v, mostidx)
-			if mostidx >= len(nums)-1 {
+		if mostStep >= i {
+			mostStep = max(i+v, mostStep)
+			if mostStep >= len(nums)-1 {
 				return true
 			}
 		}
@@ -1087,19 +1064,38 @@ func canJump(nums []int) bool {
 	return false
 }
 
+// 45. 跳跃游戏 II
+// 贪心 或者 dp
+func jump(nums []int) int {
+	dp := make([]int, len(nums))
+	for i := range nums {
+		dp[i] = math.MaxInt
+	}
+	dp[0] = 0
+	for i := 0; i < len(nums); i++ {
+		for j := 0; j < i; j++ {
+			if nums[j] >= i-j {
+				dp[i] = min(dp[j]+1, dp[i])
+			}
+		}
+	}
+	return dp[len(nums)-1]
+}
+
 // 53. 最大子数组和
 // 输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
 // 输出：6
 // 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
 func maxSubArray(nums []int) int {
-	var maxSum, tmpSum = math.MinInt, 0
+	maxSum, curSum := math.MinInt, 0
 	for _, v := range nums {
-		if tmpSum > 0 {
-			tmpSum += v
-		} else {
-			tmpSum = v
+		curSum += v
+		if curSum > maxSum {
+			maxSum = curSum
 		}
-		maxSum = max(tmpSum, maxSum)
+		if curSum < 0 {
+			curSum = 0
+		}
 	}
 	return maxSum
 }
@@ -1865,13 +1861,30 @@ func longestUnivaluePath(root *TreeNode) int {
 
 // 121. 买卖股票的最佳时机
 func maxProfit(prices []int) int {
-	var maxProfit int
-	minPrice := math.MaxInt
+	minprice := prices[0]
+	res := 0
 	for _, v := range prices {
-		minPrice = min(minPrice, v)
-		maxProfit = max(maxProfit, v-minPrice)
+		res = max(res, v-minprice)
+		minprice = min(v, minprice)
 	}
-	return maxProfit
+	return res
+}
+
+// 买卖股票的最佳时机 II
+func maxProfitV2(prices []int) int {
+	var res int
+	for i := 0; i < len(prices)-1; i++ {
+		if prices[i] < prices[i+1] {
+			res += prices[i+1] - prices[i]
+		}
+	}
+	return res
+}
+
+// 123. 买卖股票的最佳时机 III
+func maxProfitV3(prices []int) int {
+
+	return 0
 }
 
 // 128. 最长连续序列
@@ -1919,26 +1932,46 @@ func singleNumber(nums []int) int {
 
 // 139. 单词拆分
 func wordBreak(s string, wordDict []string) bool {
+	wordMap := make(map[string]bool)
+	for _, v := range wordDict {
+		wordMap[v] = true
+	}
 	dp := make([]bool, len(s)+1)
 	dp[0] = true
-	findWord := func(word string) bool {
-		for _, v := range wordDict {
-			if v == word {
-				return true
-			}
-		}
-		return false
-	}
-	// dp[i]是否由单词构成，可以枚举s[0,i)位置的所有可能性
 	for i := 1; i <= len(s); i++ {
-		for j := 1; j <= i; j++ {
-			if dp[j-1] && findWord(s[j-1:i]) {
-				dp[i] = true
-				break
+		for j := 0; j < i; j++ {
+			if dp[j] {
+				word := s[j:i]
+				if _, ok := wordMap[word]; ok {
+					dp[i] = true
+				}
 			}
 		}
 	}
 	return dp[len(s)]
+}
+
+// 140. 单词拆分 II
+func wordBreakV2(s string, wordDict []string) []string {
+	if s == "" {
+		return nil
+	}
+	var res []string
+	for _, v := range wordDict {
+		if !strings.HasPrefix(s, v) {
+			continue
+		}
+		left := s[len(v):]
+		if left == "" {
+			res = append(res, v)
+			continue
+		}
+		subRes := wordBreakV2(left, wordDict)
+		for _, v1 := range subRes {
+			res = append(res, v+""+v1)
+		}
+	}
+	return res
 }
 
 // 141. 环形链表
@@ -2070,18 +2103,22 @@ func (this *MinStack) GetMin() int {
 // 169. 多数元素
 // 时间复杂度为 O(n)、空间复杂度为 O(1)
 func majorityElement(nums []int) int {
-	majorNum := nums[0]
-	cnt := 1
-	for i := 1; i < len(nums); i++ {
-		if majorNum == nums[i] {
-			cnt++
-		} else if cnt == 1 { // 更新为最新元素，最可能为返回值
-			majorNum = nums[i]
+	if len(nums) == 0 {
+		return 0
+	}
+	num, times := nums[0], 1
+	for i, v := range nums {
+		if i < 1 {
+			continue
+		}
+		if v != num && times > 0 {
+			times--
 		} else {
-			cnt--
+			times++
+			num = v
 		}
 	}
-	return majorNum
+	return num
 }
 
 // 198. 打家劫舍
@@ -2161,9 +2198,415 @@ func invertTree(root *TreeNode) *TreeNode {
 }
 
 // 215. 数组中的第K个最大元素
+// 快排方案或者堆排序
 func findKthLargest(nums []int, k int) int {
-	var ret int
+	rand.Seed(time.Now().UnixNano())
+	return partition(nums, 0, len(nums)-1, k)
+}
+
+func partition(data []int, left, right, index int) int {
+	for left < right {
+		pivot := rand.Int()%(right-left) + left
+		data[pivot], data[right] = data[right], data[pivot]
+		storeIndex := left
+		for i := left; i < right; i++ {
+			if data[i] < data[right] {
+				data[storeIndex], data[i] = data[i], data[storeIndex]
+				storeIndex++
+			}
+		}
+		data[storeIndex], data[right] = data[right], data[storeIndex]
+		if storeIndex == len(data)-index {
+			return data[storeIndex]
+		} else if storeIndex < len(data)-index {
+			left = storeIndex + 1
+		} else {
+			right = storeIndex - 1
+		}
+	}
+	return data[left]
+}
+
+// 236. 二叉树的最近公共祖先
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+	if root == nil || root == p || root == q {
+		return root
+	}
+	left := lowestCommonAncestor(root.Left, p, q)
+	right := lowestCommonAncestor(root.Right, p, q)
+	if left != nil && right != nil {
+		return root
+	}
+	if left != nil {
+		return left
+	}
+	return right
+}
+
+// 238. 除自身以外数组的乘积
+func productExceptSelf(nums []int) []int {
+	if len(nums) == 0 || len(nums) == 1 {
+		return nil
+	}
+	// init
+	ret := make([]int, len(nums))
+	for i := range ret {
+		ret[i] = 1
+	}
+	// cal from left, except first
+	for i := 1; i < len(nums); i++ {
+		ret[i] = ret[i-1] * nums[i-1]
+	}
+	// cal from right
+	right := 1
+	for i := len(nums) - 1; i >= 0; i-- {
+		ret[i] = ret[i] * right
+		right = right * nums[i]
+	}
 	return ret
+}
+
+// 357. 统计各位数字都不同的数字个数
+func countNumbersWithUniqueDigits(n int) int {
+	if n == 0 {
+		return 1
+	}
+	if n == 1 {
+		return 10
+	}
+	// i 代表当前有多少位数字
+	total, cur := 10, 9
+	for i := 2; i <= n; i++ {
+		cur = cur * (11 - i)
+		total += cur
+	}
+	return total
+}
+
+// 367. 有效的完全平方数
+func isPerfectSquare(num int) bool {
+	left, right := 0, num
+	for left <= right {
+		mid := left + (right-left)/2
+		val := mid * mid
+		if val < num {
+			left = mid + 1
+		} else if val > num {
+			right = mid - 1
+		} else {
+			return true
+		}
+	}
+	return false
+}
+
+// 88. 合并两个有序数组
+func mergeSortedArray(nums1 []int, m int, nums2 []int, n int) {
+	idx, i, j := len(nums1)-1, m-1, n-1
+	for i >= 0 && j >= 0 {
+		if nums1[i] > nums2[j] {
+			nums1[idx] = nums1[i]
+			i--
+		} else {
+			nums1[idx] = nums2[j]
+			j--
+		}
+		idx--
+	}
+	// if nums1 left
+	for ; i >= 0; i-- {
+		nums1[idx] = nums1[i]
+		idx--
+	}
+	// if nums2 left
+	for ; j >= 0; j-- {
+		nums1[idx] = nums2[j]
+		idx--
+	}
+}
+
+// 27. 移除元素
+func removeElement(nums []int, val int) int {
+	idx := 0
+	for _, v := range nums {
+		if v != val {
+			nums[idx] = v
+			idx++
+		}
+	}
+	return idx
+}
+
+// 26. 删除有序数组中的重复项
+// 80. 删除有序数组中的重复项 II
+func removeDuplicates(nums []int) int {
+	duplicatedCnt := 2
+	if len(nums) <= 1 {
+		return len(nums)
+	}
+	slow := 0
+	for fast, v := range nums {
+		if fast < duplicatedCnt || v != nums[slow-duplicatedCnt] {
+			nums[slow] = v
+			slow++
+		}
+	}
+	return slow
+}
+
+// 189. 轮转数组
+func rotateArray(nums []int, k int) {
+	rotateHandler := func(array []int) {
+		arrayLen := len(array)
+		for i := 0; i < arrayLen/2; i++ {
+			array[arrayLen-1-i], array[i] = array[i], array[arrayLen-1-i]
+		}
+	}
+	rotateHandler(nums)
+	rotateHandler(nums[0 : k%len(nums)])
+	rotateHandler(nums[k%len(nums):])
+}
+
+// 70. 爬楼梯
+func climbStairs(n int) int {
+	if n == 1 {
+		return 1
+	}
+	if n == 2 {
+		return 2
+	}
+	pre, cur := 1, 2
+	for i := 3; i <= n; i++ {
+		newCur := pre + cur
+		pre, cur = cur, newCur
+	}
+	return cur
+}
+
+// 134. 加油站
+func canCompleteCircuit(gas []int, cost []int) int {
+	var total, sum int
+	start := 0
+	for i := 0; i < len(gas); i++ {
+		total += gas[i] - cost[i]
+		sum += gas[i] - cost[i]
+		if sum < 0 {
+			sum = 0
+			start = i + 1
+		}
+	}
+	if total < 0 {
+		return -1
+	}
+	return start
+}
+
+// 918. 环形子数组的最大和
+func maxSubarraySumCircular(nums []int) int {
+	var newdata = make([]int, len(nums)*2)
+	copy(newdata, nums)
+	copy(newdata[len(nums):], nums)
+	maxSum, curSum := math.MinInt, 0
+	var start = 0
+	for i, v := range newdata {
+		if start >= len(nums) {
+			break
+		}
+		curSum += v
+		if i >= len(nums) && i-len(nums) >= start {
+			curSum -= v
+			start += 1
+		}
+		maxSum = max(maxSum, curSum)
+		if curSum < 0 {
+			curSum = 0
+			start = i + 1
+		}
+	}
+	return maxSum
+}
+
+// 125. 验证回文串
+func isPalindrome(s string) bool {
+	convertFunc := func(b rune) rune {
+		distance := 'a' - 'A'
+		if b >= '0' && b <= '9' {
+			return b
+		}
+		if b >= 'A' && b <= 'Z' {
+			return b + distance
+		}
+		if b >= 'a' && b <= 'z' {
+			return b
+		}
+		return 0
+	}
+	var sb strings.Builder
+	for _, v := range s {
+		b := convertFunc(v)
+		if b != 0 {
+			sb.WriteRune(b)
+		}
+	}
+	ret := sb.String()
+	for i := 0; i < len(ret)/2; i++ {
+		if ret[i] != ret[len(ret)-1-i] {
+			return false
+		}
+	}
+	return true
+}
+
+// 392. 判断子序列
+func isSubsequence(s string, t string) bool {
+	var j int
+	for i := 0; i < len(s); i++ {
+		var find bool
+		for j < len(t) {
+			if s[i] == t[j] {
+				find = true
+				j++
+				break
+			}
+			j++
+		}
+		if !find {
+			return false
+		}
+	}
+	return true
+}
+
+// 167. 两数之和 II - 输入有序数组
+func twoSum(numbers []int, target int) []int {
+	index1, index2 := 0, len(numbers)-1
+	for index1 < index2 {
+		sum := numbers[index1] + numbers[index2]
+		if sum == target {
+			return []int{index1 + 1, index2 + 1}
+		} else if sum < target {
+			index1++
+		} else {
+			index2--
+		}
+	}
+	return nil
+}
+
+// 42. 接雨水
+func trap(height []int) int {
+	if len(height) == 1 {
+		return 0
+	}
+	// 先计算右侧最大
+	right := make([]int, len(height))
+	right[len(height)-1] = 0
+	for j := len(height) - 2; j >= 0; j-- {
+		right[j] = max(right[j+1], height[j+1])
+	}
+	// 再计算左侧最大
+	left := make([]int, len(height))
+	left[0] = 0
+	for j := 1; j < len(height); j++ {
+		left[j] = max(left[j-1], height[j-1])
+	}
+	// 最后计算面积
+	var sum int
+	for j := 0; j < len(height); j++ {
+		if left[j] > height[j] && right[j] > height[j] {
+			sum += min(left[j], right[j]) - height[j]
+		}
+	}
+	return sum
+}
+
+// 151. 反转字符串中的单词
+func reverseWords(s string) string {
+	reverseFunc := func(s string) string {
+		var sb strings.Builder
+		for i := 0; i < len(s); i++ {
+			sb.WriteByte(s[len(s)-1-i])
+		}
+		return sb.String()
+	}
+	if s == "" {
+		return ""
+	}
+	var sb strings.Builder
+	// 移除多余的空格
+	sb.WriteByte(s[0])
+	for i := 1; i < len(s); i++ {
+		if s[i] != ' ' || s[i] != s[i-1] {
+			sb.WriteByte(s[i])
+		}
+	}
+	// 移除首位的空格
+	str1 := sb.String()
+	str2 := strings.TrimSpace(str1)
+	// 反转整个串
+	reverseTotal := reverseFunc(str2)
+	// 反转单个串
+	var sbRet strings.Builder
+	var start int
+	for i := 0; i < len(reverseTotal); i++ {
+		if reverseTotal[i] == ' ' {
+			// 反转[start,i)区间
+			sbRet.WriteString(reverseFunc(reverseTotal[start:i]))
+			sbRet.WriteByte(' ')
+			start = i + 1
+		}
+	}
+	sbRet.WriteString(reverseFunc(reverseTotal[start:]))
+	return sbRet.String()
+}
+
+// 14. 最长公共前缀
+func longestCommonPrefix(strs []string) string {
+	if len(strs) == 0 {
+		return ""
+	}
+	checkStrSize := func(idx int) bool {
+		for _, v := range strs {
+			if len(v) < idx+1 {
+				return false
+			}
+			if v[idx] != strs[0][idx] {
+				return false
+			}
+		}
+		return true
+	}
+	for i := 0; i < 200; i++ {
+		if !checkStrSize(i) {
+			return strs[0][:i]
+		}
+	}
+	return ""
+}
+
+// 58. 最后一个单词的长度
+func lengthOfLastWord(s string) int {
+	// 找最后一个单词的起点
+	var endPos, endStart = -1, -1
+	for i := len(s) - 1; i >= 0; i-- {
+		if s[i] != ' ' {
+			endPos = i
+			break
+		}
+	}
+	// 找到空格
+	for i := endPos - 1; i >= 0; i-- {
+		if s[i] == ' ' {
+			endStart = i
+			break
+		}
+	}
+	return endPos - endStart
+}
+
+// 209. 长度最小的子数组
+func minSubArrayLen(target int, nums []int) int {
+	return 0
 }
 
 func main() {

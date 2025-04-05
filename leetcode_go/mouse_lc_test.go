@@ -3,6 +3,8 @@ package main
 import (
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_generate(t *testing.T) {
@@ -77,6 +79,10 @@ func Test_longestPalindrome(t *testing.T) {
 		},
 		{
 			args: args{s: "cbbd"},
+			want: "bb",
+		},
+		{
+			args: args{s: "bb"},
 			want: "bb",
 		},
 	}
@@ -638,4 +644,104 @@ func Test_singleNumber(t *testing.T) {
 			}
 		})
 	}
+}
+
+func Test_findKthLargest(t *testing.T) {
+	type args struct {
+		nums []int
+		k    int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		// TODO: Add test cases.
+		{
+			args: args{nums: []int{7, 6, 5, 4, 3, 2, 1}, k: 2},
+			want: 6,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := findKthLargest(tt.args.nums, tt.args.k); got != tt.want {
+				t.Errorf("findKthLargest() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestProduceExceptSelf(t *testing.T) {
+	assert.Equal(t, []int{24, 12, 8, 6}, productExceptSelf([]int{1, 2, 3, 4}))
+	assert.Equal(t, []int{0, 0, 9, 0, 0}, productExceptSelf([]int{-1, 1, 0, -3, 3}))
+}
+
+func TestCountNumbersWithUniqueDigits(t *testing.T) {
+	assert.Equal(t, countNumbersWithUniqueDigits(2), 91)
+	assert.Equal(t, countNumbersWithUniqueDigits(0), 1)
+}
+
+func TestIsPerfectSquare(t *testing.T) {
+	assert.Equal(t, isPerfectSquare(16), true)
+	assert.Equal(t, isPerfectSquare(14), false)
+}
+
+func TestRotateArray(t *testing.T) {
+	input1 := []int{1, 2, 3, 4, 5, 6, 7}
+	rotateArray(input1, 3)
+	assert.Equal(t, []int{5, 6, 7, 1, 2, 3, 4}, input1)
+	input2 := []int{-1, -100, 3, 99}
+	rotateArray(input2, 2)
+	assert.Equal(t, []int{3, 99, -1, -100}, input2)
+}
+
+func TestMaxProfit(t *testing.T) {
+	assert.Equal(t, 5, maxProfit([]int{7, 1, 5, 3, 6, 4}))
+	assert.Equal(t, 0, maxProfit([]int{7, 6, 4, 3, 1}))
+}
+
+func TestMaxProfitV2(t *testing.T) {
+	assert.Equal(t, 7, maxProfitV2([]int{7, 1, 5, 3, 6, 4}))
+	assert.Equal(t, 4, maxProfitV2([]int{1, 2, 3, 4, 5}))
+	assert.Equal(t, 0, maxProfitV2([]int{7, 6, 4, 3, 1}))
+}
+
+func TestJump(t *testing.T) {
+	assert.Equal(t, 2, jump([]int{2, 3, 1, 1, 4}))
+	assert.Equal(t, 2, jump([]int{2, 3, 0, 1, 4}))
+}
+
+func TestWordBreak(t *testing.T) {
+	assert.Equal(t, true, wordBreak("leetcode", []string{"leet", "code"}))
+	assert.Equal(t, true, wordBreak("applepenapple", []string{"apple", "pen"}))
+	assert.Equal(t, false, wordBreak("catsandog", []string{"cats", "dog", "sand", "and", "cat"}))
+}
+
+func TestWordBreakV2(t *testing.T) {
+	assert.Equal(t, 2, len(wordBreakV2("catsanddog", []string{"cat", "cats", "and", "sand", "dog"})))
+}
+
+func TestCanCompleteCircuit(t *testing.T) {
+	assert.Equal(t, 3, canCompleteCircuit([]int{1, 2, 3, 4, 5}, []int{3, 4, 5, 1, 2}))
+	assert.Equal(t, -1, canCompleteCircuit([]int{2, 3, 4}, []int{3, 4, 3}))
+}
+
+func TestMaxSubarraySumCircular(t *testing.T) {
+	assert.Equal(t, 3, maxSubarraySumCircular([]int{1, -2, 3, -2}))
+	assert.Equal(t, 10, maxSubarraySumCircular([]int{5, -3, 5}))
+	assert.Equal(t, 3, maxSubarraySumCircular([]int{1, -2, 3, -2}))
+}
+
+func TestIsPalindrome(t *testing.T) {
+	assert.Equal(t, true, isPalindrome("A man, a plan, a canal: Panama"))
+	assert.Equal(t, false, isPalindrome("race a car"))
+	assert.Equal(t, true, isPalindrome(" "))
+}
+
+func TestCommon(t *testing.T) {
+	assert.Equal(t, 1, trap([]int{4, 2, 3}))
+	assert.Equal(t, 6, trap([]int{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}))
+	assert.Equal(t, "blue is sky the", reverseWords("the sky is blue"))
+	assert.Equal(t, "fl", longestCommonPrefix([]string{"flower", "flow", "flight"}))
+	assert.Equal(t, "", longestCommonPrefix([]string{"dog", "racecar", "car"}))
 }
